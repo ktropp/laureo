@@ -9,6 +9,16 @@ import {Checkbox} from "components/ui/checkbox";
 import {RadioGroup, RadioGroupItem} from "components/ui/radio-group";
 import {Switch} from "components/ui/switch";
 import {Plus, Download, Edit, Trash2} from "lucide-react";
+import {Alert, AlertTitle, AlertDescription} from "components/ui/alert";
+import {Progress} from "components/ui/progress";
+import {Table, TableHeader, TableRow, TableHead, TableBody, TableCell} from "components/ui/table";
+import {Badge} from "components/ui/badge";
+import {
+    Info,
+    CheckCircle,
+    AlertTriangle,
+    AlertCircle,
+} from "lucide-react";
 
 export default function Page() {
 
@@ -127,9 +137,119 @@ export default function Page() {
                         </div>
                         <div className="flex items-center space-x-2">
                             <Switch id="switch"/>
-                            <Label htmlFor="switch">Toggle Switch</Label>
+                            <Label htmlFor="switch" className="mb-0">Toggle Switch</Label>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* Alerts */}
+            <section className="mt-16">
+                <h2 className="text-2xl font-semibold mb-6">Alerts</h2>
+                <div className="space-y-4">
+                    <Alert>
+                        <Info className="h-4 w-4"/>
+                        <AlertTitle>Information</AlertTitle>
+                        <AlertDescription>
+                            This is an informational alert with some details.
+                        </AlertDescription>
+                    </Alert>
+                    <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
+                        <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400"/>
+                        <AlertTitle className="text-green-800 dark:text-green-200">Success</AlertTitle>
+                        <AlertDescription className="text-green-700 dark:text-green-300">
+                            Operation completed successfully!
+                        </AlertDescription>
+                    </Alert>
+                    <Alert className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
+                        <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400"/>
+                        <AlertTitle className="text-yellow-800 dark:text-yellow-200">Warning</AlertTitle>
+                        <AlertDescription className="text-yellow-700 dark:text-yellow-300">
+                            Please review this important information.
+                        </AlertDescription>
+                    </Alert>
+                    <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4"/>
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>
+                            Something went wrong. Please try again.
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            </section>
+
+            {/* Progress & Loading */}
+            <section className="mt-16">
+                <h2 className="text-2xl font-semibold mb-6">Progress & Loading</h2>
+                <div className="p-6 space-y-6">
+                    <div className="space-y-2">
+                        <Label>Progress Bar</Label>
+                        <Progress value={65} className="w-full"/>
+                        <p className="text-sm text-muted-foreground">65% complete</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Different Progress Values</Label>
+                        <Progress value={25} className="w-full"/>
+                        <Progress value={50} className="w-full"/>
+                        <Progress value={75} className="w-full"/>
+                        <Progress value={100} className="w-full"/>
+                    </div>
+                </div>
+            </section>
+
+            {/* Data Tables */}
+            <section className="mt-16">
+                <h2 className="text-2xl font-semibold mb-6">Data Tables</h2>
+                <div>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-medium">John Doe</TableCell>
+                                <TableCell>john@example.com</TableCell>
+                                <TableCell>Admin</TableCell>
+                                <TableCell><Badge>Active</Badge></TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button variant="ghost" size="sm"><Edit className="h-4 w-4"/></Button>
+                                        <Button variant="ghost" size="sm"><Trash2 className="h-4 w-4"/></Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Jane Smith</TableCell>
+                                <TableCell>jane@example.com</TableCell>
+                                <TableCell>Editor</TableCell>
+                                <TableCell><Badge variant="secondary">Inactive</Badge></TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button variant="ghost" size="sm"><Edit className="h-4 w-4"/></Button>
+                                        <Button variant="ghost" size="sm"><Trash2 className="h-4 w-4"/></Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium">Mike Johnson</TableCell>
+                                <TableCell>mike@example.com</TableCell>
+                                <TableCell>Author</TableCell>
+                                <TableCell><Badge>Active</Badge></TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button variant="ghost" size="sm"><Edit className="h-4 w-4"/></Button>
+                                        <Button variant="ghost" size="sm"><Trash2 className="h-4 w-4"/></Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
             </section>
         </>
