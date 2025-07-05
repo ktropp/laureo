@@ -1,25 +1,24 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {decrypt} from 'lib/session'
 import {cookies} from 'next/headers'
-import {prisma} from 'lib/prisma'
 
 // Specify protected and public routes
-const protectedRoutes = ['/dashboard']
+const protectedRoutes = ['/']
 const publicRoutes = ['/login', '/signup', '/']
 
 export default async function middleware(req: NextRequest) {
     // Check if there exists at least one user in the database
     try {
-        const userCount = await prisma.user.count()
-        if (userCount === 0 && !req.nextUrl.pathname.startsWith('/install')) {
+        const response = await fetch(`${req.nextUrl.origin}/api/check-install`)
+        const data = await response.json()
+
+        if (!data && !req.nextUrl.pathname.startsWith('/install')) {
             return NextResponse.redirect(new URL('/install', req.nextUrl))
+        }else if (data && req.nextUrl.pathname.startsWith('/install')) {
+            return NextResponse.redirect(new URL('/', req.nextUrl))
         }
     } catch (error) {
-        console.error('Database connection error:', error)
-        // In case of database connection error, we should still allow access to /install
-        if (!req.nextUrl.pathname.startsWith('/install')) {
-            return NextResponse.redirect(new URL('/install', req.nextUrl))
-        }
+        console.error('Error checking installation status:', error)
     }
 
     // Check if the current route is protected or public
