@@ -9,8 +9,11 @@ import {
     EyeOff
 } from "lucide-react";
 import {useState} from "react";
+import {useTranslations} from "next-intl";
 
 export default function Page() {
+    const t = useTranslations('install');
+
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,9 +21,9 @@ export default function Page() {
     return (
         <>
             <div className="space-y-1 mb-3">
-                <h2 className="text-xl font-semibold">Installation</h2>
+                <h2 className="text-xl font-semibold">{t('title')}</h2>
                 <p className="text-sm text-slate-800 dark:text-slate-200">
-                    Finish installation by creating first user.
+                    {t('description')}
                 </p>
             </div>
 

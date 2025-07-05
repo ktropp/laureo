@@ -3,7 +3,6 @@ import {
     FileText,
     Settings,
     Users,
-    BarChart3,
     Images,
     Menu,
     LogOut
@@ -18,10 +17,9 @@ interface SidebarProps {
 
 const menuItems = [
     {icon: LayoutDashboard, label: "Dashboard", active: true},
-    {icon: FileText, label: "Posts"},
+    {icon: FileText, label: "Pages"},
     {icon: Images, label: "Media"},
     {icon: Users, label: "Users"},
-    {icon: BarChart3, label: "Analytics"},
     {icon: Settings, label: "Settings"},
 ];
 
