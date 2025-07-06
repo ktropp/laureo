@@ -3,8 +3,8 @@ import {decrypt} from 'lib/session'
 import {cookies} from 'next/headers'
 
 // Specify protected and public routes
-const protectedRoutes = ['/']
-const publicRoutes = ['/login', '/signup', '/']
+const protectedRoutes = ['/', '/styleguide']
+const publicRoutes = ['/login']
 
 export default async function middleware(req: NextRequest) {
     // Check if there exists at least one user in the database

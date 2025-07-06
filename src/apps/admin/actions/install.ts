@@ -1,6 +1,6 @@
 'use server';
 import {InstallFormSchema, InstallFormState} from "lib/definitions";
-import {prisma} from "../lib/prisma";
+import {prisma} from "lib/prisma";
 import bcrypt from "bcrypt";
 
 export async function install(state: InstallFormState, formData: FormData) {

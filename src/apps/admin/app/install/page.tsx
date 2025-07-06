@@ -36,9 +36,9 @@ export default function Page() {
                         name="email"
                         placeholder="Enter your email"
                         required
+                        error={state?.errors?.email}
                     />
                 </div>
-                {state?.errors?.email && <p>{state.errors.email}</p>}
 
                 <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>

@@ -6,9 +6,13 @@ import {Button} from "components/ui/button";
 import Link from "next/link";
 import {
     Eye,
-    EyeOff
+    EyeOff,
+    AlertCircle
 } from "lucide-react";
-import {useState} from "react";
+import {useActionState, useState} from "react";
+import {useTranslations} from "next-intl";
+import {login} from "actions/login"
+import {Alert, AlertTitle, AlertDescription} from "components/ui/alert";
 
 export default function Page({
                                  params,
@@ -17,33 +21,29 @@ export default function Page({
     params: Promise<{ slug: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
-    const [error, setError] = useState("");
+    const t = useTranslations('install');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Basic validation
-        if (!email || !password) {
-            setError("Please fill in all fields");
-            return;
-        }
-        // Clear error and proceed with login logic
-        setError("");
-        console.log("Login attempt:", {email, password, rememberMe});
-    };
+    const [state, action, pending] = useActionState(login, undefined)
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
         <>
+            {state?.message && (<Alert variant="destructive" className="mb-3">
+                <AlertCircle className="h-4 w-4"/>
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    {state?.message}
+                </AlertDescription>
+            </Alert>)}
+
             <div className="space-y-1 mb-3">
-                <h2 className="text-xl font-semibold">Sign in</h2>
+                <h2 className="text-xl font-semibold">Login</h2>
                 <p className="text-sm text-slate-800 dark:text-slate-200">
                     Enter your email and password to access your account
                 </p>
             </div>
             <div>
-                <form className="space-y-4">
+                <form className="space-y-4" action={action}>
 
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
@@ -51,9 +51,9 @@ export default function Page({
                             id="email"
                             type="email"
                             placeholder="Enter your email"
-                            value=""
-                            onChange={(e) => setEmail(e.target.value)}
+                            name="email"
                             required
+                            error={state?.errors?.email}
                         />
                     </div>
 
@@ -64,9 +64,9 @@ export default function Page({
                                 id="password"
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                name="password"
                                 required
+                                error={state?.errors?.password}
                             />
                             <Button
                                 type="button"
@@ -89,8 +89,7 @@ export default function Page({
                             <input
                                 id="remember"
                                 type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
+                                name="remember"
                                 className="rounded border-input"
                             />
                             <Label htmlFor="remember" className="text-sm mb-0">
@@ -102,8 +101,8 @@ export default function Page({
                         </Link>
                     </div>
 
-                    <Button type="submit" className="w-full">
-                        Sign in
+                    <Button type="submit" className="w-full" disabled={pending}>
+                        Login
                     </Button>
                 </form>
 
