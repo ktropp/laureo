@@ -50,7 +50,7 @@ export async function login(state: LoginFormState, formData: FormData) {
     }
 
     // Login user
-    await createSession(user.id)
+    await createSession(user.id, Boolean(formData.get('remember')))
 
     // redirect to /
     redirect('/')

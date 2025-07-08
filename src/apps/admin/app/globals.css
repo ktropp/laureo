@@ -5,3 +5,7 @@
 @theme {
     --color-primary: oklch(0.511 0.096 186.391);
 }
+
+.min-h-content-height {
+    min-height: calc(100vh - 48px);
+}

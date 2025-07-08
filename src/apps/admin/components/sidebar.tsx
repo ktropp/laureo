@@ -9,6 +9,10 @@ import {
 } from "lucide-react";
 import {Button} from "components/ui/button";
 import {Avatar, AvatarFallback, AvatarImage} from "components/ui/avatar";
+import {logout} from "actions/logout";
+import Link from "next/link";
+import {usePathname} from "next/navigation";
+import {UserInfo} from "components/user-info";
 
 interface SidebarProps {
     collapsed: boolean;
@@ -16,14 +20,15 @@ interface SidebarProps {
 }
 
 const menuItems = [
-    {icon: LayoutDashboard, label: "Dashboard", active: true},
-    {icon: FileText, label: "Pages"},
-    {icon: Images, label: "Media"},
-    {icon: Users, label: "Users"},
-    {icon: Settings, label: "Settings"},
+    {icon: LayoutDashboard, label: "Dashboard", href: "/"},
+    {icon: FileText, label: "Pages", href: "/page"},
+    {icon: Images, label: "Media", href: "/media"},
+    {icon: Users, label: "Users", href: '/user'},
+    {icon: Settings, label: "Settings", href: '/settings'},
 ];
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
+    const pathname = usePathname()
 
     return (
         <div className={`
@@ -54,11 +59,12 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             <nav className="flex-1 p-4">
                 <div className="space-y-2">
                     {menuItems.map((item, index) => (
-                        <button
+                        <Link
                             key={index}
+                            href={item.href}
                             className={`
                 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer justify-center xl:justify-start
-                ${item.active
+                ${pathname === item.href
                                 ? 'bg-primary text-slate-50 shadow-sm'
                                 : 'text-slate-800 hover:bg-slate-200 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-slate-100'
                             }
@@ -67,7 +73,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                         >
                             <item.icon className="h-5 w-5 flex-shrink-0"/>
                             {!collapsed && <span className="text-sm font-medium hidden xl:inline">{item.label}</span>}
-                        </button>
+                        </Link>
                     ))}
                 </div>
             </nav>
@@ -77,18 +83,12 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                 {/* User Info */}
                 <div
                     className={`flex items-center gap-3 justify-center xl:justify-start flex-col xl:flex-row  ${collapsed ? 'xl:justify-center' : ''}`}>
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"/>
-                        <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
-                        <p className="text-sm font-medium truncate">John Doe</p>
-                        <p className="text-xs text-slate-800 dark:text-slate-200 truncate">Admin</p>
-                    </div>
-                    <Button variant="ghost" size="sm" className="p-1">
-                        <LogOut className="h-4 w-4"/>
-                    </Button>
+                    <UserInfo/>
+                    <form action={logout}>
+                        <Button variant="ghost" size="sm" className="p-1" type="submit">
+                            <LogOut className="h-4 w-4"/>
+                        </Button>
+                    </form>
                 </div>
             </div>
         </div>

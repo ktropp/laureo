@@ -21,56 +21,61 @@ enum Role {
   CONTRIBUTOR
 }
 
+enum PostType {
+  PAGE
+}
+
 model User {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  email      String   @unique
-  name       String?
-  surname    String?
-  role       Role     @default(CONTRIBUTOR)
-  password   String
+  id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  email          String   @unique
+  name           String?
+  surname        String?
+  role           Role     @default(CONTRIBUTOR)
+  password       String
   profilePhotoId Int?
-  profilePhoto Media? @relation("UserProfile", fields: [profilePhotoId], references: [id], onDelete: SetNull)
-  uploadedMedia Media[] @relation("MediaAuthor")
+  profilePhoto   Media?   @relation("UserProfile", fields: [profilePhotoId], references: [id], onDelete: SetNull)
+  uploadedMedia  Media[]  @relation("MediaAuthor")
 
   posts Post[]
 }
 
 model Media {
-  id Int @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  authorId Int
-  author User @relation("MediaAuthor", fields: [authorId], references: [id])
-  file String
-  alt String?
-  title String?
-  usersWithThisProfile User[] @relation("UserProfile")
+  id                   Int      @id @default(autoincrement())
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  authorId             Int
+  author               User     @relation("MediaAuthor", fields: [authorId], references: [id])
+  file                 String
+  alt                  String?
+  title                String?
+  usersWithThisProfile User[]   @relation("UserProfile")
 }
 
 model Post {
-  id         Int        @id @default(autoincrement())
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  authorId   Int
-  author     User       @relation(fields: [authorId], references: [id])
-  published  Boolean    @default(false)
+  id           Int        @id @default(autoincrement())
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  type         PostType   @default(PAGE)
+  authorId     Int
+  author       User       @relation(fields: [authorId], references: [id])
+  published    Boolean    @default(false)
   translations PostLang[]
 }
 
 model PostLang {
-  id          Int      @id @default(autoincrement())
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  postId      Int
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  languageCode String  @db.VarChar(2)
-  title       String
-  slug        String
-  metaTitle   String?
+  id              Int      @id @default(autoincrement())
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  postId          Int
+  post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  languageCode    String   @db.VarChar(2)
+  title           String
+  slug            String
+  metaTitle       String?
   metaDescription String?
-  metaKeywords String?
+  metaKeywords    String?
 
   @@unique([postId, languageCode])
   @@index([languageCode])

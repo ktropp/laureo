@@ -2,6 +2,7 @@
 import {SignJWT, jwtVerify} from 'jose'
 import {SessionPayload} from 'lib/definitions'
 import {cookies} from 'next/headers'
+import {prisma} from "./prisma";
 
 const secretKey = process.env.SESSION_SECRET
 if (!secretKey) {
@@ -33,8 +34,12 @@ export async function decrypt(session: string | undefined = '') {
     }
 }
 
-export async function createSession(userId: number) {
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+export async function createSession(userId: number, remember: boolean = false) {
+    // Set different expiration times based on remember preference
+    const expiresAt = new Date(Date.now() + (remember
+            ? 30 * 24 * 60 * 60 * 1000  // 30 days for "remember me"
+            : 24 * 60 * 60 * 1000       // 24 hours for regular session
+    ))
     const session = await encrypt({userId, expiresAt})
     const cookieStore = await cookies()
 
@@ -45,4 +50,30 @@ export async function createSession(userId: number) {
         sameSite: 'lax',
         path: '/',
     })
+}
+
+export async function deleteSession() {
+    const cookieStore = await cookies()
+    cookieStore.delete('session')
+}
+
+export async function currentUser() {
+    // Decrypt the session from the cookie
+    const cookie = (await cookies()).get('session')?.value
+    const session = await decrypt(cookie)
+
+    // Get user
+    const currentUser = await prisma.user.findUnique({
+        where: {
+            id: session?.userId
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            name: true,
+            surname: true
+        }
+    })
+    return currentUser
 }
