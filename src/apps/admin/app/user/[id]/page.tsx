@@ -1,20 +1,27 @@
-import {prisma} from "../../../lib/prisma";
+import { prisma } from "lib/prisma";
+import { UserForm } from "./user-form";
 
-export default async function User({
+export default async function UserPage({
     params,
-                                   }: {
-    params: Promise<{ id: number}>
+}: {
+    params: { id: string }
 }) {
-    const { id } = await params
-    const user = prisma.user.findFirstOrThrow({
+    const user = await prisma.user.findUnique({
         where: {
-            id: id
+            id: parseInt(params.id)
+        },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            surname: true,
+            role: true
         }
-    })
+    });
 
-    return (
-        <div>
-            <h1 className="text-4xl font-bold">User</h1>
-        </div>
-    )
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    return <UserForm user={user} />;
 }
