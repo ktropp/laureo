@@ -44,7 +44,7 @@ export function UserInfo() {
     }
 
     return (
-        <div>
+        <>
             <Avatar className="h-8 w-8">
                 <AvatarImage src={user.image || undefined}/>
                 <AvatarFallback>{user.name?.[0] || 'U'}</AvatarFallback>
@@ -53,6 +53,6 @@ export function UserInfo() {
                 <p className="text-sm font-medium truncate">{(user.name && user.surname) || user.email}</p>
                 <p className="text-xs text-slate-800 dark:text-slate-200 truncate">{user.role}</p>
             </div>
-        </div>
+        </>
     )
 }
