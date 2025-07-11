@@ -6,16 +6,19 @@ import {createSession} from "../lib/session";
 import {redirect} from "next/navigation";
 
 export async function login(state: LoginFormState, formData: FormData) {
-    // validate fields
-    const validatedFields = LoginFormSchema.safeParse({
+    // Form data
+    const dataFromForm = {
         email: formData.get('email'),
         password: formData.get('password'),
-    });
+    }
+    // validate fields
+    const validatedFields = LoginFormSchema.safeParse(dataFromForm);
 
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
+            data: dataFromForm
         }
     }
 
@@ -35,7 +38,8 @@ export async function login(state: LoginFormState, formData: FormData) {
 
     if (!user) {
         return {
-            message: 'Invalid email or password.'
+            message: 'Invalid email or password.',
+            data: dataFromForm
         }
     }
 
@@ -45,7 +49,8 @@ export async function login(state: LoginFormState, formData: FormData) {
 
     if (!isValidPassword) {
         return {
-            message: 'Invalid email or password.'
+            message: 'Invalid email or password.',
+            data: dataFromForm
         }
     }
 

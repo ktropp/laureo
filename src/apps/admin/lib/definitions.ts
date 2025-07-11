@@ -25,6 +25,10 @@ export type InstallFormState =
         password?: string[]
     }
     message?: string
+    data?: {
+        email: string
+        password: string
+    }
 }
     | undefined
 
@@ -42,6 +46,10 @@ export type LoginFormState =
         password?: string[]
     }
     message?: string
+    data?: {
+        email: string
+        password: string
+    }
 }
     | undefined
 

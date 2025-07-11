@@ -1,4 +1,7 @@
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "components/ui/table";
+import { toast } from "react-toastify";
+import { Trash2 } from "lucide-react";
+import { Button } from "components/ui/button";
 
 interface Column {
   header: string;
@@ -37,3 +40,4 @@ export function GridView({ data, columns }: GridViewProps) {
     </Table>
   );
 }
+

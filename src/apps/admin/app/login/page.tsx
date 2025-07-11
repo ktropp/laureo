@@ -26,6 +26,8 @@ export default function Page({
     const [state, action, pending] = useActionState(login, undefined)
     const [showPassword, setShowPassword] = useState(false);
 
+    const currentUser = state?.data || {}
+
     return (
         <>
             {state?.message && (<Alert variant="destructive" className="mb-3">
@@ -52,6 +54,7 @@ export default function Page({
                             type="email"
                             placeholder="Enter your email"
                             name="email"
+                            defaultValue={currentUser?.email}
                             required
                             error={state?.errors?.email}
                         />
@@ -65,6 +68,7 @@ export default function Page({
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
                                 name="password"
+                                defaultValue={currentUser?.password}
                                 required
                                 error={state?.errors?.password}
                             />
