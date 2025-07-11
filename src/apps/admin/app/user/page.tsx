@@ -44,7 +44,7 @@ export default async function Home() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-4xl font-bold">Users</h1>
-                <Button>Add <CirclePlus className="h-5 w-5"/></Button>
+                <Button asChild><Link href="/user/add">Add <CirclePlus className="h-5 w-5"/></Link></Button>
             </div>
             <GridView data={data} columns={columns}/>
         </div>

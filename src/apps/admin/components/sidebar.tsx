@@ -29,6 +29,7 @@ const menuItems = [
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
     const pathname = usePathname()
+    console.log(pathname)
 
     return (
         <div className={`
@@ -64,7 +65,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                             href={item.href}
                             className={`
                 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer justify-center xl:justify-start
-                ${pathname === item.href
+                ${(pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href)))
                                 ? 'bg-primary text-slate-50 shadow-sm'
                                 : 'text-slate-800 hover:bg-slate-200 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-slate-100'
                             }
