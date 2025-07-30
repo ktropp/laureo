@@ -7,5 +7,9 @@
 }
 
 .min-h-content-height {
-    min-height: calc(100vh - 48px);
+    min-height: calc(100vh - 24px);
+}
+
+.min-h-sidebar-height {
+  min-height: calc(100vh - 48px);
 }

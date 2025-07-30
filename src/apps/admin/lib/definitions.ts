@@ -114,3 +114,25 @@ export type UserAddFormState =
 }
     | undefined
 
+export const PostAddFormSchema = z.object({
+    type: z.string().trim(),
+    title: z.string().trim(),
+    url: z.string().trim(),
+});
+
+export type PostAddFormState =
+    | {
+    errors?: {
+        type?: string[]
+        title?: string[]
+        url?: string[]
+    }
+    message?: string
+    data?: {
+        type: string
+        title: string
+        url: string
+    }
+}
+    | undefined
+

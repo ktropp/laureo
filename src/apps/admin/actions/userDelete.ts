@@ -11,7 +11,7 @@ export async function userDelete(userId: number) {
                 id: userId
             }
         })
-        revalidatePath('/users')
+        revalidatePath('/user')
         return {success: true, message: 'User deleted successfully'};
     } catch (error) {
         return {success: false, message: 'Failed to delete user: ' + error};

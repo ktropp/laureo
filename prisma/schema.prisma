@@ -70,7 +70,7 @@ model PostLang {
   updated_at      DateTime @updatedAt
   postId          Int
   post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  languageCode    String   @db.VarChar(2)
+  languageCode    String   @db.VarChar(5)
   title           String
   slug            String
   metaTitle       String?
