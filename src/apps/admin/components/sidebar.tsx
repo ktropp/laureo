@@ -21,7 +21,7 @@ interface SidebarProps {
 
 const menuItems = [
     {icon: LayoutDashboard, label: "Dashboard", href: "/"},
-    {icon: FileText, label: "Pages", href: "/post/page"},
+    {icon: FileText, label: "Pages", href: "/page"},
     {icon: Images, label: "Media", href: "/media"},
     {icon: Users, label: "Users", href: '/user'},
     {icon: Settings, label: "Settings", href: '/settings'},

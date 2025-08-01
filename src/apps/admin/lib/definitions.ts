@@ -116,22 +116,37 @@ export type UserAddFormState =
 
 export const PostAddFormSchema = z.object({
     type: z.string().trim(),
+    status: z.string().trim(),
     title: z.string().trim(),
-    url: z.string().trim(),
+    slug: z.string().trim(),
+    blocks: z.string().trim(),
+    //metaTitle: z.string().trim(),
+    //metaDescription: z.string().trim(),
+    //metaKeywords: z.string().trim(),
 });
 
 export type PostAddFormState =
     | {
     errors?: {
         type?: string[]
+        status?: string[]
         title?: string[]
-        url?: string[]
+        slug?: string[]
+        blocks?: string[]
+        metaTitle?: string[]
+        metaDescription?: string[]
+        metaKeywords?: string[]
     }
     message?: string
     data?: {
         type: string
+        status: string
         title: string
-        url: string
+        slug: string
+        blocks: string
+        metaTitle: string
+        metaDescription: string
+        metaKeywords: string
     }
 }
     | undefined

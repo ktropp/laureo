@@ -10,8 +10,10 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
   // data from form
   const dataFromForm = {
     type: formData.get('type'),
+    status: formData.get('status'),
     title: formData.get('title'),
-    url: formData.get('url'),
+    slug: formData.get('slug'),
+    blocks: formData.get('blocks'),
   }
   // validate fields
   const validatedFields = PostAddFormSchema.safeParse(dataFromForm);
@@ -24,7 +26,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
     }
   }
 
-  const { title, url } = validatedFields.data;
+  const { type, title, slug, status, blocks } = validatedFields.data;
 
   const author = await currentUser()
 
@@ -41,13 +43,15 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
     data: {
       postId: result.id,
       languageCode: process.env.DEFAULT_LANG,
+      status: status,
       title: title,
-      slug: url,
+      slug: slug,
+      blocks: blocks,
     },
     select: {
       id: true
     }
   }) 
 
-  return redirect(`/post/${resultLang.id}`)
+  return redirect(`/${type.toLowerCase()}/${resultLang.id}`)
 }

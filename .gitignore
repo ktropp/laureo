@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/src/apps/admin/node_modules
+/src/apps/front/node_modules
 /.pnp
 .pnp.*
 .yarn/*
