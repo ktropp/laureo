@@ -119,6 +119,7 @@ export const PostAddFormSchema = z.object({
     status: z.string().trim(),
     title: z.string().trim(),
     slug: z.string().trim(),
+    languageCode: z.string().trim(),
     blocks: z.string().trim(),
     //metaTitle: z.string().trim(),
     //metaDescription: z.string().trim(),
@@ -132,6 +133,7 @@ export type PostAddFormState =
         status?: string[]
         title?: string[]
         slug?: string[]
+        languageCode?: string[]
         blocks?: string[]
         metaTitle?: string[]
         metaDescription?: string[]
@@ -143,6 +145,7 @@ export type PostAddFormState =
         status: string
         title: string
         slug: string
+        languageCode: string
         blocks: string
         metaTitle: string
         metaDescription: string

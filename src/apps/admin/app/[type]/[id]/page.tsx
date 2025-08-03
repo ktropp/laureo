@@ -17,6 +17,7 @@ export default async function PostEditPost({
       status: true,
       title: true,
       slug: true,
+      languageCode: true,
       blocks: true,
       metaTitle: true,
       metaDescription: true,
@@ -27,5 +28,8 @@ export default async function PostEditPost({
   if (!post) {
     throw new Error('Post not found');
   }
-  return <PostForm post={post} />
+
+  const languages = process.env.LANGUAGES?.split(',');
+
+  return <PostForm post={post} languages={languages} />
 }

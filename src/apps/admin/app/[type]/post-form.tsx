@@ -8,10 +8,11 @@ import { useActionState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "../../components/ui/select";
 import { Textarea } from "components/ui/textarea";
 
-export function PostForm({ post }: { post: Post }) {
+export function PostForm({ post, languages }: { post: Post, languages: Array }) {
   const [state, action, pending] = useActionState(postAdd, undefined);
 
   const currentPost = state?.data || post || {};
+
 
   return (
     <form action={action}>
@@ -40,14 +41,28 @@ export function PostForm({ post }: { post: Post }) {
           />
 
           <div className="space-y-2 mb-2">
-            <Label htmlFor="select">Status</Label>
-            <Select value="DRAFT" name="status">
+            <Label htmlFor="status">Status</Label>
+            <Select value={currentPost.status || 'DRAFT'}name="status">
               <SelectTrigger>
                 <SelectValue placeholder="Choose status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="DRAFT">Draft</SelectItem>
                 <SelectItem value="PUBLISHED">Published</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2 mb-2">
+            <Label htmlFor="languageCode">Language</Label>
+            <Select value={currentPost.languageCode || process.env.DEFAULT_LANG} name="languageCode" disabled={currentPost.languageCode || languages.length <= 1}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose language" />
+              </SelectTrigger>
+              <SelectContent>
+                {languages?.map(item => (
+                <SelectItem key={item} value={item}>{item}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

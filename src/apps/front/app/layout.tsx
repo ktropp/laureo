@@ -1,3 +1,7 @@
+//TODO:
+// import css from theme
+// import fonts from theme
+//
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -23,6 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    //TODO: change lang to actual language
+    //font classes from theme
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
