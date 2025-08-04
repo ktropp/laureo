@@ -35,6 +35,12 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
 
           <Input
             type="hidden"
+            name="id"
+            defaultValue={currentPost.id || ''}
+            />
+
+          <Input
+            type="hidden"
             name="type"
             defaultValue="PAGE"
             required
@@ -42,20 +48,20 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
 
           <div className="space-y-2 mb-2">
             <Label htmlFor="status">Status</Label>
-            <Select value={currentPost.status || 'DRAFT'}name="status">
+            <Select defaultValue={currentPost.status || 'DRAFT'} name="status">
               <SelectTrigger>
                 <SelectValue placeholder="Choose status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="DRAFT">Draft</SelectItem>
-                <SelectItem value="PUBLISHED">Published</SelectItem>
+                <SelectItem key="DRAFT" value="DRAFT">Draft</SelectItem>
+                <SelectItem key="PUBLISHED" value="PUBLISHED">Published</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2 mb-2">
             <Label htmlFor="languageCode">Language</Label>
-            <Select value={currentPost.languageCode || process.env.DEFAULT_LANG} name="languageCode" disabled={currentPost.languageCode || languages.length <= 1}>
+            <Select defaultValue={currentPost.languageCode || process.env.DEFAULT_LANG} name="languageCode" disabled={currentPost.languageCode}>
               <SelectTrigger>
                 <SelectValue placeholder="Choose language" />
               </SelectTrigger>

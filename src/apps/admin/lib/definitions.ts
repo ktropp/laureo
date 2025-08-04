@@ -115,15 +115,16 @@ export type UserAddFormState =
     | undefined
 
 export const PostAddFormSchema = z.object({
+    id: z.string().optional(),
     type: z.string().trim(),
     status: z.string().trim(),
     title: z.string().trim(),
     slug: z.string().trim(),
     languageCode: z.string().trim(),
     blocks: z.string().trim(),
-    //metaTitle: z.string().trim(),
-    //metaDescription: z.string().trim(),
-    //metaKeywords: z.string().trim(),
+    metaTitle: z.string().optional(),
+    metaDescription: z.string().optional(),
+    metaKeywords: z.string().optional(),
 });
 
 export type PostAddFormState =
