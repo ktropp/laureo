@@ -54,7 +54,7 @@ model PostLang {
   status          PostStatus @default(DRAFT)
   title           String
   slug            String
-  blocks          Json
+  blocks          Json       @default("{}")
   searchText      String?
   metaTitle       String?
   metaDescription String?

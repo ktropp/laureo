@@ -7,6 +7,7 @@ import { postAdd } from "actions/postAdd";
 import { useActionState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "../../components/ui/select";
 import { Textarea } from "components/ui/textarea";
+import { postLangAdd } from "actions/postLangAdd";
 
 export function PostForm({ post, languages }: { post: Post, languages: Array }) {
   const [state, action, pending] = useActionState(postAdd, undefined);
@@ -21,11 +22,11 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
           <Input
             type="hidden"
             name="blocks"
-            defaultValue={currentPost.blocks || '{}'}
+            defaultValue={JSON.stringify(currentPost.blocks) || '{}'}
             required
           />
 
-          Json: {currentPost.blocks || '{}'}
+          Json: {JSON.stringify(currentPost.blocks) || '{}'}
 
         </div>
         <div className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
@@ -37,7 +38,7 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
             type="hidden"
             name="id"
             defaultValue={currentPost.id || ''}
-            />
+          />
 
           <Input
             type="hidden"
@@ -67,7 +68,7 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
               </SelectTrigger>
               <SelectContent>
                 {languages?.map(item => (
-                <SelectItem key={item} value={item}>{item}</SelectItem>
+                  <SelectItem key={item} value={item}>{item}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -138,6 +139,23 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
             />
           </div>
 
+          <div className="w-full border-b-1 border-slate-300 dark:border-slate-600 mt-4 mb-4"></div>
+
+          <h2 className="text-xl mt-5 font-semibold">Translations</h2>
+
+          {languages?.filter(lang => lang !== currentPost.languageCode).map((lang, index) => (
+            <div key={index} className="space-y2 mb-2">
+              <Label>{lang}</Label>
+              <div className="flex">
+                <Input
+                  type="text"
+                  disabled
+                  defaultValue="TODO"
+                />
+                <Button type="button" onClick={() => postLangAdd(currentPost.postId, lang)}>Create</Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </form>

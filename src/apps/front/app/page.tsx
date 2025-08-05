@@ -6,7 +6,7 @@ export async function generateMetadata({
 }: {
     params: { slug: string}
   }){
-  const post = await getPost('/', 'cs-CZ')
+  const post = await getPost('/', process.env.DEFAULT_LANG)
   return {
     title: post.metaTitle,
     description: post.metaDescription,
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }
 
 export default async function Home() {
-  const page = await getPost('/', 'cs-CZ')
+  const page = await getPost('/', process.env.DEFAULT_LANG)
 
   if(!page)
     notFound()

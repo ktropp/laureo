@@ -14,6 +14,7 @@ export default async function PostEditPost({
     },
     select: {
       id: true,
+      postId: true,
       status: true,
       title: true,
       slug: true,
