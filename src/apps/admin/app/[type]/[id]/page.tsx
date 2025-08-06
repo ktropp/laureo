@@ -15,6 +15,11 @@ export default async function PostEditPost({
     select: {
       id: true,
       postId: true,
+      post: {
+        include: {
+          translations: true
+        }
+      },
       status: true,
       title: true,
       slug: true,
@@ -32,5 +37,14 @@ export default async function PostEditPost({
 
   const languages = process.env.LANGUAGES?.split(',');
 
-  return <PostForm post={post} languages={languages} />
+  const mergedLanguages = languages.map(code => {
+    const match = post.post.translations.find(pl => pl.languageCode === code);
+    return {
+      languageCode: code,
+      postLang: match || null
+    }
+  })
+  console.log(mergedLanguages)
+
+  return <PostForm post={post} languages={mergedLanguages} />
 }

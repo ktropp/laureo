@@ -8,12 +8,12 @@ import { useActionState } from "react";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "../../components/ui/select";
 import { Textarea } from "components/ui/textarea";
 import { postLangAdd } from "actions/postLangAdd";
+import Link from "next/link";
 
 export function PostForm({ post, languages }: { post: Post, languages: Array }) {
   const [state, action, pending] = useActionState(postAdd, undefined);
 
   const currentPost = state?.data || post || {};
-
 
   return (
     <form action={action}>
@@ -68,7 +68,7 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
               </SelectTrigger>
               <SelectContent>
                 {languages?.map(item => (
-                  <SelectItem key={item} value={item}>{item}</SelectItem>
+                  <SelectItem key={item.languageCode} value={item.languageCode}>{item.languageCode}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -143,17 +143,15 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
 
           <h2 className="text-xl mt-5 font-semibold">Translations</h2>
 
-          {languages?.filter(lang => lang !== currentPost.languageCode).map((lang, index) => (
-            <div key={index} className="space-y2 mb-2">
-              <Label>{lang}</Label>
-              <div className="flex">
-                <Input
-                  type="text"
-                  disabled
-                  defaultValue="TODO"
-                />
-                <Button type="button" onClick={() => postLangAdd(currentPost.postId, lang)}>Create</Button>
-              </div>
+          {languages?.filter(lang => lang.languageCode !== currentPost.languageCode).map((lang, index) => (
+            <div key={index} className="flex items-center space-y2 mb-2">
+              <Label className="flex-[1_0_auto] mr-2 mb-0">{lang.languageCode}</Label>
+              <Input
+                type="text"
+                disabled
+                defaultValue={lang.postLang?.title || ''}
+              />
+              {lang.postLang ? (<Link href={`/${currentPost.post.type.toLowerCase()}/${lang.postLang.id}`}><Button type="button">Edit</Button></Link>) : (<Button type="button" onClick={() => postLangAdd(currentPost.postId, lang)}>Create</Button>)}
             </div>
           ))}
         </div>
