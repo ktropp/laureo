@@ -13,3 +13,10 @@
 .min-h-sidebar-height {
   min-height: calc(100vh - 48px);
 }
+
+[data-rich-text-placeholder]{
+
+  &:before{
+    content: attr(data-rich-text-placeholder);
+  }
+}

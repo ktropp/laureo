@@ -44,7 +44,6 @@ export default async function PostEditPost({
       postLang: match || null
     }
   })
-  console.log(mergedLanguages)
 
   return <PostForm post={post} languages={mergedLanguages} />
 }

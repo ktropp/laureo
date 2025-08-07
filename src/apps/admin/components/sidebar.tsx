@@ -29,7 +29,6 @@ const menuItems = [
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
     const pathname = usePathname()
-    console.log(pathname)
 
     return (
         <div className={`

@@ -12,8 +12,6 @@ export default async function middleware(req: NextRequest) {
     const response = await fetch(`${req.nextUrl.origin}/api/check-install`)
     const data = await response.json()
 
-    console.log(req.nextUrl.origin)
-
     if (!data.hasUsers && !req.nextUrl.pathname.startsWith('/install')) {
       return NextResponse.redirect(new URL('/install', req.nextUrl))
     } else if (data.hasUsers && req.nextUrl.pathname.startsWith('/install')) {

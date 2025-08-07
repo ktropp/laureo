@@ -9,6 +9,7 @@ import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from ".
 import { Textarea } from "components/ui/textarea";
 import { postLangAdd } from "actions/postLangAdd";
 import Link from "next/link";
+import { BlockAdd } from "blocks/BlockAdd";
 
 export function PostForm({ post, languages }: { post: Post, languages: Array }) {
   const [state, action, pending] = useActionState(postAdd, undefined);
@@ -27,6 +28,8 @@ export function PostForm({ post, languages }: { post: Post, languages: Array }) 
           />
 
           Json: {JSON.stringify(currentPost.blocks) || '{}'}
+
+          <BlockAdd></BlockAdd>
 
         </div>
         <div className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
