@@ -20,3 +20,7 @@
     content: attr(data-rich-text-placeholder);
   }
 }
+
+br:has(+ [data-rich-text-placeholder]){
+  display: none;
+}
