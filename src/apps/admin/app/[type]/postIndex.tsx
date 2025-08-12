@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "/components/ui/button";
+import { Button } from "components/ui/button";
 import Link from "next/link";
 import { CirclePlus, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { GridView } from "/components/gridview";
+import { GridView } from "components/gridview";
 import * as Dialog from '@radix-ui/react-dialog';
 import { postDelete } from "actions/postDelete";
 

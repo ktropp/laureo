@@ -18,7 +18,7 @@ const buttonVariants = cva(
           "bg-slate-800 text-slate-50 hover:bg-secondary/80 dark:bg-slate-50 dark:text-slate-950",
         ghost: "hover:bg-slate-200 hover:text-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50",
         link: "text-primary underline-offset-4 hover:underline",
-        menu: "text-slate-800 hover:bg-slate-200 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-slate-100 w-full justify-center xl:justify-start",
+        menu: "text-slate-800 hover:bg-slate-200 hover:text-slate-950 focus:bg-slate-200 focus:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-slate-100 dark:focus:bg-slate-900 dark:focus:text-slate-100 w-full justify-center xl:justify-start",
         menu_active: "bg-primary text-slate-50 shadow-sm w-full justify-center xl:justify-start"
       },
       size: {

@@ -1,9 +1,9 @@
 import { Button } from "components/ui/button"
 import { useEffect, useRef, useState } from "react";
-import { blockRegistry } from "./blockRegistry";
+import blockRegistry from "./blockRegistry";
+import { Plus } from "lucide-react";
 
 export const BlockAdd = () => {
-
   const inputRef = useRef<HTMLParagraphElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
@@ -32,8 +32,6 @@ export const BlockAdd = () => {
     checkIfEmpty();
   })
 
-  console.log(blockRegistry)
-
   return (
     <div className="flex justify-between items-center relative">
       <p
@@ -55,12 +53,17 @@ export const BlockAdd = () => {
             left: slashMenuPosition.left
           }}
         >
-          <Button variant="menu">Todo</Button>
-          <Button variant="menu">Todo</Button>
-          <Button variant="menu">Todo</Button>
+          {blockRegistry.map(({ type, name, icon: Icon, component: Block }, index) => (
+            <Button type="button" variant="menu" key={index}>
+              {Icon && <Icon size={20} />}
+              {name}
+            </Button>
+          ))}
         </div>
       )}
-      <Button className="absolute right-0">Add</Button>
+      <Button variant="secondary" className="absolute right-0">
+        <Plus></Plus>
+      </Button>
     </div>
   )
 }

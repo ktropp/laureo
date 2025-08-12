@@ -1,8 +1,15 @@
-const modules = import.meta.glob('./blocks/types/*.tsx', { eager: true });
+import { BlockMeta } from "./blockDefinitions";
 
-export const blockRegistry = Object.entries(modules).reduce((acc, [path, module]) => {
-  const blockType = module.default.type || path.split('/').pop()?.replace('.tsx', '');
-  acc[blockType] = module.default;
-  return acc;
-}, {} as Record<string, any>);
+const req = require.context('./types/', true, /\.tsx$/);
 
+type LoadedBlock = BlockMeta & { component: React.ComponentType };
+
+const blockRegistry: LoadedBlock[] = req.keys().map((file) => {
+  const mod = req(file);
+  return {
+    component: mod.default,
+    ...mod.blockConfig,
+  };
+});
+
+export default blockRegistry;

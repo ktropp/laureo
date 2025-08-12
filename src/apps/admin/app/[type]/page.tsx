@@ -1,4 +1,4 @@
-import { prisma } from "/lib/prisma";
+import { prisma } from "lib/prisma";
 import PostIndex from "./postIndex";
 
 export default async function PostsPost({ params, }: { params: { type: string } }) {
