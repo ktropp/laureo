@@ -1,8 +1,8 @@
 import { BlockMeta } from "blocks/blockDefinitions";
 import { Container } from "lucide-react";
 
-const ContainerBlock = ({ block }: { block: Block }) => {
-  return <div></div>
+const ContainerBlock = ({ children, block }: { block: Block }) => {
+  return <div className="max-w-5xl m-auto">{children}</div>
 };
 
 export const blockConfig: BlockMeta = {

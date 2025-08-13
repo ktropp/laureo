@@ -5,3 +5,8 @@ export interface BlockMeta {
   name: string;
   icon?: LucideIcon;
 }
+
+export interface BlockJson {
+  type: string;
+  children?: BlockJson[];
+}

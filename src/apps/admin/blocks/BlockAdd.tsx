@@ -2,13 +2,23 @@ import { Button } from "components/ui/button"
 import { useEffect, useRef, useState } from "react";
 import blockRegistry from "./blockRegistry";
 import { Plus } from "lucide-react";
-
-export const BlockAdd = () => {
+interface BlockAddProps {
+  onBlockAdd: (type: string) => void;
+}
+export const BlockAdd = ({ onBlockAdd }: BlockAddProps) => {
   const inputRef = useRef<HTMLParagraphElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [slashMenuPosition, setSlashMenuPosition] = useState({ top: 0, left: 0 });
 
+  const handleBlockSelection = (type: string) => {
+    onBlockAdd(type);
+    setShowSlashMenu(false);
+    if (inputRef.current) {
+      inputRef.current.textContent = '';
+    }
+    setIsEmpty(true);
+  }
   const checkIfEmpty = () => {
     const text = inputRef.current?.textContent || '';
     setIsEmpty(text.trim() === '');
@@ -54,7 +64,12 @@ export const BlockAdd = () => {
           }}
         >
           {blockRegistry.map(({ type, name, icon: Icon, component: Block }, index) => (
-            <Button type="button" variant="menu" key={index}>
+            <Button
+                type="button"
+                variant="menu"
+                key={index}
+                onClick={() => handleBlockSelection(type)}
+            >
               {Icon && <Icon size={20} />}
               {name}
             </Button>

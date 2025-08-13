@@ -45,6 +45,8 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
 
   const { type, title, slug, status, blocks, metaTitle, metaDescription, metaKeywords } = validatedFields.data;
 
+  const blocksParsed = JSON.parse(blocks)
+
   const author = await currentUser()
 
   if (dataFromForm.id) {
@@ -57,7 +59,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
         status: status,
         title: title,
         slug: slug,
-        blocks: blocks,
+        blocks: blocksParsed,
         metaTitle: metaTitle,
         metaDescription: metaDescription,
         metaKeywords: metaKeywords,
