@@ -2,8 +2,10 @@ import { Button } from "components/ui/button"
 import { useEffect, useRef, useState } from "react";
 import blockRegistry from "./blockRegistry";
 import { Plus } from "lucide-react";
+import {BlockJson, BlockMeta} from "./blockDefinitions";
 interface BlockAddProps {
-  onBlockAdd: (type: string) => void;
+  onBlockAdd: (block: BlockJson) => void;
+  parentBlock?: BlockJson;
 }
 export const BlockAdd = ({ onBlockAdd }: BlockAddProps) => {
   const inputRef = useRef<HTMLParagraphElement>(null);
@@ -63,20 +65,20 @@ export const BlockAdd = ({ onBlockAdd }: BlockAddProps) => {
             left: slashMenuPosition.left
           }}
         >
-          {blockRegistry.map(({ type, name, icon: Icon, component: Block }, index) => (
+          {blockRegistry.map((block, index) => (
             <Button
                 type="button"
                 variant="menu"
                 key={index}
-                onClick={() => handleBlockSelection(type)}
+                onClick={() => handleBlockSelection(block.type)}
             >
-              {Icon && <Icon size={20} />}
-              {name}
+              {block.icon && <block.icon size={20} />}
+              {block.name}
             </Button>
           ))}
         </div>
       )}
-      <Button variant="secondary" className="absolute right-0">
+      <Button variant="secondary" size="icon_small" className="absolute right-0">
         <Plus></Plus>
       </Button>
     </div>

@@ -18,11 +18,28 @@ export function PostForm({post, languages}: { post: Post, languages: Array }) {
     const [state, action, pending] = useActionState(postAdd, undefined);
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
 
-    const handleBlockAdd = (type: string) => {
+    const handleBlockAdd = (type: string, parentId?: number) => {
         const newBlock: BlockJson = {
-            type: type,
-        };
-        setBlocks(prev => [...prev, newBlock]);
+            type: type
+        }
+
+        if (parentId !== undefined) {
+            // Add block as a child to the specified parent
+            setBlocks(prev => {
+                return prev.map((block, index) => {
+                    if (index === parentId) {
+                        return {
+                            ...block,
+                            children: [...(block.children || []), newBlock]
+                        };
+                    }
+                    return block;
+                });
+            });
+        } else {
+            // Add block at the root level
+            setBlocks(prev => [...prev, newBlock]);
+        }
     };
 
     const currentPost = state?.data || post || {};
@@ -38,8 +55,20 @@ export function PostForm({post, languages}: { post: Post, languages: Array }) {
             <div className="flex justify-between">
                 <div className="w-full">
                     {blocks?.map((block, index) => (
-                        <BaseBlock key={index} block={block}>
-                            {block.type}
+                        <BaseBlock
+                            key={index}
+                            blockJson={block}
+                            onBlockAdd={(newBlock) => handleBlockAdd(newBlock, index)}
+                        >
+                            {block.children?.map((childBlock, childIndex) => (
+                                <BaseBlock
+                                    key={`${index}-${childIndex}`}
+                                    blockJson={childBlock}
+                                    onBlockAdd={(newBlock) => handleBlockAdd(newBlock, index)}
+                                >
+                                    {childBlock.children}
+                                </BaseBlock>
+                            ))}
                         </BaseBlock>
                     ))}
                     <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>

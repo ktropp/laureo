@@ -8,7 +8,8 @@ const ContainerBlock = ({ children, block }: { block: Block }) => {
 export const blockConfig: BlockMeta = {
   type: 'container',
   name: 'Container',
-  icon: Container 
+  icon: Container,
+  isParent: true
 };
 
 export default ContainerBlock;
