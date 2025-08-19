@@ -1,6 +1,6 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {Pilcrow} from "lucide-react";
-import {cn} from "lib/utils";
+import {cn} from "../../lib/utils";
 
 const ParagraphBlock = ({block, className, ...props}: BlockProps) => {
     return <p

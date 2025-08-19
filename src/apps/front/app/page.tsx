@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPost } from "../actions/data";
+import Page from "components/page";
 
 export async function generateMetadata({
   params,
@@ -21,6 +22,6 @@ export default async function Home() {
     notFound()
 
   return (
-    <div>Page: {page.id}</div>
+      <Page page={page}/>
   )
 }

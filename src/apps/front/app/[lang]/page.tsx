@@ -7,10 +7,11 @@ export async function generateMetadata({
 }: {
     params: { lang: string}
   }){
-  let page = await getPost(params.lang, process.env.DEFAULT_LANG)
+  const param = await params;
+  let page = await getPost(param.lang, process.env.DEFAULT_LANG)
 
   if(!(page))
-    page = await getPost('/', params.lang)
+    page = await getPost('/', param.lang)
 
   return {
     title: page?.metaTitle,
@@ -24,10 +25,11 @@ export default async function Page({
 }: {
     params: { lang: string }
 }) {
-  let page = await getPost(params.lang, process.env.DEFAULT_LANG)
+  const param = await params;
+  let page = await getPost(param.lang, process.env.DEFAULT_LANG)
 
   if(!(page)){
-    page = await getPost('/', params.lang)
+    page = await getPost('/', param.lang)
 
     if(!page){
       notFound()

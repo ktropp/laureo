@@ -12,7 +12,6 @@ import Link from "next/link";
 import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
-import blockRegistry from "../../blocks/blockRegistry";
 
 export function PostForm({post, languages}: { post: Post, languages: Array }) {
     const [state, action, pending] = useActionState(postAdd, undefined);
