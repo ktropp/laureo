@@ -7,11 +7,15 @@ export interface BlockMeta {
   icon?: LucideIcon;
   isParent?: boolean; // if true, can have nested blocks
   isText?: boolean; // if true, is editable as text
+  tagName?: string; // tagName for editable
+  className?: string; // default classes
 }
 
 export interface BlockJson {
   type: string;
   text?: string;
+  tagName?: string;
+  className?: string;
   children?: BlockJson[];
 }
 

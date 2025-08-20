@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
+@source "../../../../theme/*.ts";
+@source "../../../../theme/*.tsx";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
     --color-primary: oklch(0.511 0.096 186.391);
+}
+
+.fe-theme {
+    @theme{
+
+    }
 }
 
 .min-h-content-height {
@@ -11,16 +20,16 @@
 }
 
 .min-h-sidebar-height {
-  min-height: calc(100vh - 48px);
+    min-height: calc(100vh - 48px);
 }
 
-[data-rich-text-placeholder]{
+[data-rich-text-placeholder] {
 
-  &:before{
-    content: attr(data-rich-text-placeholder);
-  }
+    &:before {
+        content: attr(data-rich-text-placeholder);
+    }
 }
 
-br:has(+ [data-rich-text-placeholder]){
-  display: none;
+br:has(+ [data-rich-text-placeholder]) {
+    display: none;
 }

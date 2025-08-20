@@ -12,33 +12,88 @@ import Link from "next/link";
 import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
+import {Settings} from "../../../../../theme/settings";
 
 export function PostForm({post, languages}: { post: Post, languages: Array }) {
     const [state, action, pending] = useActionState(postAdd, undefined);
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
 
-    const handleBlockAdd = (type: string, parentId?: number) => {
+    const handleBlockAdd = (type: string, parentIndex?: string) => {
         const newBlock: BlockJson = {
             type: type
-        }
+        };
 
-        if (parentId !== undefined) {
-            // Add block as a child to the specified parent
+        if (parentIndex !== undefined) {
             setBlocks(prev => {
-                return prev.map((block, index) => {
-                    if (index === parentId) {
-                        return {
-                            ...block,
-                            children: [...(block.children || []), newBlock]
-                        };
+                const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
+                    return blocks.map((block, index) => {
+                        if (index.toString() === indices[0]) {
+                            if (indices.length === 1) {
+                                return {
+                                    ...block,
+                                    children: [...(block.children || []), newBlock]
+                                };
+                            } else {
+                                return {
+                                    ...block,
+                                    children: updateBlocksRecursively(block.children || [], indices.slice(1))
+                                };
+                            }
+                        }
+                        return block;
+                    });
+                };
+
+                const indices = parentIndex.split('-');
+                return updateBlocksRecursively(prev, indices);
+            });
+        } else {
+            setBlocks(prev => [...prev, newBlock]);
+        }
+    };
+
+    const handleBlockTextChange = (text: string, blockIndex: string) => {
+        setBlocks(prev => {
+            const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
+                return blocks.map((block, index) => {
+                    if (index.toString() === indices[0]) {
+                        if (indices.length === 1) {
+                            return {
+                                ...block,
+                                text: text
+                            };
+                        } else {
+                            return {
+                                ...block,
+                                children: updateBlocksRecursively(block.children || [], indices.slice(1))
+                            };
+                        }
                     }
                     return block;
                 });
-            });
-        } else {
-            // Add block at the root level
-            setBlocks(prev => [...prev, newBlock]);
-        }
+            };
+
+            const indices = blockIndex.split('-');
+            return updateBlocksRecursively(prev, indices);
+        });
+    };
+
+
+    const renderBlocks = (blocks: BlockJson[], parentIndex: string = '') => {
+        return blocks?.map((block, index) => {
+            const currentIndex = parentIndex ? `${parentIndex}-${index}` : `${index}`;
+
+            return (
+                <BaseBlock
+                    key={currentIndex}
+                    blockJson={block}
+                    onBlockAdd={(newBlock) => handleBlockAdd(newBlock, currentIndex)}
+                    onContentChange={(text) => handleBlockTextChange(text, currentIndex)}
+                >
+                    {block.children && renderBlocks(block.children, currentIndex)}
+                </BaseBlock>
+            );
+        });
     };
 
     const currentPost = state?.data || post || {};
@@ -53,24 +108,12 @@ export function PostForm({post, languages}: { post: Post, languages: Array }) {
             />
             <div className="flex justify-between">
                 <div className="w-full">
-                    {blocks?.map((block, index) => (
-                        <BaseBlock
-                            key={index}
-                            blockJson={block}
-                            onBlockAdd={(newBlock) => handleBlockAdd(newBlock, index)}
-                        >
-                            {block.children?.map((childBlock, childIndex) => (
-                                <BaseBlock
-                                    key={`${index}-${childIndex}`}
-                                    blockJson={childBlock}
-                                    onBlockAdd={(newBlock) => handleBlockAdd(newBlock, index)}
-                                >
-                                    {childBlock.children}
-                                </BaseBlock>
-                            ))}
-                        </BaseBlock>
-                    ))}
-                    <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
+                    <div className="fe-theme">
+                        <div className={Settings.bodyClass}>
+                            {renderBlocks(blocks)}
+                            <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
+                        </div>
+                    </div>
                 </div>
                 <div
                     className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
