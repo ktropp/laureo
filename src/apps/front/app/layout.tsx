@@ -1,6 +1,3 @@
-//TODO:
-// import css from theme
-//
 import type {Metadata} from "next";
 import "@theme/globals.css";
 import {Settings} from "@theme/settings";
