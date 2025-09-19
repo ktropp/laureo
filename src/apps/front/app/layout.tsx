@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-                                       children,
-                                   }: Readonly<{
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
 
@@ -26,10 +26,14 @@ export default async function RootLayout({
         //TODO: change lang to actual language
         <html lang={locale}>
         <body
-            className={`${bodyClass} antialiased`}
+            className={`${bodyClass} flex flex-col min-h-screen antialiased`}
         >
-        <Header/>
-        {children}
+        <div className="flex-[1_0_auto]">
+            <Header/>
+            <main>
+                {children}
+            </main>
+        </div>
         <Footer/>
         </body>
         </html>
