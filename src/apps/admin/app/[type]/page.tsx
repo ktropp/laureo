@@ -1,7 +1,7 @@
 import { prisma } from "lib/prisma";
 import PostIndex from "./postIndex";
 
-export default async function PostsPost({ params, }: { params: { type: string } }) {
+export default async function PostsPage({ params, }: { params: { type: string } }) {
   const data = await prisma.postLang.findMany({
     select: {
       id: true,

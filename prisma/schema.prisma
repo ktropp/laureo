@@ -21,6 +21,7 @@ model User {
   uploadedMedia  Media[]  @relation("MediaAuthor")
   posts          Post[]
   profilePhoto   Media?   @relation("UserProfile", fields: [profilePhotoId], references: [id])
+  Menu           Menu[]
 }
 
 model Media {
@@ -63,6 +64,42 @@ model PostLang {
 
   @@unique([postId, languageCode])
   @@index([languageCode])
+}
+
+model Menu {
+  id           Int        @id @default(autoincrement())
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  location     String?
+  authorId     Int
+  author       User       @relation(fields: [authorId], references: [id])
+  translations MenuLang[]
+}
+
+model MenuLang {
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  menuId       Int
+  languageCode String         @db.VarChar(5)
+  title        String
+  menu         Menu           @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  items        MenuLangItem[]
+
+  @@unique([menuId, languageCode])
+  @@index([languageCode])
+}
+
+model MenuLangItem {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  menuLangId Int
+  title      String
+  url        String
+  order      Int      @default(0)
+
+  menuLang MenuLang @relation(fields: [menuLangId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

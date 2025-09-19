@@ -155,3 +155,25 @@ export type PostAddFormState =
 }
     | undefined
 
+export const MenuAddFormSchema = z.object({
+    id: z.string().optional(),
+    location: z.string().trim(),
+    title: z.string().trim(),
+    languageCode: z.string().trim(),
+});
+
+export type MenuAddFormState =
+    | {
+    errors?: {
+        location?: string[]
+        title?: string[]
+        languageCode?: string[]
+    }
+    message?: string
+    data?: {
+        location: string
+        title: string
+        languageCode: string
+    }
+}
+    | undefined
