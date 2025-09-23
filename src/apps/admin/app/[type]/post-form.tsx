@@ -14,7 +14,20 @@ import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
 import {Settings} from "../../../../../theme/settings";
 
-export function PostForm({post, languages}: { post: Post, languages: Array }) {
+export function PostForm({post}: { post: Post }) {
+    const languages = Settings.languages;
+    let translations;
+    if (post.post) {
+        translations = Settings.languages.map(code => {
+            const match = post.post.translations.find(pl => pl.languageCode === code);
+            return {
+                languageCode: code,
+                postLang: match || null
+            }
+        })
+    }
+    const defaultLanguage = Settings.defaultLanguage;
+
     const [state, action, pending] = useActionState(postAdd, undefined);
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
 
@@ -149,15 +162,15 @@ export function PostForm({post, languages}: { post: Post, languages: Array }) {
 
                     <div className="space-y-2 mb-2">
                         <Label htmlFor="languageCode">Language</Label>
-                        <Select defaultValue={currentPost.languageCode || process.env.DEFAULT_LANG} name="languageCode"
+                        <Select defaultValue={currentPost.languageCode || defaultLanguage} name="languageCode"
                                 disabled={currentPost.languageCode}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Choose language"/>
                             </SelectTrigger>
                             <SelectContent>
                                 {languages?.map(item => (
-                                    <SelectItem key={item.languageCode}
-                                                value={item.languageCode}>{item.languageCode}</SelectItem>
+                                    <SelectItem key={item}
+                                                value={item}>{item}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -232,7 +245,7 @@ export function PostForm({post, languages}: { post: Post, languages: Array }) {
 
                     <h2 className="text-xl mt-5 font-semibold">Translations</h2>
 
-                    {languages?.filter(lang => lang.languageCode !== currentPost.languageCode).map((lang, index) => (
+                    {translations?.filter(lang => lang.languageCode !== currentPost.languageCode).map((lang, index) => (
                         <div key={index} className="flex items-center space-y2 mb-2">
                             <Label className="flex-[1_0_auto] mr-2 mb-0">{lang.languageCode}</Label>
                             <Input

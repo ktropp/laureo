@@ -2,7 +2,7 @@
 import { PostForm } from "../post-form"
 import { prisma } from "lib/prisma";
 
-export default async function PostEditPost({
+export default async function PostEditPage({
     params,
 }: {
     params: { id: string }
@@ -35,15 +35,5 @@ export default async function PostEditPost({
     throw new Error('Post not found');
   }
 
-  const languages = process.env.LANGUAGES?.split(',');
-
-  const mergedLanguages = languages.map(code => {
-    const match = post.post.translations.find(pl => pl.languageCode === code);
-    return {
-      languageCode: code,
-      postLang: match || null
-    }
-  })
-
-  return <PostForm post={post} languages={mergedLanguages} />
+  return <PostForm post={post} />
 }

@@ -68,7 +68,7 @@ export async function menuAdd(state: MenuAddFormState, formData: FormData) {
 
         const resultLang = await prisma.menuLang.create({
             data: {
-                postId: result.id,
+                menuId: result.id,
                 languageCode: process.env.DEFAULT_LANG,
                 title: title,
             },

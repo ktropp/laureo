@@ -31,7 +31,7 @@ export default function MenuIndex({ type, initialData }) {
       render: (value, row) => (
         <div className="flex gap-2">
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/${type}/${row.id}`}>
+            <Link href={`/menu/${row.id}`}>
               <Edit className="h-4 w-4" />
             </Link>
           </Button>

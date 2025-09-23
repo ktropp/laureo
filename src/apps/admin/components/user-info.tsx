@@ -35,8 +35,20 @@ export function UserInfo() {
         fetchUser()
     }, [])
 
+
     if (loading) {
-        return null // Or return a loading spinner
+        return (
+            <>
+                <Avatar className="h-8 w-8">
+                    <AvatarImage src={undefined}/>
+                    <AvatarFallback></AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
+                    <p className="text-sm font-medium truncate"></p>
+                    <p className="text-xs text-slate-800 dark:text-slate-200 truncate"></p>
+                </div>
+            </>
+        )
     }
 
     if (!user) {
@@ -51,7 +63,7 @@ export function UserInfo() {
             </Avatar>
             <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
                 <p className="text-sm font-medium truncate">{(user.name + ' ' + user.surname) || user.email}</p>
-                <p className="text-xs text-slate-800 dark:text-slate-200 truncate">{user.role}</p>
+                <p className="text-xs text-slate-800 dark:text-slate-200 truncate capitalize">{user.role.toLowerCase()}</p>
             </div>
         </>
     )

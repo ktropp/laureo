@@ -8,21 +8,35 @@ import {postLangAdd} from "actions/postLangAdd";
 import Link from "next/link";
 import {Settings} from "../../../../../theme/settings";
 import {useActionState} from "react";
-import { menuAdd } from "actions/menuAdd";
+import {menuAdd} from "actions/menuAdd";
+import MenuBuilder from "components/menu/MenuBuilder";
 
-export function MenuForm({menu, languages}: { menu: Menu, languages: Array }) {
+export function MenuForm({menu}: { menu: Menu }) {
+    const languages = Settings.languages;
+    let translations;
+    if (menu.menu) {
+        translations = Settings.languages.map(code => {
+            const match = menu.menu.translations.find(pl => pl.languageCode === code);
+            return {
+                languageCode: code,
+                postLang: match || null
+            }
+        });
+    }
+    const defaultLanguage = Settings.defaultLanguage;
+
     const [state, action, pending] = useActionState(menuAdd, undefined);
 
     const currentMenu = state?.data || menu || {};
 
     return (
-        <form action={action}>
-            <div className="flex justify-between">
-                <div className="w-full">
-                    TODO: menu items with children and drag and drop
-                </div>
-                <div
-                    className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
+        <div className="flex justify-between">
+            <div className="w-full">
+                <MenuBuilder menuLang={menu} />
+            </div>
+            <div
+                className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
+                <form action={action}>
                     <Button type="submit" disabled={pending} className="mb-2">
                         Save
                     </Button>
@@ -35,7 +49,8 @@ export function MenuForm({menu, languages}: { menu: Menu, languages: Array }) {
 
                     <div className="space-y-2 mb-2">
                         <Label htmlFor="location">Location</Label>
-                        <Select defaultValue={currentMenu.location || ''} name="location">
+                        <Select defaultValue={currentMenu.menu?.location || ''} disabled={currentMenu.menu?.location}
+                                name="location">
                             <SelectTrigger>
                                 <SelectValue placeholder="Choose location"/>
                             </SelectTrigger>
@@ -50,15 +65,15 @@ export function MenuForm({menu, languages}: { menu: Menu, languages: Array }) {
 
                     <div className="space-y-2 mb-2">
                         <Label htmlFor="languageCode">Language</Label>
-                        <Select defaultValue={currentMenu.languageCode || process.env.DEFAULT_LANG} name="languageCode"
+                        <Select defaultValue={currentMenu.languageCode || defaultLanguage} name="languageCode"
                                 disabled={currentMenu.languageCode}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Choose language"/>
                             </SelectTrigger>
                             <SelectContent>
                                 {languages?.map(item => (
-                                    <SelectItem key={item.languageCode}
-                                                value={item.languageCode}>{item.languageCode}</SelectItem>
+                                    <SelectItem key={item}
+                                                value={item}>{item}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -81,22 +96,22 @@ export function MenuForm({menu, languages}: { menu: Menu, languages: Array }) {
 
                     <h2 className="text-xl mt-5 font-semibold">Translations</h2>
 
-                    {languages?.filter(lang => lang.languageCode !== currentPost.languageCode).map((lang, index) => (
+                    {translations?.filter(lang => lang.languageCode !== currentMenu.languageCode).map((lang, index) => (
                         <div key={index} className="flex items-center space-y2 mb-2">
                             <Label className="flex-[1_0_auto] mr-2 mb-0">{lang.languageCode}</Label>
                             <Input
                                 type="text"
                                 disabled
-                                defaultValue={lang.postLang?.title || ''}
+                                defaultValue={lang.menuLang?.title || ''}
                             />
-                            {lang.postLang ? (
-                                <Link href={`/${currentPost.post?.type.toLowerCase()}/${lang.postLang.id}`}><Button
+                            {lang.menuLang ? (
+                                <Link href={`/menu/${lang.menuLang.id}`}><Button
                                     type="button">Edit</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => postLangAdd(currentPost.postId, lang)}>Create</Button>)}
+                                                                                   onClick={() => postLangAdd(currentMenu.postId, lang)}>Create</Button>)}
                         </div>
                     ))}
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     )
 }
