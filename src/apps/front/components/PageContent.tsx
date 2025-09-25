@@ -1,6 +1,6 @@
 import blockRegistry from "admin/blocks/blockRegistry";
 
-export default function Page({page}) {
+export default function PageContent({page}) {
     return (
         <>
             {page.blocks?.map((blockJson, index) => {

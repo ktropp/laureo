@@ -4,6 +4,7 @@ import {Settings} from "@theme/settings";
 import Header from "@theme/header";
 import Footer from "@theme/footer";
 import {getLocale} from "next-intl/server";
+import {NextIntlClientProvider} from "next-intl";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -15,26 +16,29 @@ export default async function RootLayout({
                                          }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     let bodyClass = Settings.bodyClass;
     Settings.fonts.forEach(font => {
         bodyClass = bodyClass.concat(" ", font.variable)
     });
     const locale = await getLocale();
+    console.log(locale)
 
     return (
         //TODO: change lang to actual language
+        //https://next-intl.dev/docs/routing/setup
         <html lang={locale}>
         <body
             className={`${bodyClass} flex flex-col min-h-screen antialiased`}
         >
-        <div className="flex-[1_0_auto]">
-            <Header/>
-            <main>
-                {children}
-            </main>
-        </div>
-        <Footer/>
+        <NextIntlClientProvider>
+            <div className="flex-[1_0_auto]">
+                <Header/>
+                <main>
+                    {children}
+                </main>
+            </div>
+            <Footer/>
+        </NextIntlClientProvider>
         </body>
         </html>
     );

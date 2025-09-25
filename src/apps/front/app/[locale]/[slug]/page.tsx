@@ -4,9 +4,9 @@ import { getPost } from "actions/data"
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: string, slug: string }
+  params: { locale: string, slug: string }
 }) {
-  const page = await getPost(params.slug, params.lang)
+  const page = await getPost(params.slug, params.locale)
   return {
     title: page?.metaTitle,
     description: page?.metaDescription,
@@ -17,9 +17,9 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: { lang: string, slug: string }
+  params: { locale: string, slug: string }
 }) {
-  const page = await getPost(params.slug, params.lang)
+  const page = await getPost(params.slug, params.locale)
 
   if (!page)
     notFound()
