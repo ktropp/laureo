@@ -15,10 +15,10 @@ export async function POST(
                 url: data.url,
                 order: data.order
             }
-        })
+        });
 
         return NextResponse.json(resultLang);
     } catch (error) {
-        return NextResponse.json({error: 'Internal server error'}, {status: 500})
+        return NextResponse.json({error: 'Internal server error: ' + error}, {status: 500})
     }
 }

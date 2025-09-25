@@ -98,8 +98,11 @@ model MenuLangItem {
   title      String
   url        String
   order      Int      @default(0)
+  parentId   Int?
 
-  menuLang MenuLang @relation(fields: [menuLangId], references: [id], onDelete: Cascade)
+  parent   MenuLangItem?  @relation("MenuItemChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children MenuLangItem[] @relation("MenuItemChildren")
+  menuLang MenuLang       @relation(fields: [menuLangId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

@@ -2,13 +2,81 @@ import {SimpleTreeItemWrapper, SortableTree, TreeItemComponentProps} from "dnd-k
 import {Button} from "components/ui/button";
 import {Input} from "components/ui/input";
 import {Label} from "components/ui/label";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {MenuLang, MenuLangItem} from "@prisma/client";
 
-function MenuBuilder({menuLang}: { menuLang: MenuLang}) {
-    const [items, setItems] = useState<MenuLangItem[]>(menuLang.items || [] as MenuLangItem[]);
+// Helper function to build tree structure
+const buildTree = (items: MenuLangItem[]): MenuLangItem[] => {
+    // First, sort all items by order
+    const sortedItems = [...items].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    // Create a map for quick lookup
+    const itemMap = new Map<string, MenuLangItem>();
+    sortedItems.forEach(item => {
+        itemMap.set(item.id, {...item, children: []});
+    });
+
+    // Build the tree structure
+    const tree: MenuLangItem[] = [];
+
+    sortedItems.forEach(item => {
+        const itemWithChildren = itemMap.get(item.id)!;
+
+        if (item.parentId === null) {
+            tree.push(itemWithChildren);
+        } else {
+            const parent = itemMap.get(item.parentId);
+            if (parent) {
+                if (!parent.children) {
+                    parent.children = [];
+                }
+                parent.children.push(itemWithChildren);
+            }
+        }
+    });
+
+    return tree;
+};
+
+const updateItemInTree = (items: MenuLangItem[], itemToUpdate: MenuLangItem): MenuLangItem[] => {
+    return items.map(item => {
+        if (item.id === itemToUpdate.id) {
+            return {...itemToUpdate, children: item.children};
+        }
+        if (item.children && item.children.length > 0) {
+            return {
+                ...item,
+                children: updateItemInTree(item.children, itemToUpdate)
+            };
+        }
+        return item;
+    });
+};
+
+const deleteItemFromTree = (items: MenuLangItem[], idToDelete: string): MenuLangItem[] => {
+    return items.filter(item => {
+        if (item.id === idToDelete) {
+            return false;
+        }
+        if (item.children && item.children.length > 0) {
+            item.children = deleteItemFromTree(item.children, idToDelete);
+        }
+        return true;
+    });
+};
+
+function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
+    const [items, setItems] = useState<MenuLangItem[]>([]);
     const [newItem, setNewItem] = useState({title: '', url: ''});
 
+
+    useEffect(() => {
+        if (menuLang.items) {
+            // Convert flat array to tree structure when component mounts or menuLang.items changes
+            const treeItems = buildTree(menuLang.items);
+            setItems(treeItems);
+        }
+    }, [menuLang.items]);
 
     const updateItems = async (newItems: MenuLangItem[]) => {
         setItems(newItems);
@@ -28,7 +96,7 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang}) {
         } catch (error) {
             //toast.error('Failed to save menu items');
             // Optionally revert the state if save fails
-            setItems(items);
+            //setItems(items);
         }
     };
 
@@ -52,34 +120,34 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang}) {
                 throw new Error('Failed to save menu items');
             }
 
-            setItems([...items, response]);
+            const resultLang = await response.json();
+            setItems([...items, resultLang as MenuLangItem]);
+            setNewItem({title: '', url: ''});
         } catch (error) {
             //toast.error('Failed to save menu items');
             // Optionally revert the state if save fails
             //setItems(items);
         }
-
-        setNewItem({title: '', url: ''});
     };
 
 
     const TreeItem = React.forwardRef<
         HTMLDivElement,
-        TreeItemComponentProps<MenuItemType>
+        TreeItemComponentProps<MenuLangItem>
     >((props, ref) => {
         const [isEditing, setIsEditing] = useState(false);
         const [editedItem, setEditedItem] = useState(props.item);
         const handleSave = () => {
-            updateItems(items.map(item =>
-                item.id === props.item.id ? editedItem : item)
-            );
+            const updatedItems = updateItemInTree(items, editedItem);
+            updateItems(updatedItems);
             setIsEditing(false);
         };
         const handleDelete = (id: string) => {
-            updateItems(items.filter(item => item.id !== id));
+            const updatedItems = deleteItemFromTree(items, id);
+            updateItems(updatedItems);
         };
         return (
-            <SimpleTreeItemWrapper {...props} ref={ref} className="flex-1 w-full">
+            <SimpleTreeItemWrapper key={props.item.id} {...props} ref={ref} className="flex-1 w-full">
                 <div className="flex-1 ml-2 flex items-center justify-between">
                     {isEditing ? (
                         <div className="flex-1 flex items-center space-x-2">
@@ -115,7 +183,8 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang}) {
     });
     return (
         <div className="space-y-4">
-            <form onSubmit={handleAddItem} className="space-y-4 p-4 border rounded-md">
+            <form onSubmit={handleAddItem}
+                  className="space-y-4 p-4 border border-slate-300 dark:border-slate-600 rounded-md">
                 <div>
                     <Label htmlFor="menuTitle">Menu Item Title</Label>
                     <Input
@@ -139,7 +208,7 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang}) {
                 <Button type="submit">Add Menu Item</Button>
             </form>
 
-            <div className="border rounded-md p-4 flex gap-2 flex-col">
+            <div className="flex gap-2 flex-col">
                 <SortableTree
                     items={items}
                     onItemsChanged={updateItems}

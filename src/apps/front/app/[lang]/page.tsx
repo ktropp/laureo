@@ -1,6 +1,7 @@
 
 import { notFound } from "next/navigation"
 import { getPost } from "actions/data"
+import {Settings} from "@theme/settings";
 
 export async function generateMetadata({
   params,
@@ -8,7 +9,7 @@ export async function generateMetadata({
     params: { lang: string}
   }){
   const param = await params;
-  let page = await getPost(param.lang, process.env.DEFAULT_LANG)
+  let page = await getPost(param.lang, Settings.defaultLanguage)
 
   if(!(page))
     page = await getPost('/', param.lang)
@@ -26,7 +27,7 @@ export default async function Page({
     params: { lang: string }
 }) {
   const param = await params;
-  let page = await getPost(param.lang, process.env.DEFAULT_LANG)
+  let page = await getPost(param.lang, Settings.defaultLanguage)
 
   if(!(page)){
     page = await getPost('/', param.lang)
