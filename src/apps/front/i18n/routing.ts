@@ -9,5 +9,8 @@ export const routing = defineRouting({
   defaultLocale: Settings.defaultLanguage.slice(0, 2),
 
   // Don't show locale in default locale
-  localePrefix: 'as-needed'
+  localePrefix: 'as-needed',
+
+  // Disable locale detection
+  localeDetection: false
 });
