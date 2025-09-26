@@ -2,7 +2,6 @@ import { Settings } from "@theme/settings";
 import { prisma } from "../lib/prisma"
 import { cache } from 'react'
 
-
 export const getPost = cache(async (slug: string, languageCode: string) => {
   const languages = Settings.languages;
   let langCode = languageCode;
@@ -22,3 +21,15 @@ export const getPost = cache(async (slug: string, languageCode: string) => {
   })
   return res
 })
+
+export const getLanguageCode = (locale: string) => {
+  let langCode = locale;
+  const languages = Settings.languages;
+    languages.forEach(lang => {
+      if(locale == lang.slice(0, 2)){
+        langCode = lang;
+      }
+    });
+
+    return langCode;
+}

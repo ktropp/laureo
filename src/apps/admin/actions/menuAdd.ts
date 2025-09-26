@@ -4,6 +4,7 @@ import {currentUser} from "lib/session";
 import {MenuAddFormSchema, MenuAddFormState} from "../lib/definitions";
 import {prisma} from "../lib/prisma";
 import {redirect} from "next/navigation";
+import {Settings} from "../../../../theme/settings";
 
 export async function menuAdd(state: MenuAddFormState, formData: FormData) {
     // data from form
@@ -37,13 +38,13 @@ export async function menuAdd(state: MenuAddFormState, formData: FormData) {
         }
     }
 
-    const {location, title} = validatedFields.data;
+    const {location, title, languageCode} = validatedFields.data;
 
     const author = await currentUser()
 
     if (dataFromForm.id) {
         //update
-        const resultLang = await prisma.menuLang.update({
+        await prisma.menuLang.update({
             where: {
                 id: parseInt(dataFromForm.id)
             },
@@ -69,7 +70,7 @@ export async function menuAdd(state: MenuAddFormState, formData: FormData) {
         const resultLang = await prisma.menuLang.create({
             data: {
                 menuId: result.id,
-                languageCode: process.env.DEFAULT_LANG,
+                languageCode: languageCode || Settings.defaultLanguage,
                 title: title,
             },
             select: {

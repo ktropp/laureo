@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPost } from "actions/data";
 import PageContent from "components/PageContent";
-import {Settings} from "@theme/settings";
 
 export async function generateMetadata({
   params,

@@ -4,6 +4,7 @@ import { currentUser } from "lib/session";
 import { PostAddFormSchema, PostAddFormState } from "../lib/definitions";
 import { prisma } from "../lib/prisma";
 import { redirect } from "next/navigation";
+import {Settings} from "../../../../theme/settings";
 
 export async function postAdd(state: PostAddFormState, formData: FormData) {
   // data from form
@@ -43,7 +44,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
     }
   }
 
-  const { type, title, slug, status, blocks, metaTitle, metaDescription, metaKeywords } = validatedFields.data;
+  const { type, title, slug, status, blocks, metaTitle, metaDescription, metaKeywords, languageCode } = validatedFields.data;
 
   const blocksParsed = JSON.parse(blocks)
 
@@ -51,7 +52,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
 
   if (dataFromForm.id) {
     //update 
-    const resultLang = await prisma.postLang.update({
+    await prisma.postLang.update({
       where: {
         id: parseInt(dataFromForm.id)
       },
@@ -82,7 +83,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
     const resultLang = await prisma.postLang.create({
       data: {
         postId: result.id,
-        languageCode: process.env.DEFAULT_LANG,
+        languageCode: languageCode || Settings.defaultLanguage,
         status: status,
         title: title,
         slug: slug,
