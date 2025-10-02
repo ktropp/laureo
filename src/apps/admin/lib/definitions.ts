@@ -157,7 +157,7 @@ export type PostAddFormState =
 
 export const MenuAddFormSchema = z.object({
     id: z.string().optional(),
-    location: z.string().trim(),
+    location: z.string().nullish(),
     title: z.string().trim(),
     languageCode: z.string().trim(),
 });

@@ -1,8 +1,7 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Heading} from "lucide-react";
-import {cn} from "../../lib/utils";
 
-const HeadingBlock = ({block, className, ...props}: BlockProps) => {
+const HeadingBlock = ({block, ...props}: BlockProps) => {
     return <h2
         className={block.className}
         {...props}

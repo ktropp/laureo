@@ -1,7 +1,5 @@
 "use server"
 
-import { currentUser } from "lib/session";
-import { PostAddFormSchema, PostAddFormState } from "../lib/definitions";
 import { prisma } from "../lib/prisma";
 import { redirect } from "next/navigation";
 

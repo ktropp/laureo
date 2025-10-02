@@ -44,7 +44,7 @@ export async function menuAdd(state: MenuAddFormState, formData: FormData) {
 
     if (dataFromForm.id) {
         //update
-        await prisma.menuLang.update({
+        return await prisma.menuLang.update({
             where: {
                 id: parseInt(dataFromForm.id)
             },
@@ -52,7 +52,8 @@ export async function menuAdd(state: MenuAddFormState, formData: FormData) {
                 title: title,
             },
             select: {
-                id: true
+                id: true,
+                title: true
             }
         })
     } else {

@@ -13,6 +13,7 @@ import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
 import {Settings} from "../../../../../theme/settings";
+import Editor from "../../components/Editor";
 
 export function PostForm({post}: { post: Post }) {
     const languages = Settings.languages;
@@ -109,7 +110,7 @@ export function PostForm({post}: { post: Post }) {
         });
     };
 
-    const currentPost = state?.data || post || {};
+    const currentPost = state || post || {};
 
     return (
         <form action={action}>
@@ -123,6 +124,11 @@ export function PostForm({post}: { post: Post }) {
                 <div className="w-full">
                     <div className="fe-theme">
                         <div className={Settings.bodyClass}>
+                            <Editor
+                            data=""
+                            onChange={() => {}}
+                            holder="editor_create"
+                            />
                             {renderBlocks(blocks)}
                             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
                         </div>
@@ -256,7 +262,7 @@ export function PostForm({post}: { post: Post }) {
                             {lang.postLang ? (
                                 <Link href={`/${currentPost.post?.type.toLowerCase()}/${lang.postLang.id}`}><Button
                                     type="button">Edit</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => postLangAdd(currentPost.postId, lang)}>Create</Button>)}
+                                                                                   onClick={() => postLangAdd(currentPost.postId, lang.languageCode)}>Create</Button>)}
                         </div>
                     ))}
                 </div>

@@ -9,7 +9,8 @@ export const blockConfig: BlockMeta = {
   type: 'container',
   name: 'Container',
   icon: Container,
-  isParent: true
+  isParent: true,
+  tagName: 'div'
 };
 
 export default ContainerBlock;

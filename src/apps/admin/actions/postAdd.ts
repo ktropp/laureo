@@ -52,7 +52,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
 
   if (dataFromForm.id) {
     //update 
-    await prisma.postLang.update({
+    return await prisma.postLang.update({
       where: {
         id: parseInt(dataFromForm.id)
       },
@@ -66,7 +66,13 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
         metaKeywords: metaKeywords,
       },
       select: {
-        id: true
+        id: true,
+        status: true,
+        title: true,
+        slug: true,
+        metaTitle: true,
+        metaDescription: true,
+        metaKeywords: true
       }
     })
   } else {

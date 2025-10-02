@@ -16,6 +16,10 @@ export interface BlockJson {
   text?: string;
   tagName?: string;
   className?: string;
+  id?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
   children?: BlockJson[];
 }
 

@@ -4,7 +4,7 @@ import {Label} from "components/ui/label";
 import {Input} from "components/ui/input";
 import {Button} from "components/ui/button";
 import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "../../components/ui/select";
-import {postLangAdd} from "actions/postLangAdd";
+import {menuLangAdd} from "actions/menuLangAdd";
 import Link from "next/link";
 import {Settings} from "../../../../../theme/settings";
 import {useActionState} from "react";
@@ -19,15 +19,16 @@ export function MenuForm({menu}: { menu: Menu }) {
             const match = menu.menu.translations.find(pl => pl.languageCode === code);
             return {
                 languageCode: code,
-                postLang: match || null
+                menuLang: match || null
             }
         });
     }
+
     const defaultLanguage = Settings.defaultLanguage;
 
     const [state, action, pending] = useActionState(menuAdd, undefined);
 
-    const currentMenu = state?.data || menu || {};
+    const currentMenu = state || menu || {};
 
     return (
         <div className="flex justify-between">
@@ -107,7 +108,7 @@ export function MenuForm({menu}: { menu: Menu }) {
                             {lang.menuLang ? (
                                 <Link href={`/menu/${lang.menuLang.id}`}><Button
                                     type="button">Edit</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => postLangAdd(currentMenu.postId, lang)}>Create</Button>)}
+                                                                                   onClick={() => menuLangAdd(currentMenu.menuId, lang.languageCode)}>Create</Button>)}
                         </div>
                     ))}
                 </form>
