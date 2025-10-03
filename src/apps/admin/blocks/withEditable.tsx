@@ -40,6 +40,5 @@ export function withEditable<T extends BaseBlockProps>(
             onBlur: handleChange
         } as T;
         return <ContentEditable {...componentProps} />
-        //return <WrappedComponent {...componentProps} />
     }
 }

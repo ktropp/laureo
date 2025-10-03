@@ -13,7 +13,7 @@ import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
 import {Settings} from "../../../../../theme/settings";
-import Editor from "../../components/Editor";
+import BlockRegistry from "../../blocks/blockRegistry";
 
 export function PostForm({post}: { post: Post }) {
     const languages = Settings.languages;
@@ -33,8 +33,11 @@ export function PostForm({post}: { post: Post }) {
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
 
     const handleBlockAdd = (type: string, parentIndex?: string) => {
+        const blockReg = BlockRegistry.find(block => block.type === type)
         const newBlock: BlockJson = {
-            type: type
+            type: type,
+            tagName: blockReg.tagName,
+            className: blockReg.className,
         };
 
         if (parentIndex !== undefined) {
@@ -124,11 +127,6 @@ export function PostForm({post}: { post: Post }) {
                 <div className="w-full">
                     <div className="fe-theme">
                         <div className={Settings.bodyClass}>
-                            <Editor
-                            data=""
-                            onChange={() => {}}
-                            holder="editor_create"
-                            />
                             {renderBlocks(blocks)}
                             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
                         </div>

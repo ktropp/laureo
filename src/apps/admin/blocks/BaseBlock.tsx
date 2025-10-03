@@ -1,7 +1,7 @@
 import blockRegistry from "./blockRegistry";
 import {BlockAdd} from "./BlockAdd";
 import {withEditable} from "./withEditable";
-import { GripVertical } from "lucide-react";
+import {ChevronDown, ChevronUp, EllipsisVertical, GripVertical} from "lucide-react";
 
 const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange}) => {
     const Block = blockRegistry.find(block => block.type === blockJson.type);
@@ -20,17 +20,39 @@ const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange}) => {
 
     return <div className="relative border border-dashed">
         <div className="absolute bg-white -top-3 right-2">{Block.name}</div>
-        <div className="absolute flex gap-2">
-            {Block.isParent && <div className="p-2 border bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50"><button className="p-1 cursor-pointer hover:text-primary">
-                <Block.icon size={20}/>TODO: parent selector
-            </button></div>}
-            <div className="p-2 border bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50">
-                <button className="p-1 cursor-pointer hover:text-primary">
-                    <Block.icon size={20}/>
-                </button>
-                <button className="p-1 cursor-pointer hover:text-primary">
-                    <GripVertical size={20}/>
-                </button>
+        <div className="absolute flex gap-2 -top-15">
+            {Block.isParent &&
+                <div className="p-2 border bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50">
+                    <button className="p-1 cursor-pointer hover:text-primary">
+                        <Block.icon size={20}/>TODO: parent selector
+                    </button>
+                </div>}
+            <div
+                className="border bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50 flex flex-row items-center">
+                <div className="p-2 flex flex-row items-center">
+                    <button className="p-1 cursor-pointer hover:text-primary">
+                        <Block.icon size={20}/>
+                    </button>
+                    <button className="p-1 cursor-pointer hover:text-primary">
+                        <GripVertical size={20}/>
+                    </button>
+                    <div className="flex flex-col">
+                        <button className="cursor-pointer hover:text-primary">
+                            <ChevronUp size={20}/>
+                        </button>
+                        <button className="cursor-pointer hover:text-primary">
+                            <ChevronDown size={20}/>
+                        </button>
+                    </div>
+                </div>
+                <div className="p-2 flex flex-row items-center border-l h-full">
+                    TODO: controls if exists
+                </div>
+                <div className="p-2 flex flex-row items-center border-l h-full">
+                    <button className="p-1 cursor-pointer hover:text-primary">
+                        <EllipsisVertical size={20}/>
+                    </button>
+                </div>
             </div>
         </div>
         <BlockComponent block={blockWithCallback}>

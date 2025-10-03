@@ -9,6 +9,12 @@ export interface BlockMeta {
   isText?: boolean; // if true, is editable as text
   tagName?: string; // tagName for editable
   className?: string; // default classes
+  tags?: BlockTag[];
+}
+
+export interface BlockTag {
+  tagName: string;
+  className?: string;
 }
 
 export interface BlockJson {
