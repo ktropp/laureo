@@ -9,17 +9,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-slate-50 hover:bg-primary/90",
+        default: "bg-laureo-primary text-laureo-text hover:bg-laureo-primary/90",
         destructive:
-          "bg-red-600 text-slate-50 hover:bg-red-600/90",
+          "bg-red-600 text-laureo-text hover:bg-red-600/90",
         outline:
-          "border border-slate-300 bg-slate-50 hover:bg-slate-200 hover:text-slate-950 dark:bg-slate-950 dark:border-slate-600 dark:hover:bg-slate-900 dark:hover:text-slate-50",
+          "border border-laureo-border bg-laureo-body hover:bg-slate-200 hover:text-laureo-text-dark dark:bg-laureo-body-dark dark:border-laureo-border-dark dark:hover:bg-slate-900 dark:hover:text-laureo-text",
         secondary:
-          "bg-slate-800 text-slate-50 hover:bg-secondary/80 dark:bg-slate-50 dark:text-slate-950",
-        ghost: "hover:bg-slate-200 hover:text-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50",
-        link: "text-primary underline-offset-4 hover:underline",
-        menu: "text-slate-800 hover:bg-slate-200 hover:text-slate-950 focus:bg-slate-200 focus:text-slate-950 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-slate-100 dark:focus:bg-slate-900 dark:focus:text-slate-100 w-full justify-center xl:justify-start",
-        menu_active: "bg-primary text-slate-50 shadow-sm w-full justify-center xl:justify-start"
+          "bg-laureo-secondary text-laureo-text hover:bg-laureo-secondary/80 dark:bg-laureo-body dark:text-laureo-text-dark",
+        ghost: "hover:bg-slate-200 hover:text-laureo-text-dark dark:hover:bg-slate-900 dark:hover:text-laureo-text",
+        link: "text-laureo-primary underline-offset-4 hover:underline",
+        menu: "text-laureo-text-lighter hover:bg-slate-200 hover:text-laureo-text-dark focus:bg-slate-200 focus:text-laureo-text-dark dark:text-laureo-text-lighter-dark dark:hover:bg-slate-900 dark:hover:text-slate-100 dark:focus:bg-slate-900 dark:focus:text-slate-100 w-full justify-center xl:justify-start",
+        menu_active: "bg-laureo-primary text-laureo-text shadow-sm w-full justify-center xl:justify-start"
       },
       size: {
         default: "h-10 px-4 py-2",

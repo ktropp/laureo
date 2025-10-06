@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "@theme/*": ["../../../theme/*"]
+    },
     "target": "ES2017",
     "lib": [
       "dom",

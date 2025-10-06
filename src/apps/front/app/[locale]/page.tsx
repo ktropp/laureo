@@ -7,7 +7,8 @@ export async function generateMetadata({
 }: {
     params: { locale: string}
   }){
-  const post = await getPost('/', params.locale)
+  const param = await params;
+  const post = await getPost('/', param.locale)
   return {
     title: post.metaTitle,
     description: post.metaDescription,
@@ -20,7 +21,8 @@ export default async function Page({
 }: {
   params: { locale: string}
 }) {
-  const page = await getPost('/', params.locale)
+  const param = await params;
+  const page = await getPost('/', param.locale)
 
   if(!page)
     notFound()

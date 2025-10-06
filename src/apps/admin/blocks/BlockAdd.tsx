@@ -59,7 +59,7 @@ export const BlockAdd = ({ onBlockAdd }: BlockAddProps) => {
       </p>
       {showSlashMenu && (
         <div
-          className={`fixed flex flex-col border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-950 p-2`}
+          className={`fixed flex flex-col border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark p-2`}
           style={{
             top: slashMenuPosition.top,
             left: slashMenuPosition.left

@@ -6,7 +6,7 @@ import {Button} from "components/ui/button";
 import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "../../components/ui/select";
 import {menuLangAdd} from "actions/menuLangAdd";
 import Link from "next/link";
-import {Settings} from "../../../../../theme/settings";
+import {Settings} from "@theme/settings";
 import {useActionState} from "react";
 import {menuAdd} from "actions/menuAdd";
 import MenuBuilder from "components/menu/MenuBuilder";
@@ -36,7 +36,7 @@ export function MenuForm({menu}: { menu: Menu }) {
                 <MenuBuilder menuLang={menu} />
             </div>
             <div
-                className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
+                className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                 <form action={action}>
                     <Button type="submit" disabled={pending} className="mb-2">
                         Save
@@ -93,7 +93,7 @@ export function MenuForm({menu}: { menu: Menu }) {
                         />
                     </div>
 
-                    <div className="w-full border-b-1 border-slate-300 dark:border-slate-600 mt-4 mb-4"></div>
+                    <div className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
                     <h2 className="text-xl mt-5 font-semibold">Translations</h2>
 

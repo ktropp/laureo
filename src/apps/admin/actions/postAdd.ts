@@ -4,7 +4,7 @@ import { currentUser } from "lib/session";
 import { PostAddFormSchema, PostAddFormState } from "../lib/definitions";
 import { prisma } from "../lib/prisma";
 import { redirect } from "next/navigation";
-import {Settings} from "../../../../theme/settings";
+import {Settings} from "@theme/settings";
 
 export async function postAdd(state: PostAddFormState, formData: FormData) {
   // data from form

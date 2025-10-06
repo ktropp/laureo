@@ -1,18 +1,25 @@
 @import "tailwindcss";
 
-@source "../../../../theme/*.ts";
-@source "../../../../theme/*.tsx";
+@source "@theme/*.ts";
+@source "@theme/*.tsx";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --color-primary: oklch(0.511 0.096 186.391);
-}
+    --color-laureo-primary: oklch(0.511 0.096 186.391);
+    --color-laureo-secondary: oklch(27.9% 0.041 260.031);
 
-.fe-theme {
-    @theme{
+    --color-laureo-body: oklch(98.4% 0.003 247.858);
+    --color-laureo-body-dark: oklch(12.9% 0.042 264.695);
 
-    }
+    --color-laureo-text: oklch(98.4% 0.003 247.858);
+    --color-laureo-text-dark: oklch(12.9% 0.042 264.695);
+
+    --color-laureo-text-lighter: oklch(27.9% 0.041 260.031);
+    --color-laureo-text-lighter-dark: oklch(92.9% 0.013 255.508);
+
+    --color-laureo-border: oklch(86.9% 0.022 252.894);
+    --color-laureo-border-dark: oklch(44.6% 0.043 257.281);
 }
 
 .min-h-content-height {

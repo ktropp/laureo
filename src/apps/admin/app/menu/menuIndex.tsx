@@ -56,7 +56,7 @@ export default function MenuIndex({ type, initialData }) {
 
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-slate-950/50" />
+          <Dialog.Overlay className="fixed inset-0 bg-laureo-body-dark/50" />
           <Dialog.Content
             className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white dark:bg-slate-900 rounded-lg p-6 shadow-lg">
             <Dialog.Title className="text-lg font-semibold mb-4">

@@ -1,5 +1,5 @@
 import { BlockMeta } from "./blockDefinitions";
-import {Settings} from "../../../../theme/settings";
+import {Settings} from "@theme/settings";
 
 const req = require.context('./types/', true, /\.tsx$/);
 

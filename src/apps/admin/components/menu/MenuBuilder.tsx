@@ -184,7 +184,7 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
     return (
         <div className="space-y-4">
             <form onSubmit={handleAddItem}
-                  className="space-y-4 p-4 border border-slate-300 dark:border-slate-600 rounded-md">
+                  className="space-y-4 p-4 border border-laureo-border dark:border-laureo-border-dark rounded-md">
                 <div>
                     <Label htmlFor="menuTitle">Menu Item Title</Label>
                     <Input

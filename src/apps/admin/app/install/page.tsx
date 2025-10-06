@@ -21,7 +21,7 @@ export default function Page() {
         <>
             <div className="space-y-1 mb-3">
                 <h2 className="text-xl font-semibold">{t('title')}</h2>
-                <p className="text-sm text-slate-800 dark:text-slate-200">
+                <p className="text-sm text-laureo-text-lighter dark:text-laureo-text-lighter-dark">
                     {t('description')}
                 </p>
             </div>

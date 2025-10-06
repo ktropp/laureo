@@ -1,4 +1,4 @@
-import "@theme/globals.css";
+import "./../globals.css";
 import {Settings} from "@theme/settings";
 import Header from "@theme/header";
 import Footer from "@theme/footer";

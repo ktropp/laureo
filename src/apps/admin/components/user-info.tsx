@@ -45,7 +45,7 @@ export function UserInfo() {
                 </Avatar>
                 <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
                     <p className="text-sm font-medium truncate"></p>
-                    <p className="text-xs text-slate-800 dark:text-slate-200 truncate"></p>
+                    <p className="text-xs text-laureo-text-lighter dark:text-laureo-text-lighter-dark truncate"></p>
                 </div>
             </>
         )
@@ -63,7 +63,7 @@ export function UserInfo() {
             </Avatar>
             <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
                 <p className="text-sm font-medium truncate">{(user.name + ' ' + user.surname) || user.email}</p>
-                <p className="text-xs text-slate-800 dark:text-slate-200 truncate capitalize">{user.role.toLowerCase()}</p>
+                <p className="text-xs text-laureo-text-lighter dark:text-laureo-text-lighter-dark truncate capitalize">{user.role.toLowerCase()}</p>
             </div>
         </>
     )

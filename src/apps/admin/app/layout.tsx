@@ -26,7 +26,7 @@ export default async function RootLayout({
     return (
         <html lang={locale}>
         <body
-            className={`${roboto.variable} font-(family-name:--font-roboto) antialiased h-full bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50`}
+            className={`${roboto.variable} font-(family-name:--font-roboto) antialiased h-full bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text`}
         >
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
         <ToastContainer />

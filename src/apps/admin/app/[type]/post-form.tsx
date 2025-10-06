@@ -12,8 +12,9 @@ import Link from "next/link";
 import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import BaseBlock from "../../blocks/BaseBlock";
-import {Settings} from "../../../../../theme/settings";
+import {Settings} from "@theme/settings";
 import BlockRegistry from "../../blocks/blockRegistry";
+import ContentEditor from "../../components/editor/ContentEditor";
 
 export function PostForm({post}: { post: Post }) {
     const languages = Settings.languages;
@@ -125,6 +126,7 @@ export function PostForm({post}: { post: Post }) {
             />
             <div className="flex justify-between">
                 <div className="w-full">
+                    <ContentEditor blocks={post?.blocks} />
                     <div className="fe-theme">
                         <div className={Settings.bodyClass}>
                             {renderBlocks(blocks)}
@@ -133,7 +135,7 @@ export function PostForm({post}: { post: Post }) {
                     </div>
                 </div>
                 <div
-                    className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-slate-300 dark:border-slate-600">
+                    className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                     <Button type="submit" disabled={pending} className="mb-2">
                         Save
                     </Button>
@@ -206,7 +208,7 @@ export function PostForm({post}: { post: Post }) {
                         />
                     </div>
 
-                    <div className="w-full border-b-1 border-slate-300 dark:border-slate-600 mt-4 mb-4"></div>
+                    <div className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
                     <h2 className="text-xl mt-5 font-semibold">Seo</h2>
 
@@ -245,7 +247,7 @@ export function PostForm({post}: { post: Post }) {
                         />
                     </div>
 
-                    <div className="w-full border-b-1 border-slate-300 dark:border-slate-600 mt-4 mb-4"></div>
+                    <div className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
                     <h2 className="text-xl mt-5 font-semibold">Translations</h2>
 

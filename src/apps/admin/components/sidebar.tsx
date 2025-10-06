@@ -33,15 +33,15 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
 
     return (
         <div className={`
-      fixed left-0 top-0 h-full bg-card border-r border-slate-300 dark:border-slate-600 transition-all duration-300 z-50 w-16
+      fixed left-0 top-0 h-full bg-card border-r border-laureo-border dark:border-laureo-border-dark transition-all duration-300 z-50 w-16
       ${collapsed ? 'xl:w-16' : 'xl:w-64'}
     `}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-300 dark:border-slate-600">
+            <div className="flex items-center justify-between p-4 border-b border-laureo-border dark:border-laureo-border-dark">
                 {!collapsed && (
                     <div className="items-center gap-2 flex">
-                        <div className="w-8 h-8 bg-primary rounded-md items-center justify-center flex">
-                            <span className="text-slate-50 font-bold text-sm">L</span>
+                        <div className="w-8 h-8 bg-laureo-primary rounded-md items-center justify-center flex">
+                            <span className="text-laureo-text font-bold text-sm">L</span>
                         </div>
                         <span className="hidden xl:block font-semibold text-lg">Laureo CMS</span>
                     </div>
@@ -77,7 +77,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             </nav>
 
             {/* Footer */}
-            <div className="p-4 border-t border-slate-300 dark:border-slate-600">
+            <div className="p-4 border-t border-laureo-border dark:border-laureo-border-dark">
                 {/* User Info */}
                 <div
                     className={`flex items-center gap-3 justify-center xl:justify-start flex-col xl:flex-row  ${collapsed ? 'xl:justify-center' : ''}`}>

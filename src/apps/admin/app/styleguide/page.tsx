@@ -43,7 +43,7 @@ export default function Page() {
                     <h5 className="text-lg font-semibold">Heading 5 - lg</h5>
                     <h6 className="text-base font-semibold">Heading 6 - base</h6>
                 </div>
-                <div className="w-full border-b-1 border-slate-300 dark:border-slate-600 mt-4 mb-4"></div>
+                <div className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
                 <div className="space-y-2">
                     <p className="text-lg">Large paragraph text for important content.</p>
                     <p className="text-base">Regular paragraph text for standard content.</p>
