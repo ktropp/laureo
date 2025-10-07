@@ -1,13 +1,18 @@
-import React from 'react';
-import {Settings} from '@theme/settings';
-import {useState} from "react";
-import BlockRegistry from "../../blocks/blockRegistry";
 import {BlockJson} from "../../blocks/blockDefinitions";
+import {Settings} from "@theme/settings";
 import BaseBlock from "../../blocks/BaseBlock";
 import {BlockAdd} from "blocks/BlockAdd";
+import BlockRegistry from "../../blocks/blockRegistry";
+import {useState} from "react";
 
-export default function IframeContent({content}: { content: BlockJson[] }) {
+export default function BlockEditor({content}: { content: BlockJson[] }) {
     const [blocks, setBlocks] = useState<Array<BlockJson>>(content || []);
+
+    let bodyClass = Settings.bodyClass;
+    Settings.fonts.forEach(font => {
+        bodyClass = bodyClass.concat(" ", font.variable)
+    });
+
     const handleBlockAdd = (type: string, parentIndex?: string) => {
         const blockReg = BlockRegistry.find(block => block.type === type)
         const newBlock: BlockJson = {
@@ -45,6 +50,33 @@ export default function IframeContent({content}: { content: BlockJson[] }) {
         }
     };
 
+    const handleBlockDelete = (blockIndex: string) => {
+        setBlocks(prev => {
+            const deleteBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
+                if (indices.length === 0) return blocks;
+
+                const currentIndex = parseInt(indices[0]);
+
+                if (indices.length === 1) {
+                    return blocks.filter((_, index) => index !== currentIndex);
+                }
+
+                return blocks.map((block, index) => {
+                    if (index === currentIndex) {
+                        return {
+                            ...block,
+                            children: deleteBlocksRecursively(block.children || [], indices.slice(1))
+                        };
+                    }
+                    return block;
+                });
+            };
+
+            const indices = blockIndex.split('-');
+            return deleteBlocksRecursively(prev, indices);
+        });
+    };
+
     const handleBlockTextChange = (text: string, blockIndex: string) => {
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
@@ -70,26 +102,31 @@ export default function IframeContent({content}: { content: BlockJson[] }) {
             return updateBlocksRecursively(prev, indices);
         });
     };
-    const renderBlocks = (blocks: BlockJson[], parentIndex: string = '') => {
+
+
+    const renderBlocks = (blocks: BlockJson[], parentIndex: string = '', parentBlock: BlockJson) => {
         return blocks?.map((block, index) => {
             const currentIndex = parentIndex ? `${parentIndex}-${index}` : `${index}`;
 
             return (
                 <BaseBlock
                     key={currentIndex}
+                    parentBlock={parentBlock}
                     blockJson={block}
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, currentIndex)}
                     onContentChange={(text) => handleBlockTextChange(text, currentIndex)}
+                    onBlockDelete={() => handleBlockDelete(currentIndex)}
                 >
-                    {block.children && renderBlocks(block.children, currentIndex)}
+                    {block.children && renderBlocks(block.children, currentIndex, block)}
                 </BaseBlock>
             );
         });
     };
+
     return (
-        <div className={Settings.bodyClass}>
+        <div className={bodyClass}>
             {renderBlocks(blocks)}
             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
         </div>
-    );
+    )
 }

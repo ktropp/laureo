@@ -9,12 +9,9 @@ import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "../
 import {Textarea} from "components/ui/textarea";
 import {postLangAdd} from "actions/postLangAdd";
 import Link from "next/link";
-import {BlockAdd} from "blocks/BlockAdd";
 import {BlockJson} from "../../blocks/blockDefinitions";
-import BaseBlock from "../../blocks/BaseBlock";
 import {Settings} from "@theme/settings";
-import BlockRegistry from "../../blocks/blockRegistry";
-import ContentEditor from "../../components/editor/ContentEditor";
+import BlockEditor from "../../components/editor/BlockEditor";
 
 export function PostForm({post}: { post: Post }) {
     const languages = Settings.languages;
@@ -33,87 +30,6 @@ export function PostForm({post}: { post: Post }) {
     const [state, action, pending] = useActionState(postAdd, undefined);
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
 
-    const handleBlockAdd = (type: string, parentIndex?: string) => {
-        const blockReg = BlockRegistry.find(block => block.type === type)
-        const newBlock: BlockJson = {
-            type: type,
-            tagName: blockReg.tagName,
-            className: blockReg.className,
-        };
-
-        if (parentIndex !== undefined) {
-            setBlocks(prev => {
-                const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
-                    return blocks.map((block, index) => {
-                        if (index.toString() === indices[0]) {
-                            if (indices.length === 1) {
-                                return {
-                                    ...block,
-                                    children: [...(block.children || []), newBlock]
-                                };
-                            } else {
-                                return {
-                                    ...block,
-                                    children: updateBlocksRecursively(block.children || [], indices.slice(1))
-                                };
-                            }
-                        }
-                        return block;
-                    });
-                };
-
-                const indices = parentIndex.split('-');
-                return updateBlocksRecursively(prev, indices);
-            });
-        } else {
-            setBlocks(prev => [...prev, newBlock]);
-        }
-    };
-
-    const handleBlockTextChange = (text: string, blockIndex: string) => {
-        setBlocks(prev => {
-            const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
-                return blocks.map((block, index) => {
-                    if (index.toString() === indices[0]) {
-                        if (indices.length === 1) {
-                            return {
-                                ...block,
-                                text: text
-                            };
-                        } else {
-                            return {
-                                ...block,
-                                children: updateBlocksRecursively(block.children || [], indices.slice(1))
-                            };
-                        }
-                    }
-                    return block;
-                });
-            };
-
-            const indices = blockIndex.split('-');
-            return updateBlocksRecursively(prev, indices);
-        });
-    };
-
-
-    const renderBlocks = (blocks: BlockJson[], parentIndex: string = '') => {
-        return blocks?.map((block, index) => {
-            const currentIndex = parentIndex ? `${parentIndex}-${index}` : `${index}`;
-
-            return (
-                <BaseBlock
-                    key={currentIndex}
-                    blockJson={block}
-                    onBlockAdd={(newBlock) => handleBlockAdd(newBlock, currentIndex)}
-                    onContentChange={(text) => handleBlockTextChange(text, currentIndex)}
-                >
-                    {block.children && renderBlocks(block.children, currentIndex)}
-                </BaseBlock>
-            );
-        });
-    };
-
     const currentPost = state || post || {};
 
     return (
@@ -126,13 +42,7 @@ export function PostForm({post}: { post: Post }) {
             />
             <div className="flex justify-between">
                 <div className="w-full">
-                    <ContentEditor blocks={post?.blocks} />
-                    <div className="fe-theme">
-                        <div className={Settings.bodyClass}>
-                            {renderBlocks(blocks)}
-                            <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
-                        </div>
-                    </div>
+                    <BlockEditor content={post?.blocks} />
                 </div>
                 <div
                     className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-laureo-border dark:border-laureo-border-dark">

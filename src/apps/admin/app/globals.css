@@ -40,3 +40,5 @@
 br:has(+ [data-rich-text-placeholder]) {
     display: none;
 }
+
+@import "./../../../../theme/globals.css";

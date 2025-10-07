@@ -1,21 +1,34 @@
-import { BlockMeta } from "./blockDefinitions";
+import {BlockMeta} from "./blockDefinitions";
 import {Settings} from "@theme/settings";
 
-const req = require.context('./types/', true, /\.tsx$/);
+const adminBlocks = require.context('./types/', true, /\.tsx$/);
+const themeBlocks = require.context('./../../../../theme/blocks/', true, /\.tsx$/);
 
 type LoadedBlock = BlockMeta & { component: React.ComponentType };
 
-const blockRegistry: LoadedBlock[] = req.keys().map((file) => {
-  const mod = req(file);
-  const blockConfig = {
-    ...mod.blockConfig,
-    ...Settings.blockConfig[mod.blockConfig.type]
-  };
+console.log(themeBlocks.keys())
 
-  return {
-    component: mod.default,
-    ...blockConfig,
-  };
+const blockRegistry: LoadedBlock[] = adminBlocks.keys().map((file) => {
+    const mod = adminBlocks(file);
+    let blockConfig = {
+        ...mod.blockConfig,
+        ...Settings.blockConfig[mod.blockConfig.type]
+    };
+
+    themeBlocks.keys().map((overrideFile) => {
+        const mod = themeBlocks(overrideFile);
+        if (mod.blockConfig.type === blockConfig.type) {
+            blockConfig = {
+                ...mod.blockConfig,
+                ...Settings.blockConfig[mod.blockConfig.type]
+            }
+        }
+    })
+
+    return {
+        component: mod.default,
+        ...blockConfig,
+    };
 });
 
 export default blockRegistry;
