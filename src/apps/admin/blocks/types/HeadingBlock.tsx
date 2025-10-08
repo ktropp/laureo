@@ -14,7 +14,21 @@ export const blockConfig: BlockMeta = {
     icon: Heading,
     isText: true,
     tagName: 'h2',
-    className: 'text-4xl font-bold mb-2'
+    className: 'text-4xl font-bold mb-2',
+    tags: [
+        {
+            tagName: 'h1',
+            className: 'text-7xl font-bold mb-2',
+        },
+        {
+            tagName: 'h2',
+            className: 'text-4xl mb-2',
+        },
+        {
+            tagName: 'h3',
+            className: 'text-2xl mb-2',
+        }
+    ]
 };
 
 export default HeadingBlock;

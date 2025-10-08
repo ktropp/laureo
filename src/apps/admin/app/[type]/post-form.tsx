@@ -42,10 +42,13 @@ export function PostForm({post}: { post: Post }) {
             />
             <div className="flex justify-between">
                 <div className="w-full">
-                    <BlockEditor content={post?.blocks}/>
+                    <BlockEditor
+                        content={post?.blocks}
+                        onChange={(newBlocks) => setBlocks(newBlocks)}
+                    />
                 </div>
                 <div
-                    className="w-full max-w-md border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
+                    className="min-w-50 w-50 xl:w-100 border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                     <div className="flex justify-between">
                         <Button type="submit" disabled={pending} className="mb-2">
                             Save

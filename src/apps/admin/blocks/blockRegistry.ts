@@ -6,27 +6,49 @@ const themeBlocks = require.context('./../../../../theme/blocks/', true, /\.tsx$
 
 type LoadedBlock = BlockMeta & { component: React.ComponentType };
 
-const blockRegistry: LoadedBlock[] = adminBlocks.keys().map((file) => {
+const blockRegistry: LoadedBlock[] = [];
+
+// Process admin blocks first
+adminBlocks.keys().forEach((file) => {
     const mod = adminBlocks(file);
     let blockConfig = {
         ...mod.blockConfig,
         ...Settings.blockConfig[mod.blockConfig.type]
     };
 
-    themeBlocks.keys().map((overrideFile) => {
-        const mod = themeBlocks(overrideFile);
-        if (mod.blockConfig.type === blockConfig.type) {
+    // Check for theme override
+    themeBlocks.keys().forEach((overrideFile) => {
+        const themeMod = themeBlocks(overrideFile);
+        if (themeMod.blockConfig.type === blockConfig.type) {
             blockConfig = {
-                ...mod.blockConfig,
-                ...Settings.blockConfig[mod.blockConfig.type]
+                ...themeMod.blockConfig,
+                ...Settings.blockConfig[themeMod.blockConfig.type]
             }
         }
-    })
+    });
 
-    return {
+    blockRegistry.push({
         component: mod.default,
         ...blockConfig,
-    };
+    });
+});
+
+// Add theme blocks that don't exist in admin blocks
+themeBlocks.keys().forEach((themeFile) => {
+    const themeMod = themeBlocks(themeFile);
+    const exists = blockRegistry.some(block => block.type === themeMod.blockConfig.type);
+
+    if (!exists) {
+        const blockConfig = {
+            ...themeMod.blockConfig,
+            ...Settings.blockConfig[themeMod.blockConfig.type]
+        };
+
+        blockRegistry.push({
+            component: themeMod.default,
+            ...blockConfig,
+        });
+    }
 });
 
 export default blockRegistry;

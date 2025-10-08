@@ -19,8 +19,20 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-export default function BlockEditor({content}: { content: BlockJson[] }) {
-    const [blocks, setBlocks] = useState<Array<BlockJson>>(content || []);
+export default function BlockEditor({content, onChange}: {
+    content: BlockJson[],
+    onChange?: (blocks: BlockJson[]) => void
+}) {
+    const [blocks, setBlocksState] = useState<Array<BlockJson>>(content || []);
+
+    // Wrapper function that handles both state update and parent notification
+    const setBlocks = (updater: BlockJson[] | ((prev: BlockJson[]) => BlockJson[])) => {
+        setBlocksState(prev => {
+            const newBlocks = typeof updater === 'function' ? updater(prev) : updater;
+            onChange?.(newBlocks);
+            return newBlocks;
+        });
+    };
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -45,27 +57,25 @@ export default function BlockEditor({content}: { content: BlockJson[] }) {
 
         if (parentIndex !== undefined) {
             setBlocks(prev => {
-                const updateBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
-                    return blocks.map((block, index) => {
-                        if (index.toString() === indices[0]) {
-                            if (indices.length === 1) {
-                                return {
-                                    ...block,
-                                    children: [...(block.children || []), newBlock]
-                                };
-                            } else {
-                                return {
-                                    ...block,
-                                    children: updateBlocksRecursively(block.children || [], indices.slice(1))
-                                };
-                            }
+                const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                    return blocks.map(block => {
+                        if (block.index === parentIndex) {
+                            return {
+                                ...block,
+                                children: [...(block.children || []), newBlock]
+                            };
+                        }
+                        if (block.children && block.children.length > 0) {
+                            return {
+                                ...block,
+                                children: updateBlocksRecursively(block.children)
+                            };
                         }
                         return block;
                     });
                 };
 
-                const indices = parentIndex.split('-');
-                return updateBlocksRecursively(prev, indices);
+                return updateBlocksRecursively(prev);
             });
         } else {
             setBlocks(prev => [...prev, newBlock]);
@@ -74,28 +84,22 @@ export default function BlockEditor({content}: { content: BlockJson[] }) {
 
     const handleBlockDelete = (blockIndex: string) => {
         setBlocks(prev => {
-            const deleteBlocksRecursively = (blocks: BlockJson[], indices: string[]): BlockJson[] => {
-                if (indices.length === 0) return blocks;
-
-                const currentIndex = parseInt(indices[0]);
-
-                if (indices.length === 1) {
-                    return blocks.filter((_, index) => index !== currentIndex);
-                }
-
-                return blocks.map((block, index) => {
-                    if (index === currentIndex) {
+            const deleteBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.filter(block => {
+                    if (block.index === blockIndex) {
+                        return false;
+                    }
+                    if (block.children && block.children.length > 0) {
                         return {
                             ...block,
-                            children: deleteBlocksRecursively(block.children || [], indices.slice(1))
+                            children: deleteBlocksRecursively(block.children)
                         };
                     }
-                    return block;
+                    return true;
                 });
             };
 
-            const indices = blockIndex.split('-');
-            return deleteBlocksRecursively(prev, indices);
+            return deleteBlocksRecursively(prev);
         });
     };
 
@@ -158,7 +162,7 @@ export default function BlockEditor({content}: { content: BlockJson[] }) {
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
-                    onBlockDelete={() => handleBlockDelete(currentIndex)}
+                    onBlockDelete={() => handleBlockDelete(block.index)}
                 >
                     {block.children && renderBlocks(block.children, block)}
                 </BaseBlock>

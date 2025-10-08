@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "lib/utils"
 
 const buttonVariants = cva(
-  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -19,6 +19,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-slate-200 hover:text-laureo-text-dark dark:hover:bg-slate-900 dark:hover:text-laureo-text",
         link: "text-laureo-primary underline-offset-4 hover:underline",
         menu: "text-laureo-text-lighter hover:bg-slate-200 hover:text-laureo-text-dark focus:bg-slate-200 focus:text-laureo-text-dark dark:text-laureo-text-lighter-dark dark:hover:bg-slate-900 dark:hover:text-slate-100 dark:focus:bg-slate-900 dark:focus:text-slate-100 w-full justify-center xl:justify-start",
+        menu_focus: "text-laureo-text-lighter bg-slate-200 text-laureo-text-dark dark:bg-slate-900 dark:text-slate-100 w-full justify-center xl:justify-start",
         menu_active: "bg-laureo-primary text-laureo-text shadow-sm w-full justify-center xl:justify-start"
       },
       size: {

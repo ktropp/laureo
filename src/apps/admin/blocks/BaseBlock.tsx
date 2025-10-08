@@ -65,7 +65,7 @@ const BaseBlock = ({
             ref={setNodeRef}
             style={style}
             {...attributes}
-            className={`relative outline-1 outline-dashed ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/50'}`}
+            className={`relative outline-1 flex-1 outline-dashed ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/50'}`}
             tabIndex={0}
             onFocus={(e) => {
                 e.stopPropagation();
