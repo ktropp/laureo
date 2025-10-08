@@ -6,8 +6,6 @@ const themeBlocks = require.context('./../../../../theme/blocks/', true, /\.tsx$
 
 type LoadedBlock = BlockMeta & { component: React.ComponentType };
 
-console.log(themeBlocks.keys())
-
 const blockRegistry: LoadedBlock[] = adminBlocks.keys().map((file) => {
     const mod = adminBlocks(file);
     let blockConfig = {

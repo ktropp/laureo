@@ -2,10 +2,21 @@ import blockRegistry from "./blockRegistry";
 import {BlockAdd} from "./BlockAdd";
 import {withEditable} from "./withEditable";
 import {Braces, ChevronDown, ChevronUp, EllipsisVertical, GripVertical} from "lucide-react";
-import {useState} from "react";
+import React, {useState} from "react";
 import {Input} from "../components/ui/input";
+import {useSortable} from '@dnd-kit/sortable';
+import {CSS} from '@dnd-kit/utilities';
 
-const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange, onBlockDelete, parentBlock}) => {
+const BaseBlock = ({
+                       children,
+                       index,
+                       blockJson,
+                       onBlockAdd,
+                       onContentChange,
+                       onClassNameChange,
+                       onBlockDelete,
+                       parentBlock
+                   }) => {
     const Block = blockRegistry.find(block => block.type === blockJson.type);
     const ParentBlock = blockRegistry.find(block => block.type === parentBlock?.type);
     let BlockComponent = Block?.component;
@@ -20,6 +31,20 @@ const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange, onBlockDel
         ...blockJson,
         onContentChange,
     }
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        setDraggableNodeRef,
+        transform,
+        transition,
+    } = useSortable({id: index});
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     const [isFocused, setIsFocused] = useState(false);
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -36,6 +61,10 @@ const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange, onBlockDel
 
     return (
         <div
+            id={index}
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
             className={`relative outline-1 outline-dashed ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/50'}`}
             tabIndex={0}
             onFocus={(e) => {
@@ -65,7 +94,11 @@ const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange, onBlockDel
                         <button className="p-1 cursor-pointer hover:text-laureo-primary">
                             <Block.icon size={20}/>
                         </button>
-                        <button className="p-1 cursor-pointer hover:text-laureo-primary">
+                        <button
+                            className="p-1 cursor-pointer hover:text-laureo-primary"
+                            ref={setDraggableNodeRef}
+                            {...listeners}
+                        >
                             <GripVertical size={20}/>
                         </button>
                         <div className="flex flex-col px-1">
@@ -91,6 +124,8 @@ const BaseBlock = ({children, blockJson, onBlockAdd, onContentChange, onBlockDel
                                     placeholder="Enter class name"
                                     name=""
                                     defaultValue={blockJson.className}
+                                    onChange={(e) => onClassNameChange(e.target.value)}
+                                    onBlur={(e) => onClassNameChange(e.target.value)}
                                 />
                             </div>
                         </div>

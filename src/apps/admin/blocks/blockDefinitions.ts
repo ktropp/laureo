@@ -18,6 +18,7 @@ export interface BlockTag {
 }
 
 export interface BlockJson {
+  index: string;
   type: string;
   text?: string;
   tagName?: string;

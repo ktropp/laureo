@@ -3,11 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:next && npm run dev:theme",
-    "dev:next": "next dev --turbo -p 3001",
-    "dev:theme": "npx tailwindcss -i ./app/theme.css -o ./public/fe-theme.css --watch",
-    "build:theme": "npx tailwindcss -i ./app/theme.css -o ./public/fe-theme.css",
-    "build": "next build && npm run build:theme",
+    "dev": "next dev --turbo -p 3001",
+    "build": "next build",
     "start": "next start -p 3001"
   },
   "dependencies": {

@@ -6,6 +6,7 @@ type menuLocation = {
 }
 
 export type Settings = {
+    frontendUrl: string,
     languages: string[],
     defaultLanguage: string,
     adminLanguage: string,

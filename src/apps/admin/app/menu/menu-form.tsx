@@ -36,7 +36,7 @@ export function MenuForm({menu}: { menu: Menu }) {
                 <MenuBuilder menuLang={menu} />
             </div>
             <div
-                className="w-full max-w-md border-l min-h-sidebar-height px-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
+                className="w-full max-w-md border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                 <form action={action}>
                     <Button type="submit" disabled={pending} className="mb-2">
                         Save
