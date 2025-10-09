@@ -1,8 +1,17 @@
 import blockRegistry from "./blockRegistry";
 import {BlockAdd} from "./BlockAdd";
 import {withEditable} from "./withEditable";
-import {Braces, ChevronDown, ChevronUp, EllipsisVertical, GripVertical} from "lucide-react";
-import React, {useState} from "react";
+import {
+    Braces,
+    ChevronDown,
+    ChevronUp,
+    EllipsisVertical,
+    GripVertical,
+    Heading1,
+    Heading2,
+    Heading3, Heading4, Heading5, Heading6
+} from "lucide-react";
+import React, {useState, useRef, useEffect} from "react";
 import {Input} from "../components/ui/input";
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
@@ -14,8 +23,10 @@ const BaseBlock = ({
                        onBlockAdd,
                        onContentChange,
                        onClassNameChange,
+                       onTagNameChange,
                        onBlockDelete,
-                       parentBlock
+                       parentBlock,
+                       autoFocus
                    }) => {
     const Block = blockRegistry.find(block => block.type === blockJson.type);
     const ParentBlock = blockRegistry.find(block => block.type === parentBlock?.type);
@@ -27,9 +38,21 @@ const BaseBlock = ({
         BlockComponent = withEditable(BlockComponent);
     }
 
+    const blockRef = useRef(null)
+    useEffect(() => {
+        if (autoFocus && Block.isText && blockRef.current) {
+            // Find the editable element inside the block component and focus it
+            const editableElement = blockRef.current.querySelector('[contenteditable="true"]');
+            if (editableElement) {
+                editableElement.focus();
+            }
+        }
+    }, [autoFocus, Block.isText]);
+
     const blockWithCallback = {
         ...blockJson,
         onContentChange,
+        ref: blockRef
     }
 
     const {
@@ -48,6 +71,7 @@ const BaseBlock = ({
 
     const [isFocused, setIsFocused] = useState(false);
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
     const [isClassOpen, setIsClassOpen] = useState(false);
 
     const handleBlur = (e) => {
@@ -59,14 +83,27 @@ const BaseBlock = ({
         }
     };
 
+    const tagNameIcons = {
+        'h1': Heading1,
+        'h2': Heading2,
+        'h3': Heading3,
+        'h4': Heading4,
+        'h5': Heading5,
+        'h6': Heading6,
+    }
+
     return (
         <div
             id={index}
-            ref={setNodeRef}
+            data-block-index={index}
+            ref={(node) => {
+                setNodeRef(node);
+                blockRef.current = node;
+            }}
             style={style}
             {...attributes}
-            className={`relative outline-1 flex-1 outline-dashed ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/50'}`}
-            tabIndex={0}
+            className={`relative outline-1 flex-1 outline-dashed ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/25'}`}
+            tabIndex={Block.isText ? -1 : 0}
             onFocus={(e) => {
                 e.stopPropagation();
                 setIsFocused(true)
@@ -79,19 +116,29 @@ const BaseBlock = ({
                 }
             }}
         >
-            <div className={`absolute gap-2 -top-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
+            <div className={`absolute z-2 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
                 {parentBlock &&
                     <div
                         className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
-                        <button title="TODO: Select parent block"
-                                className="p-1 cursor-pointer hover:text-laureo-primary">
+                        <button title="Select parent block"
+                                className="p-1 cursor-pointer hover:text-laureo-primary"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (parentBlock?.index) {
+                                        const parentElement = blockRef.current?.closest(`[data-block-index="${parentBlock.index}"`);
+                                        if (parentElement) {
+                                            parentElement.focus();
+                                        }
+                                    }
+                                }}
+                        >
                             <ParentBlock.icon size={20}/>
                         </button>
                     </div>}
                 <div
                     className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
-                        <button className="p-1 cursor-pointer hover:text-laureo-primary">
+                        <button className="p-1 cursor-pointer hover:text-laureo-primary" title={Block.name}>
                             <Block.icon size={20}/>
                         </button>
                         <button
@@ -111,12 +158,59 @@ const BaseBlock = ({
                         </div>
                     </div>
                     <div className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
-                        <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
-                                onClick={() => setIsClassOpen(!isClassOpen)}>
+                        {Block.isTagEditable && (
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    onClick={() => setIsTagOpen(!isTagOpen)}
+                                >
+                                    {blockJson.tagName && tagNameIcons[blockJson.tagName] ? (
+                                        (() => {
+                                            const IconComponent = tagNameIcons[blockJson.tagName];
+                                            return <IconComponent size={20}/>;
+                                        })()
+                                    ) : blockJson.tagName || 'div'}
+                                </button>
+                                <div
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isTagOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2">
+                                        {Block.tags?.map((tag, index) => (
+                                            <button
+                                                key={index}
+                                                className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
+                                                data-tag-name={tag.tagName}
+                                                data-tag-class={tag.className}
+                                                onClick={(e) => {
+                                                    const tagName = e.currentTarget.dataset.tagName;
+                                                    const className = e.currentTarget.dataset.tagClass;
+
+                                                    onTagNameChange(tagName, className);
+
+                                                    setIsTagOpen(false);
+                                                }}
+                                            >
+                                                {tagNameIcons[tag.tagName] ? (
+                                                    (() => {
+                                                        const IconComponent = tagNameIcons[tag.tagName];
+                                                        return <IconComponent size={20}/>;
+                                                    })()
+                                                ) : tag.tagName || 'div'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <button
+                            type="button"
+                            className="p-1 cursor-pointer hover:text-laureo-primary"
+                            onClick={() => setIsClassOpen(!isClassOpen)}
+                        >
                             <Braces size={20}/>
                         </button>
                         <div
-                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-60 flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
+                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-full flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
                             <div className="p-2">
                                 <Input
                                     id=""
@@ -129,7 +223,6 @@ const BaseBlock = ({
                                 />
                             </div>
                         </div>
-                        TODO: other controls if they exist
                     </div>
                     <div
                         className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
@@ -165,7 +258,8 @@ const BaseBlock = ({
                 {Block.isParent && <BlockAdd onBlockAdd={onBlockAdd}/>}
             </BlockComponent>
         </div>
-    );
+    )
+        ;
 };
 
 export default BaseBlock;

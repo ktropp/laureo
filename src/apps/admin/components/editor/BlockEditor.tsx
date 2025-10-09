@@ -3,7 +3,7 @@ import {Settings} from "@theme/settings";
 import BaseBlock from "../../blocks/BaseBlock";
 import {BlockAdd} from "blocks/BlockAdd";
 import BlockRegistry from "../../blocks/blockRegistry";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     DndContext,
     closestCenter,
@@ -24,14 +24,18 @@ export default function BlockEditor({content, onChange}: {
     onChange?: (blocks: BlockJson[]) => void
 }) {
     const [blocks, setBlocksState] = useState<Array<BlockJson>>(content || []);
+    const [lastAddedBlockIndex, setLastAddedBlockIndex] = useState<string | null>(null);
 
-    // Wrapper function that handles both state update and parent notification
     const setBlocks = (updater: BlockJson[] | ((prev: BlockJson[]) => BlockJson[])) => {
-        setBlocksState(prev => {
-            const newBlocks = typeof updater === 'function' ? updater(prev) : updater;
-            onChange?.(newBlocks);
-            return newBlocks;
-        });
+        const newBlocks = typeof updater === 'function' ? updater(blocks) : updater;
+        setBlocksState(newBlocks);
+        // Use useEffect to handle onChange after state is updated
+        if (onChange) {
+            // Use setTimeout to ensure this runs after the current render cycle
+            setTimeout(() => {
+                onChange(newBlocks);
+            }, 0);
+        }
     };
 
     const sensors = useSensors(
@@ -45,6 +49,7 @@ export default function BlockEditor({content, onChange}: {
     Settings.fonts.forEach(font => {
         bodyClass = bodyClass.concat(" ", font.variable)
     });
+    bodyClass += " mt-14";
 
     const handleBlockAdd = (type: string, parentIndex?: string) => {
         const blockReg = BlockRegistry.find(block => block.type === type)
@@ -54,6 +59,12 @@ export default function BlockEditor({content, onChange}: {
             tagName: blockReg.tagName,
             className: blockReg.className,
         };
+
+        setLastAddedBlockIndex(newBlock.index);
+
+        setTimeout(() => {
+            setLastAddedBlockIndex(null);
+        }, 100);
 
         if (parentIndex !== undefined) {
             setBlocks(prev => {
@@ -151,6 +162,31 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
+    const handleBlockTagNameChange = (tagName: string, className: string, blockIndex: string) => {
+        setBlocks(prev => {
+            const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map(block => {
+                    if (block.index === blockIndex) {
+                        return {
+                            ...block,
+                            tagName: tagName,
+                            className: className,
+                        };
+                    }
+                    if (block.children && block.children.length > 0) {
+                        return {
+                            ...block,
+                            children: updateBlocksRecursively(block.children)
+                        };
+                    }
+                    return block;
+                });
+            };
+
+            return updateBlocksRecursively(prev);
+        });
+    };
+
     const renderBlocks = (blocks: BlockJson[], parentBlock: BlockJson) => {
         return blocks?.map((block) => {
             return (
@@ -159,9 +195,11 @@ export default function BlockEditor({content, onChange}: {
                     index={block.index}
                     parentBlock={parentBlock}
                     blockJson={block}
+                    autoFocus={block.index === lastAddedBlockIndex}
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
+                    onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                     onBlockDelete={() => handleBlockDelete(block.index)}
                 >
                     {block.children && renderBlocks(block.children, block)}
@@ -187,8 +225,11 @@ export default function BlockEditor({content, onChange}: {
                                 key={block.index}
                                 index={block.index}
                                 blockJson={block}
+                                autoFocus={block.index === lastAddedBlockIndex}
                                 onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                                 onContentChange={(text) => handleBlockTextChange(text, block.index)}
+                                onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
+                                onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                                 onBlockDelete={() => handleBlockDelete(block.index)}
                             >
                                 {block.children && renderBlocks(block.children, block)}

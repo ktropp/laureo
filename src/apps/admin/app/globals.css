@@ -3,6 +3,8 @@
 @source "@theme/*.ts";
 @source "@theme/*.tsx";
 
+@import "./../../../../theme/globals.css";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -20,6 +22,8 @@
 
     --color-laureo-border: oklch(86.9% 0.022 252.894);
     --color-laureo-border-dark: oklch(44.6% 0.043 257.281);
+
+    --spacing: 0.25rem;
 }
 
 .min-h-content-height {
@@ -40,5 +44,3 @@
 br:has(+ [data-rich-text-placeholder]) {
     display: none;
 }
-
-@import "./../../../../theme/globals.css";

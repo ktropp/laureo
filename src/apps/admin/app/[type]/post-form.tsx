@@ -4,7 +4,7 @@ import {Label} from "components/ui/label";
 import {Input} from "components/ui/input";
 import {Button} from "components/ui/button";
 import {postAdd} from "actions/postAdd";
-import {useActionState, useState} from "react";
+import {useActionState, useCallback, useState} from "react";
 import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "../../components/ui/select";
 import {Textarea} from "components/ui/textarea";
 import {postLangAdd} from "actions/postLangAdd";
@@ -32,6 +32,11 @@ export function PostForm({post}: { post: Post }) {
 
     const currentPost = state || post || {};
 
+
+    const handleBlocksChange = useCallback((newBlocks: BlockJson[]) => {
+        setBlocks(newBlocks);
+    }, []);
+
     return (
         <form action={action}>
             <Input
@@ -44,7 +49,7 @@ export function PostForm({post}: { post: Post }) {
                 <div className="w-full">
                     <BlockEditor
                         content={post?.blocks}
-                        onChange={(newBlocks) => setBlocks(newBlocks)}
+                        onChange={handleBlocksChange}
                     />
                 </div>
                 <div
@@ -55,7 +60,7 @@ export function PostForm({post}: { post: Post }) {
                         </Button>
                         {post.slug ? (<Link href={Settings.frontendUrl + '/' + post.slug} target="_blank">
                             <Button type="button" variant="outline">Preview</Button>
-                        </Link>):''}
+                        </Link>) : ''}
                     </div>
 
                     <Input

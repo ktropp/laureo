@@ -2,10 +2,14 @@ import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Heading} from "lucide-react";
 
 const HeadingBlock = ({block, ...props}: BlockProps) => {
-    return <h2
+    const Tag = block.tagName;
+    const sanitizedHtml = block?.text || ''
+    //TODO: DOMPurify
+    return <Tag
         className={block.className}
+        dangerouslySetInnerHTML={{__html: sanitizedHtml}}
         {...props}
-    >{block?.text}</h2>
+    ></Tag>
 };
 
 export const blockConfig: BlockMeta = {
@@ -13,6 +17,7 @@ export const blockConfig: BlockMeta = {
     name: 'Heading',
     icon: Heading,
     isText: true,
+    isTagEditable: true,
     tagName: 'h2',
     className: 'text-4xl font-bold mb-2',
     tags: [
@@ -22,11 +27,23 @@ export const blockConfig: BlockMeta = {
         },
         {
             tagName: 'h2',
-            className: 'text-4xl mb-2',
+            className: 'text-4xl font-bold mb-2',
         },
         {
             tagName: 'h3',
-            className: 'text-2xl mb-2',
+            className: 'text-2xl font-bold mb-2',
+        },
+        {
+            tagName: 'h4',
+            className: 'text-xl font-bold mb-2',
+        },
+        {
+            tagName: 'h5',
+            className: 'text-lg font-bold mb-2',
+        },
+        {
+            tagName: 'h6',
+            className: 'text-base font-bold mb-2',
         }
     ]
 };

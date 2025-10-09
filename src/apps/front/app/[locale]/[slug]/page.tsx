@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation"
 import { getPost } from "actions/data"
+import PageContent from "components/PageContent";
 
 export async function generateMetadata({
   params,
 }: {
   params: { locale: string, slug: string }
 }) {
-  const page = await getPost(params.slug, params.locale)
+  const param = await params;
+  const page = await getPost(param.slug, param.locale)
   return {
     title: page?.metaTitle,
     description: page?.metaDescription,
@@ -19,12 +21,13 @@ export default async function Page({
 }: {
   params: { locale: string, slug: string }
 }) {
-  const page = await getPost(params.slug, params.locale)
+  const param = await params;
+  const page = await getPost(param.slug, param.locale)
 
   if (!page)
     notFound()
 
   return (
-    <div>Page: {page.id}</div>
+      <PageContent page={page}/>
   )
 }
