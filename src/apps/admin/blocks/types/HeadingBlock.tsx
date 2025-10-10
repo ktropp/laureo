@@ -1,10 +1,11 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Heading} from "lucide-react";
+import DOMPurify from "dompurify";
 
 const HeadingBlock = ({block, ...props}: BlockProps) => {
     const Tag = block.tagName;
     const sanitizedHtml = block?.text || ''
-    //TODO: DOMPurify
+
     return <Tag
         className={block.className}
         dangerouslySetInnerHTML={{__html: sanitizedHtml}}
@@ -17,7 +18,6 @@ export const blockConfig: BlockMeta = {
     name: 'Heading',
     icon: Heading,
     isText: true,
-    isTagEditable: true,
     tagName: 'h2',
     className: 'text-4xl font-bold mb-2',
     tags: [

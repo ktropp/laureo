@@ -2,6 +2,7 @@ import blockRegistry from "./blockRegistry";
 import {BlockAdd} from "./BlockAdd";
 import {withEditable} from "./withEditable";
 import {
+    Bold,
     Braces,
     ChevronDown,
     ChevronUp,
@@ -9,7 +10,12 @@ import {
     GripVertical,
     Heading1,
     Heading2,
-    Heading3, Heading4, Heading5, Heading6
+    Heading3,
+    Heading4,
+    Heading5,
+    Heading6,
+    Italic,
+    Link, Paintbrush
 } from "lucide-react";
 import React, {useState, useRef, useEffect} from "react";
 import {Input} from "../components/ui/input";
@@ -24,6 +30,7 @@ const BaseBlock = ({
                        onContentChange,
                        onClassNameChange,
                        onTagNameChange,
+                       onHrefChange,
                        onBlockDelete,
                        parentBlock,
                        autoFocus
@@ -73,6 +80,8 @@ const BaseBlock = ({
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
     const [isTagOpen, setIsTagOpen] = useState(false);
     const [isClassOpen, setIsClassOpen] = useState(false);
+    const [isLinkOpen, setIsLinkOpen] = useState(false);
+    const [isVariantOpen, setIsVariantOpen] = useState(false);
 
     const handleBlur = (e) => {
         // Check if the related target is a child of the current element
@@ -143,26 +152,34 @@ const BaseBlock = ({
                         </button>
                         <button
                             className="p-1 cursor-pointer hover:text-laureo-primary"
+                            title="Drag to reorder"
                             ref={setDraggableNodeRef}
                             {...listeners}
                         >
                             <GripVertical size={20}/>
                         </button>
                         <div className="flex flex-col px-1">
-                            <button className="cursor-pointer hover:text-laureo-primary">
+                            <button
+                                className="cursor-pointer hover:text-laureo-primary"
+                                title="Move up"
+                            >
                                 <ChevronUp size={20}/>
                             </button>
-                            <button className="cursor-pointer hover:text-laureo-primary">
+                            <button
+                                className="cursor-pointer hover:text-laureo-primary"
+                                title="Move down"
+                            >
                                 <ChevronDown size={20}/>
                             </button>
                         </div>
                     </div>
                     <div className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
-                        {Block.isTagEditable && (
+                        {Block.tags && (
                             <div className="relative">
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Change tag"
                                     onClick={() => setIsTagOpen(!isTagOpen)}
                                 >
                                     {blockJson.tagName && tagNameIcons[blockJson.tagName] ? (
@@ -202,9 +219,131 @@ const BaseBlock = ({
                                 </div>
                             </div>
                         )}
+                        {Block.variants && (
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Change variant"
+                                    onClick={() => setIsVariantOpen(!isVariantOpen)}
+                                >
+                                    <Paintbrush size={20}/>
+                                </button>
+                                <div
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isVariantOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2">
+                                        {Block.variants?.map((variant, index) => (
+                                            <button
+                                                key={index}
+                                                className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
+                                                data-variant-class={variant.className}
+                                                onClick={(e) => {
+                                                    const className = e.currentTarget.dataset.variantClass;
+
+                                                    onClassNameChange(className);
+
+                                                    setIsVariantOpen(false);
+                                                }}
+                                            >
+                                                {variant.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {Block.isText && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Bold"
+                                    onClick={() => {
+                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                                        if (editableElement) {
+                                            const selection = window.getSelection();
+                                            const range = selection?.getRangeAt(0);
+
+                                            if (selection && !selection.isCollapsed) {
+                                                // There is selected text
+                                                const selectedText = selection.toString();
+                                                const strong = document.createElement('strong');
+                                                strong.textContent = selectedText;
+                                                range?.deleteContents();
+                                                range?.insertNode(strong);
+                                            } else {
+                                                // No selection, wrap all content
+                                                const content = editableElement.innerHTML;
+                                                editableElement.innerHTML = `<strong>${content}</strong>`;
+                                            }
+
+                                            // Trigger content change
+                                            const event = new Event('input', {bubbles: true});
+                                            editableElement.dispatchEvent(event);
+                                        }
+                                    }}
+                                >
+                                    <Bold size={20}/>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Italic"
+                                    onClick={() => {
+                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                                        if (editableElement) {
+                                            const selection = window.getSelection();
+                                            const range = selection?.getRangeAt(0);
+
+                                            if (selection && !selection.isCollapsed) {
+                                                // There is selected text
+                                                const selectedText = selection.toString();
+                                                const strong = document.createElement('em');
+                                                strong.textContent = selectedText;
+                                                range?.deleteContents();
+                                                range?.insertNode(strong);
+                                            } else {
+                                                // No selection, wrap all content
+                                                const content = editableElement.innerHTML;
+                                                editableElement.innerHTML = `<em>${content}</em>`;
+                                            }
+
+                                            // Trigger content change
+                                            const event = new Event('input', {bubbles: true});
+                                            editableElement.dispatchEvent(event);
+                                        }
+                                    }}
+                                >
+                                    <Italic size={20}/>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Link"
+                                    onClick={() => setIsLinkOpen(!isLinkOpen)}
+                                >
+                                    <Link size={20}/>
+                                </button>
+                                <div
+                                    className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2">
+                                        <Input
+                                            id=""
+                                            type="text"
+                                            placeholder="Enter link URL"
+                                            name=""
+                                            defaultValue={blockJson.href}
+                                            onChange={(e) => onHrefChange(e.target.value)}
+                                            onBlur={(e) => onHrefChange(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
                         <button
                             type="button"
                             className="p-1 cursor-pointer hover:text-laureo-primary"
+                            title="Change class"
                             onClick={() => setIsClassOpen(!isClassOpen)}
                         >
                             <Braces size={20}/>
@@ -226,8 +365,11 @@ const BaseBlock = ({
                     </div>
                     <div
                         className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
-                        <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
-                                onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
+                        <button
+                            type="button"
+                            className="p-1 cursor-pointer hover:text-laureo-primary"
+                            title="More options"
+                            onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
                             <EllipsisVertical size={20}/>
                         </button>
                         <div

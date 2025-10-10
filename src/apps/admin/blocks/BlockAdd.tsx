@@ -95,7 +95,7 @@ export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
                 ref={inputRef}
                 contentEditable
                 suppressContentEditableWarning
-                className="w-full focus:outline-0 relative"
+                className="w-full min-w-30 focus:outline-0 relative"
                 onInput={(e) => handleInput(e)}
                 onKeyDown={handleKeyDown}
             >

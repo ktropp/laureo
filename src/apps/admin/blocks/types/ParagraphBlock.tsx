@@ -1,12 +1,13 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {Pilcrow} from "lucide-react";
-import {cn} from "../../lib/utils";
 
 const ParagraphBlock = ({block, ...props}: BlockProps) => {
+    const sanitizedHtml = block?.text || ''
     return <p
         className={block.className}
+        dangerouslySetInnerHTML={{__html: sanitizedHtml}}
         {...props}
-    >{block?.text}</p>
+    ></p>
 };
 
 export const blockConfig: BlockMeta = {
