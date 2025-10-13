@@ -1,11 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@theme/*": ["../../../theme/*"],
-      "@front/*": ["../../src/apps/front"],
-      "@admin/*": ["../admin/*"]
-    },
     "target": "ES2017",
     "lib": [
       "dom",

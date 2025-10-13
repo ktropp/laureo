@@ -3,7 +3,7 @@
 import {useSelectedLayoutSegment} from 'next/navigation';
 import {ComponentProps} from 'react';
 import {Link} from 'i18n/navigation';
-import {cn} from "admin/lib/utils";
+import {cn} from "@admin/lib/utils";
 
 export default function MenuLink({
                                      href,

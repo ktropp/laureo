@@ -49,7 +49,7 @@ export default function UsersIndex({initialData}) {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center mb-6 gap-6">
                 <h1 className="text-4xl font-bold">Users</h1>
                 <Button asChild><Link href="/user/add">Add <CirclePlus className="h-5 w-5"/></Link></Button>
             </div>

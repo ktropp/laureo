@@ -1,6 +1,8 @@
+import {prisma} from "lib/prisma";
+import MediaIndex from "./mediaIndex";
 
-export default function Home() {
-  return (
-    <h1 className="text-4xl font-bold">Media</h1>
-  );
+export default async function MediaPage({params,}: { params: { type: string } }) {
+    const data = await prisma.media.findMany()
+
+    return <MediaIndex initialData={data}/>
 }

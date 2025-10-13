@@ -1,17 +1,60 @@
 services:
 
-  cms-dev:
-    build: .
+  front:
+    build:
+      context: .
+      dockerfile: src/apps/front/Dockerfile
+    container_name: front
     ports:
-      - "3000:3000" # front
-      - "3001:3001" # admin
+      - "3000:3000"   # accessible on host: localhost:3000
+    networks:
+      - app-network
+    depends_on:
+      - cdn
+      - db
     volumes:
-      - .:/app
+      - ./src/apps/front:/app/src/apps/front
+      - ./src/apps/admin:/app/src/apps/admin
+      - ./theme:/app/theme
+      - ./prisma:/app/prisma
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_CDN_HOST=cdn
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
+
+  admin:
+    build:
+      context: .
+      dockerfile: src/apps/admin/Dockerfile
+    container_name: admin
+    ports:
+      - "3001:3001"   # accessible on host: localhost:3001
+    networks:
+      - app-network
     depends_on:
+      - cdn
       - db
+    volumes:
+      - ./src/apps/admin:/app/src/apps/admin
+      - ./uploads:/app/uploads   # Admin can write uploaded files here
+      - ./theme:/app/theme
+      - ./prisma:/app/prisma
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_CDN_HOST=cdn
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
+
+  cdn:
+    build:
+      context: .
+      dockerfile: src/apps/cdn/Dockerfile
+    container_name: cdn
+    ports:
+      - "3002:3002"   # accessible on host: localhost:3002
+    networks:
+      - app-network
+    volumes:
+      - ./uploads:/app/uploads   # CDN serves files from the shared uploads folder
 
   db:
     image: postgres:15
@@ -19,12 +62,18 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    networks:
+      - app-network
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mydb
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:

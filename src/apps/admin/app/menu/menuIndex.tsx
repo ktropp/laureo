@@ -8,7 +8,7 @@ import { GridView } from "components/gridview";
 import * as Dialog from '@radix-ui/react-dialog';
 import { postDelete } from "actions/postDelete";
 
-export default function MenuIndex({ type, initialData }) {
+export default function MenuIndex({ initialData }) {
   const [open, setOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
@@ -48,7 +48,7 @@ export default function MenuIndex({ type, initialData }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex items-center mb-6 gap-6">
         <h1 className="text-4xl font-bold">Menus</h1>
         <Button asChild><Link href={`/menu/add`}>Add <CirclePlus className="h-5 w-5" /></Link></Button>
       </div>

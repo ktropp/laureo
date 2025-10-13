@@ -1,4 +1,4 @@
-import blockRegistry from "admin/blocks/blockRegistry";
+import blockRegistry from "@admin/blocks/blockRegistry";
 
 const RenderBlock = ({block}) => {
     const Block = blockRegistry.find(b => b.type === block.type);
