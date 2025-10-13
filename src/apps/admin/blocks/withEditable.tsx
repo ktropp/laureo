@@ -2,6 +2,8 @@ import {BlockJson} from "./blockDefinitions";
 import {ComponentType, useRef} from "react";
 import {cn} from "lib/utils";
 import ContentEditable from "react-contenteditable";
+import {getIconByName} from "./iconRegistry";
+import {renderToStaticMarkup} from "react-dom/server";
 
 export interface WithEditableProps {
     className?: string;
@@ -21,6 +23,7 @@ export function withEditable<T extends BaseBlockProps>(
                                       }: T & WithEditableProps) {
 
         const contentEditableRef = useRef<any>(null);
+        const Icon = props.block.icon ? getIconByName(props.block.icon) : null;
 
         const handleChange = (evt: any) => {
             const content = contentEditableRef.current?.innerHTML || '';
@@ -29,16 +32,26 @@ export function withEditable<T extends BaseBlockProps>(
             }
         };
 
+        //TODO: icon displays multiple times, fix
+        const iconHtml = Icon
+            ? `<span contenteditable="false" class="inline-flex align-middle ml-2">${renderToStaticMarkup(
+                <Icon size={16}/>
+            )}</span>`
+            : "";
+        const contentHtml = `${props.block.text || ''}${iconHtml}`;
+
         const componentProps = {
             className: cn(
                 props.block.className,
+                Icon ? 'flex items-center' : '',
                 'focus:outline-0'
             ),
             innerRef: contentEditableRef,
-            html: props.block.text || '',
+            html: contentHtml,
             tagName: props.block.tagName || 'div',
             onBlur: handleChange
         } as T;
-        return <ContentEditable {...componentProps} />
+
+        return <ContentEditable {...componentProps} />;
     }
 }

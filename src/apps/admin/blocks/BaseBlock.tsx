@@ -5,7 +5,7 @@ import {
     Bold,
     Braces,
     ChevronDown,
-    ChevronUp,
+    ChevronUp, Diamond,
     EllipsisVertical,
     GripVertical,
     Heading1,
@@ -21,6 +21,7 @@ import React, {useState, useRef, useEffect} from "react";
 import {Input} from "../components/ui/input";
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
+import {getIconName} from "./iconRegistry";
 
 const BaseBlock = ({
                        children,
@@ -31,6 +32,7 @@ const BaseBlock = ({
                        onClassNameChange,
                        onTagNameChange,
                        onHrefChange,
+                       onIconChange,
                        onBlockDelete,
                        parentBlock,
                        autoFocus
@@ -82,6 +84,7 @@ const BaseBlock = ({
     const [isClassOpen, setIsClassOpen] = useState(false);
     const [isLinkOpen, setIsLinkOpen] = useState(false);
     const [isVariantOpen, setIsVariantOpen] = useState(false);
+    const [isIconOpen, setIsIconOpen] = useState(false);
 
     const handleBlur = (e) => {
         // Check if the related target is a child of the current element
@@ -246,6 +249,42 @@ const BaseBlock = ({
                                                 }}
                                             >
                                                 {variant.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {Block.icons && (
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title="Change icon"
+                                    onClick={() => setIsIconOpen(!isIconOpen)}
+                                >
+                                    <Diamond size={20}/>
+                                </button>
+                                <div
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2">
+                                        {Block.icons?.map((Icon, index) => (
+                                            <button
+                                                key={index}
+                                                className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
+                                                onClick={() => {
+                                                    let iconName = getIconName(Icon)
+
+                                                    if (iconName === blockJson.icon) {
+                                                        iconName = null;
+                                                    }
+
+                                                    onIconChange(iconName);
+
+                                                    setIsIconOpen(false);
+                                                }}
+                                            >
+                                                <Icon size={20}/>
                                             </button>
                                         ))}
                                     </div>

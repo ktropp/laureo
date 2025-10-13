@@ -186,6 +186,30 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
+    const handleBlockIconChange = (icon: string, blockIndex: string) => {
+        setBlocks(prev => {
+            const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map(block => {
+                    if (block.index === blockIndex) {
+                        return {
+                            ...block,
+                            icon: icon
+                        };
+                    }
+                    if (block.children && block.children.length > 0) {
+                        return {
+                            ...block,
+                            children: updateBlocksRecursively(block.children)
+                        };
+                    }
+                    return block;
+                });
+            };
+
+            return updateBlocksRecursively(prev);
+        });
+    };
+
     const handleBlockTagNameChange = (tagName: string, className: string, blockIndex: string) => {
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
@@ -224,6 +248,7 @@ export default function BlockEditor({content, onChange}: {
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
                     onHrefChange={(href) => handleBlockHrefChange(href, block.index)}
+                    onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
                     onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                     onBlockDelete={() => handleBlockDelete(block.index)}
                 >
@@ -255,6 +280,7 @@ export default function BlockEditor({content, onChange}: {
                                 onContentChange={(text) => handleBlockTextChange(text, block.index)}
                                 onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
                                 onHrefChange={(href) => handleBlockHrefChange(href, block.index)}
+                                onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
                                 onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                                 onBlockDelete={() => handleBlockDelete(block.index)}
                             >

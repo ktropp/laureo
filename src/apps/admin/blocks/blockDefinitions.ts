@@ -11,6 +11,9 @@ export interface BlockMeta {
   className?: string; // default classes
   tags?: BlockTag[];
   variants?: BlockVariant[];
+  icons?: LucideIcon[];
+  iconSize?: number;
+  iconClassName?: string;
 }
 
 export interface BlockTag {
@@ -33,6 +36,7 @@ export interface BlockJson {
   href?: string;
   target?: string;
   rel?: string;
+  icon?: string;
   children?: BlockJson[];
 }
 
