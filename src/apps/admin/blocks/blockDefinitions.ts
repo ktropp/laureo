@@ -34,6 +34,11 @@ export interface BlockJson {
   className?: string;
   id?: string;
   href?: string;
+  src?: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+  title?: string;
   target?: string;
   rel?: string;
   icon?: string;

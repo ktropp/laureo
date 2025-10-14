@@ -7,10 +7,11 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { path: string[] } }
 ) {
+  const param = await params
 
   try {
     // Go from src/apps/cdn/app → project root → uploads/
-    const filePath = path.join(process.cwd(), "../../../uploads", ...params.path);
+    const filePath = path.join(process.cwd(), "../../../uploads", ...param.path);
     const fileBuffer = await fs.readFile(filePath).catch(() => null);
 
     if (!fileBuffer) {

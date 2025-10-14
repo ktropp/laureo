@@ -54,6 +54,7 @@ services:
     networks:
       - app-network
     volumes:
+      - ./src/apps/cdn:/app/src/apps/cdn
       - ./uploads:/app/uploads   # CDN serves files from the shared uploads folder
 
   db:

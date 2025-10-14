@@ -1,6 +1,5 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Heading} from "lucide-react";
-import DOMPurify from "dompurify";
 
 const HeadingBlock = ({block, ...props}: BlockProps) => {
     const Tag = block.tagName;

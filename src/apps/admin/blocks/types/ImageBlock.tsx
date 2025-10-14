@@ -1,14 +1,24 @@
-import { BlockMeta } from "blocks/blockDefinitions";
-import { Image } from "lucide-react";
+import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
+import {Image as LucideImage} from "lucide-react";
+import Image from 'next/image'
 
-const ImageBlock = ({ block }: { block: Block }) => {
-  return <div></div>
+const ImageBlock = ({block, ...props}: BlockProps) => {
+    return <figure
+        className={block.className}
+    >
+        <Image
+            src={block.src}
+            alt={block.alt}
+            width={block.width}
+            height={block.height}
+        />
+    </figure>
 };
 
 export const blockConfig: BlockMeta = {
-  type: 'image',
-  name: 'Image',
-  icon: Image 
+    type: 'image',
+    name: 'Image',
+    icon: LucideImage
 };
 
 export default ImageBlock;

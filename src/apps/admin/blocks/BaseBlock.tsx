@@ -22,6 +22,7 @@ import {Input} from "../components/ui/input";
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
+import {withImage} from "./withImage";
 
 const BaseBlock = ({
                        children,
@@ -45,6 +46,10 @@ const BaseBlock = ({
 
     if (Block.isText) {
         BlockComponent = withEditable(BlockComponent);
+    }
+
+    if (Block.type === 'image') {
+        BlockComponent = withImage(BlockComponent);
     }
 
     const blockRef = useRef(null)
