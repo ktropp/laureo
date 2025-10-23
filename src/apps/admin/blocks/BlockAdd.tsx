@@ -1,25 +1,28 @@
 import {Button} from "components/ui/button"
 import {useEffect, useRef, useState} from "react";
 import blockRegistry from "./blockRegistry";
-import {Plus} from "lucide-react";
+import {Plus, Search} from "lucide-react";
 import {BlockJson, BlockMeta} from "./blockDefinitions";
+import {Input} from "../components/ui/input";
 
 interface BlockAddProps {
     onBlockAdd: (block: BlockJson) => void;
     parentBlock?: BlockJson;
 }
 
-export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
+export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
     const inputRef = useRef<HTMLParagraphElement>(null);
     const [isEmpty, setIsEmpty] = useState(true);
     const [showSlashMenu, setShowSlashMenu] = useState(false);
     const [slashMenuPosition, setSlashMenuPosition] = useState({top: 0, left: 0});
     const [filteredBlocks, setFilteredBlocks] = useState(blockRegistry);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [showMenu, setShowMenu] = useState(false);
 
     const handleBlockSelection = (type: string) => {
         onBlockAdd(type);
         setShowSlashMenu(false);
+        setShowMenu(false);
         if (inputRef.current) {
             inputRef.current.textContent = '';
         }
@@ -31,7 +34,7 @@ export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (!showSlashMenu) return;
+        if (!showSlashMenu && !showMenu) return;
 
         switch (e.key) {
             case 'ArrowDown':
@@ -53,8 +56,10 @@ export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
                 }
                 break;
             case 'Escape':
+                //TODO: nefunguje
                 e.preventDefault();
                 setShowSlashMenu(false);
+                setShowMenu(false);
                 break;
         }
     };
@@ -90,20 +95,22 @@ export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
     };
 
     return (
-        <div className="flex flex-1 justify-between items-center relative">
-            <p
-                ref={inputRef}
-                contentEditable
-                suppressContentEditableWarning
-                className="w-full min-w-30 focus:outline-0 relative"
-                onInput={(e) => handleInput(e)}
-                onKeyDown={handleKeyDown}
-            >
-                {isEmpty && (
-                    <span className="absolute pointer-events-none opacity-60"
-                          data-rich-text-placeholder="Write / for block selection"></span>
-                )}
-            </p>
+        <div className={`flex justify-between items-center relative ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
+            {!parentBlock && (
+                <p
+                    ref={inputRef}
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="w-full min-w-30 focus:outline-0 relative"
+                    onInput={(e) => handleInput(e)}
+                    onKeyDown={handleKeyDown}
+                >
+                    {isEmpty && (
+                        <span className="absolute pointer-events-none opacity-60"
+                              data-rich-text-placeholder="Write / for block selection"></span>
+                    )}
+                </p>
+            )}
             {showSlashMenu && (
                 <div
                     className={`fixed z-2 flex flex-col border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark p-2`}
@@ -127,9 +134,51 @@ export const BlockAdd = ({onBlockAdd}: BlockAddProps) => {
                     ))}
                 </div>
             )}
-            <Button variant="secondary" size="icon_small" className="absolute right-0">
-                <Plus></Plus>
+            <Button
+                variant="secondary"
+                size="icon_small"
+                className="absolute right-0"
+                type="button"
+                onClick={() => {
+                    setFilteredBlocks(blockRegistry);
+                    setSelectedIndex(0);
+                    setShowMenu(!showMenu)
+                }}
+            >
+                <Plus size={20}/>
             </Button>
+            {showMenu && (
+                <div className="absolute right-0 top-8 z-2">
+                    <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-lg shadow-lg p-2">
+                        <div className="flex flex-col gap-2">
+                            <div className="relative">
+                                <Input
+                                    placeholder="Search"
+                                />
+                                <Search
+                                    size={20}
+                                    className="absolute right-2 top-2.5"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {filteredBlocks.map((block, index) => (
+                                    <Button
+                                        type="button"
+                                        variant={selectedIndex == index ? 'menu_focus' : 'menu'}
+                                        key={index}
+                                        data-slash-menu-item
+                                        onClick={() => handleBlockSelection(block.type)}
+                                        onMouseEnter={() => handleMenuItemMouseEnter(index)}
+                                    >
+                                        {block.icon && <block.icon size={20}/>}
+                                        {block.name}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

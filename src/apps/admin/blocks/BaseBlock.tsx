@@ -15,7 +15,7 @@ import {
     Heading5,
     Heading6,
     Italic,
-    Link, Paintbrush
+    Link, List, ListOrdered, Paintbrush
 } from "lucide-react";
 import React, {useState, useRef, useEffect} from "react";
 import {Input} from "../components/ui/input";
@@ -23,6 +23,7 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
 import {withImage} from "./withImage";
+import {withList} from "./withList";
 
 const BaseBlock = ({
                        children,
@@ -50,6 +51,10 @@ const BaseBlock = ({
 
     if (Block.type === 'image') {
         BlockComponent = withImage(BlockComponent);
+    }
+
+    if (Block.type === 'list') {
+        //BlockComponent = withList(BlockComponent);
     }
 
     const blockRef = useRef(null)
@@ -107,6 +112,8 @@ const BaseBlock = ({
         'h4': Heading4,
         'h5': Heading5,
         'h6': Heading6,
+        'ul': List,
+        'ol': ListOrdered,
     }
 
     return (
@@ -420,6 +427,7 @@ const BaseBlock = ({
                             className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
                             <div className="p-2">
                                 <button
+                                    type="button"
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
                                     <span>Kopírovat</span>
                                     <span>TODO</span>
@@ -427,6 +435,7 @@ const BaseBlock = ({
                             </div>
                             <div className="p-2 border-t">
                                 <button
+                                    type="button"
                                     onClick={() => {
                                         onBlockDelete()
                                     }}
@@ -439,9 +448,9 @@ const BaseBlock = ({
                     </div>
                 </div>
             </div>
-            <BlockComponent block={blockWithCallback}>
+            <BlockComponent block={blockWithCallback} className={Block.type == 'list' ? 'min-h-7' : ''}>
                 {children}
-                {Block.isParent && <BlockAdd onBlockAdd={onBlockAdd}/>}
+                {Block.isParent && isFocused && <BlockAdd onBlockAdd={onBlockAdd} parentBlock={parentBlock}/>}
             </BlockComponent>
         </div>
     )

@@ -14,6 +14,8 @@ export interface BlockMeta {
   icons?: LucideIcon[];
   iconSize?: number;
   iconClassName?: string;
+  allowedChildren?: string[];
+  disallowChildren?: string[];
 }
 
 export interface BlockTag {
