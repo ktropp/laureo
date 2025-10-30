@@ -2,6 +2,7 @@
 
 @source "@theme/*.ts";
 @source "@theme/*.tsx";
+@source "../safelist.txt";
 
 @import "./../../../../theme/globals.css";
 

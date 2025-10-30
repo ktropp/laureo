@@ -23,7 +23,6 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
 import {withImage} from "./withImage";
-import {withList} from "./withList";
 
 const BaseBlock = ({
                        children,
@@ -36,6 +35,8 @@ const BaseBlock = ({
                        onHrefChange,
                        onIconChange,
                        onBlockDelete,
+                       onBlockCopy,
+                       onBlockPaste,
                        parentBlock,
                        autoFocus
                    }) => {
@@ -138,9 +139,17 @@ const BaseBlock = ({
                     e.preventDefault();
                     onBlockDelete();
                 }
+                if (isFocused && !isClassOpen && e.ctrlKey && e.key.toLowerCase() === 'c') {
+                    e.preventDefault();
+                    onBlockCopy();
+                }
+                if (isFocused && Block.isParent && !isClassOpen && e.ctrlKey && e.key.toLowerCase() === 'v') {
+                    e.preventDefault();
+                    onBlockPaste();
+                }
             }}
         >
-            <div className={`absolute z-2 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
+            <div className={`absolute z-9 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
                 {parentBlock &&
                     <div
                         className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
@@ -428,9 +437,23 @@ const BaseBlock = ({
                             <div className="p-2">
                                 <button
                                     type="button"
+                                    onClick={() => {
+                                        onBlockCopy()
+                                    }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
                                     <span>Kopírovat</span>
-                                    <span>TODO</span>
+                                    <span>Ctrl+C</span>
+                                </button>
+                            </div>
+                            <div className="p-2 border-t">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onBlockPaste()
+                                    }}
+                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                    <span>Vložit</span>
+                                    <span>Ctrl+V</span>
                                 </button>
                             </div>
                             <div className="p-2 border-t">
@@ -448,7 +471,7 @@ const BaseBlock = ({
                     </div>
                 </div>
             </div>
-            <BlockComponent block={blockWithCallback} className={Block.type == 'list' ? 'min-h-7' : ''}>
+            <BlockComponent block={blockWithCallback} className={Block.isParent ? 'min-h-7 min-w-20' : ''}>
                 {children}
                 {Block.isParent && isFocused && <BlockAdd onBlockAdd={onBlockAdd} parentBlock={parentBlock}/>}
             </BlockComponent>

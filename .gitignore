@@ -4,6 +4,9 @@
 /theme/*
 !/theme/.gitkeep
 
+# safelist
+/src/apps/admin/safelist.txt
+
 # uploads
 /uploads/*
 !/uploads/.gitkeep
@@ -12,6 +15,7 @@
 /node_modules
 /src/apps/admin/node_modules
 /src/apps/front/node_modules
+/src/apps/cdn/node_modules
 /.pnp
 .pnp.*
 .yarn/*

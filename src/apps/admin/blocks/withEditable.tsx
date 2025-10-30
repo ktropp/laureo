@@ -44,7 +44,7 @@ export function withEditable<T extends BaseBlockProps>(
             className: cn(
                 props.block.className,
                 Icon ? 'flex items-center' : '',
-                'focus:outline-0'
+                'focus:outline-0 min-w-20'
             ),
             innerRef: contentEditableRef,
             html: contentHtml,

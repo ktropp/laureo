@@ -1,8 +1,9 @@
 import { BlockMeta } from "blocks/blockDefinitions";
 import { Group } from "lucide-react";
+import {cn} from "../../lib/utils";
 
-const GroupBlock = ({ children, block }: { block: Block }) => {
-  return <div className={block.className}>{children}</div>
+const GroupBlock = ({ children, block, className }: { block: Block }) => {
+  return <div className={cn(block.className, className)}>{children}</div>
 };
 
 export const blockConfig: BlockMeta = {

@@ -101,10 +101,7 @@ export default function BlockEditor({content, onChange}: {
                         return false;
                     }
                     if (block.children && block.children.length > 0) {
-                        return {
-                            ...block,
-                            children: deleteBlocksRecursively(block.children)
-                        };
+                        block.children = deleteBlocksRecursively(block.children);
                     }
                     return true;
                 });
@@ -112,6 +109,109 @@ export default function BlockEditor({content, onChange}: {
 
             return deleteBlocksRecursively(prev);
         });
+    };
+
+    const handleBlockCopy = async (blockIndex: string) => {
+        const findBlock = (blocks: BlockJson[]): BlockJson | undefined => {
+            for (const block of blocks) {
+                if (block.index === blockIndex) {
+                    return block;
+                }
+                if (block.children?.length) {
+                    const found = findBlock(block.children);
+                    if (found) return found;
+                }
+            }
+            return undefined;
+        };
+
+        const blockToCopy = findBlock(blocks);
+        if (!blockToCopy) return;
+
+        // Create a deep copy of the block, but generate new indices
+        const prepareBlockCopy = (block: BlockJson): BlockJson => {
+            const newBlock = {
+                ...block,
+                index: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+            };
+
+            if (block.children?.length) {
+                newBlock.children = block.children.map(child => prepareBlockCopy(child));
+            }
+
+            return newBlock;
+        };
+
+        const blockCopy = prepareBlockCopy(blockToCopy);
+
+        try {
+            await navigator.clipboard.writeText(JSON.stringify(blockCopy));
+        } catch (err) {
+            console.error('Failed to copy block to clipboard:', err);
+        }
+    };
+
+    const handleBlockPaste = async (blockIndex: string) => {
+        try {
+            // Read clipboard text using the modern Clipboard API
+            const clipboardText = await navigator.clipboard.readText();
+
+            // Try to parse the clipboard content as JSON
+            let pastedBlock: BlockJson;
+            try {
+                pastedBlock = JSON.parse(clipboardText);
+                // Validate that it's a BlockJson object
+                if (!pastedBlock.type || !pastedBlock.index) {
+                    throw new Error('Invalid block data');
+                }
+            } catch (e) {
+                console.error('Invalid JSON data in clipboard');
+                return;
+            }
+
+            // Generate new unique indices for the block and its children
+            const generateUniqueIndices = (block: BlockJson): BlockJson => {
+                const newBlock = {
+                    ...block,
+                    index: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                };
+
+                if (block.children?.length) {
+                    newBlock.children = block.children.map(child => generateUniqueIndices(child));
+                }
+
+                return newBlock;
+            };
+
+            // Create a new block with unique indices
+            const uniqueBlock = generateUniqueIndices(pastedBlock);
+
+            // Update the blocks state to add the pasted block as a child
+            setBlocks(prev => {
+                const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                    return blocks.map(block => {
+                        if (block.index === blockIndex) {
+                            return {
+                                ...block,
+                                children: [...(block.children || []), uniqueBlock]
+                            };
+                        }
+                        if (block.children && block.children.length > 0) {
+                            return {
+                                ...block,
+                                children: updateBlocksRecursively(block.children)
+                            };
+                        }
+                        return block;
+                    });
+                };
+
+                return updateBlocksRecursively(prev);
+            });
+
+        } catch (err) {
+            console.error('Failed to paste block:', err);
+        }
     };
 
     const handleBlockTextChange = (text: string, blockIndex: string) => {
@@ -139,6 +239,15 @@ export default function BlockEditor({content, onChange}: {
     };
 
     const handleBlockClassNameChange = (className: string, blockIndex: string) => {
+
+        fetch('/api/safelist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({className})
+        });
+
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {
@@ -251,6 +360,8 @@ export default function BlockEditor({content, onChange}: {
                     onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
                     onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                     onBlockDelete={() => handleBlockDelete(block.index)}
+                    onBlockCopy={() => handleBlockCopy(block.index)}
+                    onBlockPaste={() => handleBlockPaste(block.index)}
                 >
                     {block.children && renderBlocks(block.children, block)}
                 </BaseBlock>
@@ -283,6 +394,8 @@ export default function BlockEditor({content, onChange}: {
                                 onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
                                 onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                                 onBlockDelete={() => handleBlockDelete(block.index)}
+                                onBlockCopy={() => handleBlockCopy(block.index)}
+                                onBlockPaste={() => handleBlockPaste(block.index)}
                             >
                                 {block.children && renderBlocks(block.children, block)}
                             </BaseBlock>
