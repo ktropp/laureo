@@ -27,6 +27,8 @@
     --spacing: 0.25rem;
 }
 
+@import "./../../../../theme/admin.css";
+
 .min-h-content-height {
     min-height: calc(100vh - 24px);
 }

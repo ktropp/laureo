@@ -1,7 +1,7 @@
 import {
     LayoutDashboard,
     FileText,
-    Settings,
+    Settings as SettingsIcon,
     Users,
     Images,
     List,
@@ -13,6 +13,10 @@ import {logout} from "actions/logout";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {UserInfo} from "components/user-info";
+import {Settings} from "@theme/settings";
+import Image from "next/image";
+import cmsIcon from "@theme/favicon/favicon.svg";
+//TODO: dynamic import icon
 
 interface SidebarProps {
     collapsed: boolean;
@@ -25,7 +29,7 @@ const menuItems = [
     {icon: Images, label: "Media", href: "/media"},
     {icon: Users, label: "Users", href: '/user'},
     {icon: List, label: "Menus", href: '/menu'},
-    {icon: Settings, label: "Settings", href: '/settings'},
+    {icon: SettingsIcon, label: "Settings", href: '/settings'},
 ];
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
@@ -37,13 +41,21 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
       ${collapsed ? 'xl:w-16' : 'xl:w-64'}
     `}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-laureo-border dark:border-laureo-border-dark">
+            <div
+                className="flex items-center justify-between p-4 border-b border-laureo-border dark:border-laureo-border-dark">
                 {!collapsed && (
                     <div className="items-center gap-2 flex">
-                        <div className="w-8 h-8 bg-laureo-primary rounded-md items-center justify-center flex">
-                            <span className="text-laureo-text font-bold text-sm">L</span>
+                        <div className="w-8 h-8">
+                            <Image src={cmsIcon} alt={Settings.cmsName ?? 'Laureo CMS'}/>
                         </div>
-                        <span className="hidden xl:block font-semibold text-lg">Laureo CMS</span>
+                        {/*
+                        <div className="w-8 h-8 bg-laureo-primary rounded-md items-center justify-center flex">
+                            <span
+                                className="text-laureo-text font-bold text-sm">{Settings.cmsName ? Settings.cmsName.slice(0, 1).toUpperCase() : 'L'}</span>
+                        </div>
+                        */}
+                        <span
+                            className="hidden xl:block font-semibold text-lg">{Settings.cmsName ?? 'Laureo CMS'}</span>
                     </div>
                 )}
                 <Button

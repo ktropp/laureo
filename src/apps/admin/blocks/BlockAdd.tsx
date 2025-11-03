@@ -95,7 +95,7 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
     };
 
     return (
-        <div className={`flex justify-between items-center relative ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
+        <div className={`flex justify-between items-center relative z-20 ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
             {!parentBlock && (
                 <p
                     ref={inputRef}
@@ -113,7 +113,7 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
             )}
             {showSlashMenu && (
                 <div
-                    className={`fixed z-2 flex flex-col border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark p-2`}
+                    className={`fixed z-20 flex flex-col border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark p-2`}
                     style={{
                         top: slashMenuPosition.top,
                         left: slashMenuPosition.left
@@ -148,7 +148,7 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
                 <Plus size={20}/>
             </Button>
             {showMenu && (
-                <div className="absolute right-0 top-8 z-2">
+                <div className="absolute right-0 top-8 z-20">
                     <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-lg shadow-lg p-2">
                         <div className="flex flex-col gap-2">
                             <div className="relative">
