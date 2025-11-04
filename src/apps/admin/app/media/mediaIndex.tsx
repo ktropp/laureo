@@ -4,6 +4,7 @@ import {Button} from "components/ui/button";
 import {CirclePlus, X} from "lucide-react";
 import {useDropzone} from 'react-dropzone'
 import MediaListing from "../../components/media/MediaListing";
+import MediaModal from "../../components/media/MediaModal";
 
 export default function MediaIndex({initialData}) {
     async function handleFileUpload(acceptedFiles) {
@@ -22,6 +23,7 @@ export default function MediaIndex({initialData}) {
             body: formData
         })
     }
+
     const onDrop = useCallback(acceptedFiles => {
         handleFileUpload(acceptedFiles)
     }, [])
@@ -49,7 +51,7 @@ export default function MediaIndex({initialData}) {
                         <p>Drag 'n' drop some files here, or click to select files</p>
                 }
             </div>
-            <MediaListing data={initialData} />
+            <MediaListing data={initialData}/>
         </div>
     )
 }

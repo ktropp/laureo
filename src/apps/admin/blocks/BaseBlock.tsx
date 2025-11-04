@@ -46,16 +46,20 @@ const BaseBlock = ({
     if (!BlockComponent)
         return null;
 
+    const [isFocused, setIsFocused] = useState(false);
+    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
+    const [isClassOpen, setIsClassOpen] = useState(false);
+    const [isLinkOpen, setIsLinkOpen] = useState(false);
+    const [isVariantOpen, setIsVariantOpen] = useState(false);
+    const [isIconOpen, setIsIconOpen] = useState(false);
+
     if (Block.isText) {
         BlockComponent = withEditable(BlockComponent);
     }
 
     if (Block.type === 'image') {
         BlockComponent = withImage(BlockComponent);
-    }
-
-    if (Block.type === 'list') {
-        //BlockComponent = withList(BlockComponent);
     }
 
     const blockRef = useRef(null)
@@ -72,6 +76,7 @@ const BaseBlock = ({
     const blockWithCallback = {
         ...blockJson,
         onContentChange,
+        isFocused,
         ref: blockRef
     }
 
@@ -89,13 +94,6 @@ const BaseBlock = ({
         transition,
     };
 
-    const [isFocused, setIsFocused] = useState(false);
-    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-    const [isTagOpen, setIsTagOpen] = useState(false);
-    const [isClassOpen, setIsClassOpen] = useState(false);
-    const [isLinkOpen, setIsLinkOpen] = useState(false);
-    const [isVariantOpen, setIsVariantOpen] = useState(false);
-    const [isIconOpen, setIsIconOpen] = useState(false);
 
     const handleBlur = (e) => {
         // Check if the related target is a child of the current element

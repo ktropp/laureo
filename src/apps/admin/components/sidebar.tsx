@@ -43,21 +43,20 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             {/* Header */}
             <div
                 className="flex items-center justify-between p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                {!collapsed && (
-                    <div className="items-center gap-2 flex">
+                <div className={`items-center gap-2 flex ${collapsed ? 'xl:hidden' : ''}`}>
+                    {cmsIcon ? (
                         <div className="w-8 h-8">
                             <Image src={cmsIcon} alt={Settings.cmsName ?? 'Laureo CMS'}/>
                         </div>
-                        {/*
+                    ) : (
                         <div className="w-8 h-8 bg-laureo-primary rounded-md items-center justify-center flex">
                             <span
                                 className="text-laureo-text font-bold text-sm">{Settings.cmsName ? Settings.cmsName.slice(0, 1).toUpperCase() : 'L'}</span>
                         </div>
-                        */}
-                        <span
-                            className="hidden xl:block font-semibold text-lg">{Settings.cmsName ?? 'Laureo CMS'}</span>
-                    </div>
-                )}
+                    )}
+                    <span
+                        className={`hidden font-semibold text-lg xl:block`}>{Settings.cmsName ?? 'Laureo CMS'}</span>
+                </div>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -92,8 +91,8 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             <div className="p-4 border-t border-laureo-border dark:border-laureo-border-dark">
                 {/* User Info */}
                 <div
-                    className={`flex items-center gap-3 justify-center xl:justify-start flex-col xl:flex-row  ${collapsed ? 'xl:justify-center' : ''}`}>
-                    <UserInfo/>
+                    className={`flex items-center gap-3 justify-center xl:justify-start flex-col ${collapsed ? 'xl:justify-center xl:flex-col' : 'xl:flex-row'}`}>
+                    <UserInfo collapsed={collapsed}/>
                     <form action={logout}>
                         <Button variant="ghost" size="sm" className="p-1" type="submit">
                             <LogOut className="h-4 w-4"/>

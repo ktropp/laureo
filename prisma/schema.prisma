@@ -32,6 +32,9 @@ model Media {
   file                 String
   alt                  String?
   title                String?
+  type                 String?
+  size                 String?
+  dimensions           String?
   author               User     @relation("MediaAuthor", fields: [authorId], references: [id])
   usersWithThisProfile User[]   @relation("UserProfile")
 }

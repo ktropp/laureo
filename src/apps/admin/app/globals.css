@@ -24,6 +24,9 @@
     --color-laureo-border: oklch(86.9% 0.022 252.894);
     --color-laureo-border-dark: oklch(44.6% 0.043 257.281);
 
+    --color-laureo-error: oklch(57.7% 0.245 27.325);
+    --color-laureo-error-bg: oklch(80.8% 0.114 19.571);
+
     --spacing: 0.25rem;
 }
 

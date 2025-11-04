@@ -5,6 +5,7 @@ import type {Metadata} from "next";
 import {Roboto} from "next/font/google";
 import "./globals.css";
 import {ToastContainer} from "react-toastify";
+import { Settings } from '@theme/settings';
 
 const roboto = Roboto({
     variable: "--font-roboto",
@@ -12,7 +13,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-    title: "Laureo CMS",
+    title: Settings.cmsName??"Laureo CMS",
     description: "Wordpress-like CMS. Built with Next.js, Prisma, and Tailwind CSS.",
 };
 

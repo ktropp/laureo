@@ -1,8 +1,8 @@
 'use server'
 import { prisma } from "lib/prisma";
 
-export async function getUser(id: number) {
-    return prisma.user.findFirstOrThrow({
+export async function getPostLang(id: number) {
+    return prisma.postLang.findFirstOrThrow({
         where: {
             id: id
         }

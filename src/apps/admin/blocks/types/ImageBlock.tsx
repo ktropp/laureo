@@ -6,12 +6,16 @@ const ImageBlock = ({block, ...props}: BlockProps) => {
     return <figure
         className={block.className}
     >
-        <Image
-            src={block.src}
-            alt={block.alt}
-            width={block.width}
-            height={block.height}
-        />
+        {block.src ? (
+            <Image
+                src={block.src}
+                alt={block.alt}
+                width={block.width}
+                height={block.height}
+            />
+        ) : (
+            <div>placeholder todo</div>
+        )}
     </figure>
 };
 

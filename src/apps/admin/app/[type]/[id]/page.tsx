@@ -1,6 +1,20 @@
-
 import { PostForm } from "../post-form"
 import { prisma } from "lib/prisma";
+import { Settings } from "@theme/settings";
+import {getPostLang} from "../../../actions/getPostLang";
+
+export async function generateMetadata({
+                                           params,
+                                       }: {
+    params: { type: string, id: string }
+}) {
+    const param = await params;
+    const postLang = await getPostLang(parseInt(param.id))
+
+    return {
+        title: "Edit " + param.type +  ' "' + postLang.title + '"' + " | " + (Settings.cmsName ?? "Laureo CMS"),
+    }
+}
 
 export default async function PostEditPage({
     params,

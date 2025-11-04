@@ -2,6 +2,7 @@ import {promises as fs} from "fs";
 import path from "path";
 import {prisma} from "lib/prisma";
 import { currentUser } from "lib/session";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
     const formData = await request.formData();
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
         await fs.writeFile(filePath, buffer);
     }
 
+    //TODO: this is not working here
     revalidatePath('/media')
 
     return new Response("Files uploaded successfully", {status: 200});

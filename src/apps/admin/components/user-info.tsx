@@ -12,7 +12,7 @@ type User = {
     surname?: string
 }
 
-export function UserInfo() {
+export function UserInfo({collapsed}) {
     const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -61,7 +61,7 @@ export function UserInfo() {
                 <AvatarImage src={user.image || undefined}/>
                 <AvatarFallback>{user.name?.[0] || 'U'}</AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0 hidden xl:flex flex-col items-center xl:items-start">
+            <div className={`flex-1 min-w-0 hidden flex-col items-center xl:items-start ${collapsed ? 'xl:hidden' : 'xl:flex'}`}>
                 <p className="text-sm font-medium truncate">{(user.name + ' ' + user.surname) || user.email}</p>
                 <p className="text-xs text-laureo-text-lighter dark:text-laureo-text-lighter-dark truncate capitalize">{user.role.toLowerCase()}</p>
             </div>

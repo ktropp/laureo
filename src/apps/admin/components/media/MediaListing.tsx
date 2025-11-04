@@ -1,12 +1,11 @@
-import {Media} from "@prisma/client";
 import MediaItem from "./MediaItem";
 
-export default function MediaListing({data}) {
+export default function MediaListing({data, onMediaSelect}) {
 
     return <div
         className="grid grid-cols-10 gap-4 mt-4"
     >
-        {data.map((media, index) => <MediaItem key={index} media={media}/>)}
+        {data.map((media, index) => <MediaItem key={index} media={media} onMediaSelect={onMediaSelect}/>)}
     </div>
 
 }
