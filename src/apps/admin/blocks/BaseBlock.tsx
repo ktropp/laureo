@@ -37,6 +37,7 @@ const BaseBlock = ({
                        onBlockDelete,
                        onBlockCopy,
                        onBlockPaste,
+                       onMediaEditorOpen,
                        parentBlock,
                        autoFocus
                    }) => {
@@ -76,6 +77,7 @@ const BaseBlock = ({
     const blockWithCallback = {
         ...blockJson,
         onContentChange,
+        onMediaEditorOpen,
         isFocused,
         ref: blockRef
     }

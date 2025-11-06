@@ -2,7 +2,7 @@ import Image from "next/image";
 import {Settings} from "@theme/settings";
 import {useRouter} from 'next/navigation';
 
-export default function MediaItem({media, onMediaSelect}) {
+export default function MediaItem({media}) {
     const router = useRouter();
 
     const handleClick = () => {

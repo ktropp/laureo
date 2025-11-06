@@ -11,6 +11,7 @@ export interface WithEditableProps {
 interface BaseBlockProps {
     block: BlockJson;
     onContentChange?: (content: string) => void;
+    onMediaEditorOpen?: (slug: string) => void;
     isFocused?: boolean;
 }
 
@@ -22,7 +23,6 @@ export function withImage<T extends BaseBlockProps>(
                                                ...props
                                            }: T & WithEditableProps) {
         const isFocused = props.block.isFocused;
-
         return <div
             className={`${!props.block.src ? "min-h-40 min-w-100 w-full " : ""} ${isFocused ? 'border border-laureo-secondary bg-laureo-border/30 dark:bg-laureo-border-dark/30' : 'bg-laureo-border dark:bg-laureo-border-dark'}`}>
             {!props.block.src && !isFocused && (
@@ -37,10 +37,15 @@ export function withImage<T extends BaseBlockProps>(
                     </div>
                     <p className="text-sm">Upload or pick an image from the media library</p>
                     <div className="flex gap-2">
-                        <Button>
+                        <Button
+                            type="button"
+                            onClick={() => props.block.onMediaEditorOpen?.('upload')}
+                        >
                             Upload
                         </Button>
                         <Button
+                            type="button"
+                            onClick={() => props.block.onMediaEditorOpen?.('media')}
                             variant="outline"
                         >
                             Select from media library

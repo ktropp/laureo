@@ -18,6 +18,7 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import MediaEditor from "./MediaEditor";
 
 export default function BlockEditor({content, onChange}: {
     content: BlockJson[],
@@ -25,6 +26,7 @@ export default function BlockEditor({content, onChange}: {
 }) {
     const [blocks, setBlocksState] = useState<Array<BlockJson>>(content || []);
     const [lastAddedBlockIndex, setLastAddedBlockIndex] = useState<string | null>(null);
+    const [mediaEditorOpen, setMediaEditorOpen] = useState<string | null>(null);
 
     const setBlocks = (updater: BlockJson[] | ((prev: BlockJson[]) => BlockJson[])) => {
         const newBlocks = typeof updater === 'function' ? updater(blocks) : updater;
@@ -344,6 +346,10 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
+    const handleMediaEditorOpen = (mediaEditorSlug: string, blockIndex: string) => {
+        setMediaEditorOpen(mediaEditorSlug);
+    }
+
     const renderBlocks = (blocks: BlockJson[], parentBlock: BlockJson) => {
         return blocks?.map((block) => {
             return (
@@ -362,6 +368,7 @@ export default function BlockEditor({content, onChange}: {
                     onBlockDelete={() => handleBlockDelete(block.index)}
                     onBlockCopy={() => handleBlockCopy(block.index)}
                     onBlockPaste={() => handleBlockPaste(block.index)}
+                    onMediaEditorOpen={(slug) => handleMediaEditorOpen(slug, block.index)}
                 >
                     {block.children && renderBlocks(block.children, block)}
                 </BaseBlock>
@@ -396,6 +403,7 @@ export default function BlockEditor({content, onChange}: {
                                 onBlockDelete={() => handleBlockDelete(block.index)}
                                 onBlockCopy={() => handleBlockCopy(block.index)}
                                 onBlockPaste={() => handleBlockPaste(block.index)}
+                                onMediaEditorOpen={(slug) => handleMediaEditorOpen(slug, block.index)}
                             >
                                 {block.children && renderBlocks(block.children, block)}
                             </BaseBlock>
@@ -404,6 +412,7 @@ export default function BlockEditor({content, onChange}: {
                 </SortableContext>
             </DndContext>
             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
+            {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen} onMediaEditorClose={() => setMediaEditorOpen(null)}/>}
         </div>
     )
 

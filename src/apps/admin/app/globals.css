@@ -28,6 +28,8 @@
     --color-laureo-error-bg: oklch(80.8% 0.114 19.571);
 
     --spacing: 0.25rem;
+
+    --text-laureo-base: 16px;
 }
 
 @import "./../../../../theme/admin.css";
