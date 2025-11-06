@@ -7,22 +7,6 @@ const protectedRoutes = ['/', '/styleguide', '/api/user']
 const publicRoutes = ['/login', '/api/check-install']
 
 export default async function middleware(req: NextRequest) {
-  // Check if there exists at least one user in the database
-  try {
-    const response = await fetch(`${req.nextUrl.origin}/api/check-install`)
-    const data = await response.json()
-
-    if (!data.hasUsers && !req.nextUrl.pathname.startsWith('/install')) {
-      return NextResponse.redirect(new URL('/install', req.nextUrl))
-    } else if (data.hasUsers && req.nextUrl.pathname.startsWith('/install')) {
-      return NextResponse.redirect(new URL('/', req.nextUrl))
-    } else if (!data.hasUsers && req.nextUrl.pathname.startsWith('/install')) {
-      return NextResponse.next()
-    }
-  } catch (error) {
-    console.error('Error checking installation status:', error)
-  }
-
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)

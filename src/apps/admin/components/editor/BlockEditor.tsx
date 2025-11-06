@@ -20,13 +20,18 @@ import {
 } from '@dnd-kit/sortable';
 import MediaEditor from "./MediaEditor";
 
+interface MediaEditorProps {
+    slug: string,
+    blockIndex: string
+}
+
 export default function BlockEditor({content, onChange}: {
     content: BlockJson[],
     onChange?: (blocks: BlockJson[]) => void
 }) {
     const [blocks, setBlocksState] = useState<Array<BlockJson>>(content || []);
     const [lastAddedBlockIndex, setLastAddedBlockIndex] = useState<string | null>(null);
-    const [mediaEditorOpen, setMediaEditorOpen] = useState<string | null>(null);
+    const [mediaEditorOpen, setMediaEditorOpen] = useState<MediaEditorProps | null>(null);
 
     const setBlocks = (updater: BlockJson[] | ((prev: BlockJson[]) => BlockJson[])) => {
         const newBlocks = typeof updater === 'function' ? updater(blocks) : updater;
@@ -347,7 +352,39 @@ export default function BlockEditor({content, onChange}: {
     };
 
     const handleMediaEditorOpen = (mediaEditorSlug: string, blockIndex: string) => {
-        setMediaEditorOpen(mediaEditorSlug);
+        setMediaEditorOpen({
+            slug: mediaEditorSlug,
+            blockIndex: blockIndex,
+        });
+    }
+
+    const handleMediaEditorSelect = (media_id: number, src: string, alt: string, width: number, height: number, blockIndex: string) => {
+        setBlocks(prev => {
+            const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map(block => {
+                    if (block.index === blockIndex) {
+                        return {
+                            ...block,
+                            src: src,
+                            media_id: media_id,
+                            alt: alt,
+                            width: width,
+                            height: height
+                        };
+                    }
+                    if (block.children && block.children.length > 0) {
+                        return {
+                            ...block,
+                            children: updateBlocksRecursively(block.children)
+                        };
+                    }
+                    return block;
+                });
+            };
+
+            return updateBlocksRecursively(prev);
+        });
+        setMediaEditorOpen(null);
     }
 
     const renderBlocks = (blocks: BlockJson[], parentBlock: BlockJson) => {
@@ -412,7 +449,9 @@ export default function BlockEditor({content, onChange}: {
                 </SortableContext>
             </DndContext>
             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
-            {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen} onMediaEditorClose={() => setMediaEditorOpen(null)}/>}
+            {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen.slug} blockIndex={mediaEditorOpen.blockIndex}
+                                             onMediaEditorClose={() => setMediaEditorOpen(null)}
+                                             onMediaSelect={(media_id, src, alt, width, height, blockIndex) => handleMediaEditorSelect(media_id, src, alt, width, height, blockIndex)}/>}
         </div>
     )
 

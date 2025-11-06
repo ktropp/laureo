@@ -2,8 +2,10 @@ import {X} from "lucide-react"
 import {useState, useEffect} from "react";
 import {getAllMedia} from "../../actions/getAllMedia";
 import MediaItem from "./MediaItem";
+import {Button} from "components/ui/button";
+import {Settings} from "@theme/settings";
 
-export default function MediaEditor({slug, onMediaEditorClose}) {
+export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMediaSelect}) {
 
     const accordionItems = [
         {
@@ -19,6 +21,7 @@ export default function MediaEditor({slug, onMediaEditorClose}) {
     const [currentAccordionSlug, setCurrentAccordionSlug] = useState(slug);
     const [isLoading, setIsLoading] = useState(false);
     const [mediaItems, setMediaItems] = useState([]);
+    const [selectedMedia, setSelectedMedia] = useState(null);
 
 
     useEffect(() => {
@@ -38,6 +41,11 @@ export default function MediaEditor({slug, onMediaEditorClose}) {
             fetchMediaItems()
         }
     }, [currentAccordionSlug])
+
+    const handleMediaSelect = (media_id: number) => {
+        setSelectedMedia(mediaItems.find(media => media.id === media_id))
+    }
+
 
     return <div
         className="fixed w-full h-full top-0 left-0 flex items-center justify-center bg-black/70 z-90 p-4 xl:p-8">
@@ -79,18 +87,50 @@ export default function MediaEditor({slug, onMediaEditorClose}) {
                                     case 'upload':
                                         return <div className="p-4">todo: upload</div>;
                                     case 'media':
-                                        return <>
-                                            <div className="flex-1 flex p-4">
-                                                {isLoading ? (<div>Loading...</div>) : (
-                                                    <div className="grid grid-cols-10 gap-4">
-                                                        {mediaItems.map((media, index) => <MediaItem key={index} media={media}/>)}
+                                        return (
+                                            <div className="flex flex-col">
+                                                <div className="flex flex-1">
+                                                    <div className="flex-1 flex p-4">
+                                                        {isLoading ? (<div>Loading...</div>) : (
+                                                            <div className="grid grid-cols-10 gap-4">
+                                                                {mediaItems.map((media, index) => <MediaItem key={index}
+                                                                                                             media={media}
+                                                                                                             isActive={selectedMedia?.id === media.id}
+                                                                                                             onMediaSelect={() => handleMediaSelect(media.id)}/>)}
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                )}
+                                                    <div
+                                                        className="w-75 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
+                                                        {selectedMedia && (
+                                                            <div
+                                                                className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
+                                                                <p><strong>Uploaded: </strong>
+                                                                    <span>{new Intl.DateTimeFormat().format(new Date(selectedMedia.created_at))}</span>
+                                                                </p>
+                                                                <p><strong>User: </strong>
+                                                                    <span>{selectedMedia.author.name + " " + selectedMedia.author.surname}</span>
+                                                                </p>
+                                                                <p><strong>File name: </strong>
+                                                                    <span>{selectedMedia.file}</span>
+                                                                </p>
+                                                                <p><strong>File type: </strong> <span></span></p>
+                                                                <p><strong>File size: </strong> <span></span></p>
+                                                                <p><strong>File dimensions: </strong> <span></span></p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className="flex justify-end border-t p-4 border-laureo-border dark:border-laureo-border-dark">
+                                                    <Button
+                                                        type="button"
+                                                        disabled={!selectedMedia}
+                                                        onClick={() => onMediaSelect(selectedMedia.id, Settings.cdnUrl+"/"+selectedMedia.id+"_"+selectedMedia.file, 'TODO:alt', 200, 200, blockIndex)}
+                                                    >Select</Button>
+                                                </div>
                                             </div>
-                                            <div
-                                                className="w-75 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
-                                            </div>
-                                        </>
+                                        )
                                 }
                             })()}
                         </div>

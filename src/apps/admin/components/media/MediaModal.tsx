@@ -41,13 +41,13 @@ export default function MediaModal({media}) {
                     className="w-2/5 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
                     <div
                         className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
-                        <p><strong>Uploaded:</strong>
+                        <p><strong>Uploaded: </strong>
                             <span>{new Intl.DateTimeFormat().format(new Date(media.created_at))}</span></p>
-                        <p><strong>User:</strong> <span>{media.author.name + " " + media.author.surname}</span></p>
-                        <p><strong>File name:</strong> <span>{media.file}</span></p>
-                        <p><strong>File type:</strong> <span></span></p>
-                        <p><strong>File size:</strong> <span></span></p>
-                        <p><strong>File dimensions:</strong> <span></span></p>
+                        <p><strong>User: </strong> <span>{media.author.name + " " + media.author.surname}</span></p>
+                        <p><strong>File name: </strong> <span>{media.file}</span></p>
+                        <p><strong>File type: </strong> <span></span></p>
+                        <p><strong>File size: </strong> <span></span></p>
+                        <p><strong>File dimensions: </strong> <span></span></p>
                     </div>
                     <div
                         className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
