@@ -10,6 +10,10 @@ export async function getAllMedia() {
             file: true,
             title: true,
             alt: true,
+            type: true,
+            size: true,
+            width: true,
+            height: true,
         }
     });
 }

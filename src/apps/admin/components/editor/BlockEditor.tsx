@@ -358,7 +358,7 @@ export default function BlockEditor({content, onChange}: {
         });
     }
 
-    const handleMediaEditorSelect = (media_id: number, src: string, alt: string, width: number, height: number, blockIndex: string) => {
+    const handleMediaEditorSelect = (media_id: number, src: string, alt: string, title: string, width: number, height: number, blockIndex: string) => {
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {
@@ -368,6 +368,7 @@ export default function BlockEditor({content, onChange}: {
                             src: src,
                             media_id: media_id,
                             alt: alt,
+                            title: title,
                             width: width,
                             height: height
                         };
@@ -451,7 +452,7 @@ export default function BlockEditor({content, onChange}: {
             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
             {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen.slug} blockIndex={mediaEditorOpen.blockIndex}
                                              onMediaEditorClose={() => setMediaEditorOpen(null)}
-                                             onMediaSelect={(media_id, src, alt, width, height, blockIndex) => handleMediaEditorSelect(media_id, src, alt, width, height, blockIndex)}/>}
+                                             onMediaSelect={(media_id, src, alt, title, width, height, blockIndex) => handleMediaEditorSelect(media_id, src, alt, title, width, height, blockIndex)}/>}
         </div>
     )
 

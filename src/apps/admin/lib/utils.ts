@@ -5,7 +5,7 @@ import {extendTailwindMerge} from "tailwind-merge"
 const customTwMerge = extendTailwindMerge({
     extend: {
         theme: {
-            'text': ['heading-2', 'small'],
+            'text': ['heading-2', 'small', 'heading-numbers'],
             'color': ['primary', 'primary-button', 'body-inverse', 'body'],
         },
     }

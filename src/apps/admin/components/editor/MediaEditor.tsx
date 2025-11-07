@@ -4,6 +4,8 @@ import {getAllMedia} from "../../actions/getAllMedia";
 import MediaItem from "./MediaItem";
 import {Button} from "components/ui/button";
 import {Settings} from "@theme/settings";
+import {Label} from "components/ui/label";
+import {Input} from "../ui/input";
 
 export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMediaSelect}) {
 
@@ -22,6 +24,11 @@ export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMed
     const [isLoading, setIsLoading] = useState(false);
     const [mediaItems, setMediaItems] = useState([]);
     const [selectedMedia, setSelectedMedia] = useState(null);
+
+    const [alt, setAlt] = useState(selectedMedia?.alt);
+    const [title, setTitle] = useState(selectedMedia?.title);
+    const [width, setWidth] = useState(selectedMedia?.width);
+    const [height, setHeight] = useState(selectedMedia?.height);
 
 
     useEffect(() => {
@@ -43,7 +50,12 @@ export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMed
     }, [currentAccordionSlug])
 
     const handleMediaSelect = (media_id: number) => {
-        setSelectedMedia(mediaItems.find(media => media.id === media_id))
+        const media = mediaItems.find(media => media.id === media_id);
+        setSelectedMedia(media);
+        setAlt(media?.alt);
+        setTitle(media?.title);
+        setWidth(media?.width);
+        setHeight(media?.height);
     }
 
 
@@ -103,22 +115,78 @@ export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMed
                                                     <div
                                                         className="w-75 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
                                                         {selectedMedia && (
-                                                            <div
-                                                                className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
-                                                                <p><strong>Uploaded: </strong>
-                                                                    <span>{new Intl.DateTimeFormat().format(new Date(selectedMedia.created_at))}</span>
-                                                                </p>
-                                                                <p><strong>User: </strong>
-                                                                    <span>{selectedMedia.author.name + " " + selectedMedia.author.surname}</span>
-                                                                </p>
-                                                                <p><strong>File name: </strong>
-                                                                    <span>{selectedMedia.file}</span>
-                                                                </p>
-                                                                <p><strong>File type: </strong> <span></span></p>
-                                                                <p><strong>File size: </strong> <span></span></p>
-                                                                <p><strong>File dimensions: </strong> <span></span></p>
-                                                            </div>
-                                                        )}
+                                                            <>
+                                                                <div
+                                                                    className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
+                                                                    <p><strong>Uploaded: </strong>
+                                                                        <span>{new Intl.DateTimeFormat().format(new Date(selectedMedia.created_at))}</span>
+                                                                    </p>
+                                                                    <p><strong>User: </strong>
+                                                                        <span>{selectedMedia.author.name + " " + selectedMedia.author.surname}</span>
+                                                                    </p>
+                                                                    <p><strong>File name: </strong>
+                                                                        <span>{selectedMedia.file}</span>
+                                                                    </p>
+                                                                    {selectedMedia.type && <p><strong>File type: </strong>
+                                                                        <span>{selectedMedia.type}</span></p>}
+                                                                    {selectedMedia.size && <p><strong>File size: </strong>
+                                                                        <span>{selectedMedia.size}</span></p>}
+                                                                    {selectedMedia.width && selectedMedia.height &&
+                                                                        <p><strong>File dimensions: </strong>
+                                                                            <span>{selectedMedia.width}x{selectedMedia.height} px</span>
+                                                                        </p>}
+                                                                </div>
+                                                                <div
+                                                                    className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
+                                                                    <div className="space-y-2 mb-2">
+                                                                        <Label htmlFor="alt">Alt</Label>
+                                                                        <Input
+                                                                            id="alt"
+                                                                            type="text"
+                                                                            placeholder="Enter alt"
+                                                                            name="alt"
+                                                                            requuired
+                                                                            defaultValue={selectedMedia?.alt}
+                                                                            onChange={(e) => setAlt(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="space-y-2 mb-2">
+                                                                        <Label htmlFor="title">Title</Label>
+                                                                        <Input
+                                                                            id="title"
+                                                                            type="text"
+                                                                            placeholder="Enter title"
+                                                                            name="title"
+                                                                            defaultValue={selectedMedia?.title}
+                                                                            onChange={(e) => setTitle(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="space-y-2 mb-2">
+                                                                        <Label htmlFor="width">Width</Label>
+                                                                        <Input
+                                                                            id="width"
+                                                                            type="text"
+                                                                            name="width"
+                                                                            required
+                                                                            defaultValue={selectedMedia?.width}
+                                                                            onChange={(e) => setWidth(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="space-y-2 mb-2">
+                                                                        <Label htmlFor="height">Height</Label>
+                                                                        <Input
+                                                                            id="height"
+                                                                            type="text"
+                                                                            name="height"
+                                                                            required
+                                                                            defaultValue={selectedMedia?.height}
+                                                                            onChange={(e) => setHeight(e.target.value)}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div
@@ -126,7 +194,7 @@ export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMed
                                                     <Button
                                                         type="button"
                                                         disabled={!selectedMedia}
-                                                        onClick={() => onMediaSelect(selectedMedia.id, Settings.cdnUrl+"/"+selectedMedia.id+"_"+selectedMedia.file, 'TODO:alt', 200, 200, blockIndex)}
+                                                        onClick={() => onMediaSelect(selectedMedia.id, Settings.cdnUrl + "/" + selectedMedia.id + "_" + selectedMedia.file, alt, title, width, height, blockIndex)}
                                                     >Select</Button>
                                                 </div>
                                             </div>

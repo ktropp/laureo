@@ -4,6 +4,8 @@ import {Input} from "components/ui/input";
 import {useRouter} from 'next/navigation';
 import {Settings} from "@theme/settings";
 import Image from "next/image";
+import { deleteMedia } from "actions/deleteMedia";
+import {toast} from "react-toastify";
 
 export default function MediaModal({media}) {
     const router = useRouter();
@@ -11,6 +13,18 @@ export default function MediaModal({media}) {
     const handleClose = () => {
         router.push('/media', undefined, {shallow: true});
     };
+
+    const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete this file?')) {
+            const result = await deleteMedia(media.id)
+            if (result.success) {
+                toast.success('Media deleted successfully')
+                router.push('/media')
+            } else {
+                toast.error(result.error || 'Failed to delete media')
+            }
+        }
+    }
 
     if (!media) return null;
     return <div
@@ -45,9 +59,10 @@ export default function MediaModal({media}) {
                             <span>{new Intl.DateTimeFormat().format(new Date(media.created_at))}</span></p>
                         <p><strong>User: </strong> <span>{media.author.name + " " + media.author.surname}</span></p>
                         <p><strong>File name: </strong> <span>{media.file}</span></p>
-                        <p><strong>File type: </strong> <span></span></p>
-                        <p><strong>File size: </strong> <span></span></p>
-                        <p><strong>File dimensions: </strong> <span></span></p>
+                        {media.type && <p><strong>File type: </strong> <span>{media.type}</span></p>}
+                        {media.size && <p><strong>File size: </strong> <span>{media.size}</span></p>}
+                        {media.width && media.height &&
+                            <p><strong>File dimensions: </strong> <span>{media.width}x{media.height} px</span></p>}
                     </div>
                     <div
                         className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
@@ -87,12 +102,13 @@ export default function MediaModal({media}) {
                             type="button"
                             className="cursor-pointer"
                         >
-                            Download file
+                            TODO: Download file
                         </button>
                         <span>|</span>
                         <button
                             type="button"
                             className="cursor-pointer text-laureo-error"
+                            onClick={handleDelete}
                         >
                             Delete file permanently
                         </button>

@@ -1,8 +1,10 @@
 import {promises as fs} from "fs";
 import path from "path";
 import {prisma} from "lib/prisma";
-import { currentUser } from "lib/session";
-import { revalidatePath } from "next/cache";
+import {currentUser} from "lib/session";
+import {revalidatePath} from "next/cache";
+
+import sizeOf from "image-size";
 
 export async function POST(request: Request) {
     const formData = await request.formData();
@@ -19,17 +21,32 @@ export async function POST(request: Request) {
     const author = await currentUser()
 
     for (const file of files) {
+        let data = {
+            authorId: author.id,
+            file: file.name,
+            type: file.type,
+            size: file.size,
+        }
+
+        if (file.type.startsWith('image/')) {
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const dimensions = sizeOf(buffer);
+            const {width, height} = dimensions;
+            if (width && height) {
+                data.width = width;
+                data.height = height;
+            }
+        }
+
         const media = await prisma.media.create({
-            data: {
-                authorId: author.id,
-                file: file.name
-            },
+            data: data,
             select: {
                 id: true
             }
         })
 
-        if(!media) {
+        if (!media) {
             return new Response("An error occurred while creating media.", {status: 500})
         }
 

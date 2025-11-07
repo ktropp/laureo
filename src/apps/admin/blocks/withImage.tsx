@@ -24,13 +24,13 @@ export function withImage<T extends BaseBlockProps>(
                                            }: T & WithEditableProps) {
         const isFocused = props.block.isFocused;
         return <div
-            className={`${!props.block.src ? "min-h-40 min-w-100 w-full " : ""} ${isFocused ? 'border border-laureo-secondary bg-laureo-border/30 dark:bg-laureo-border-dark/30' : 'bg-laureo-border dark:bg-laureo-border-dark'}`}>
-            {!props.block.src && !isFocused && (
+            className={`${!props.block.media_id ? "min-h-40 min-w-100 w-full " : ""} ${isFocused ? 'border border-laureo-secondary bg-laureo-border/30 dark:bg-laureo-border-dark/30' : 'bg-laureo-border dark:bg-laureo-border-dark'}`}>
+            {!props.block.media_id && !isFocused && (
                 <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none"
                      aria-hidden="true" focusable="false" className="stroke-current max-h-40 w-full">
                     <path vectorEffect="non-scaling-stroke" d="M60 60 0 0"></path>
                 </svg>)}
-            {!props.block.src && isFocused && (
+            {!props.block.media_id && isFocused && (
                 <div className="p-4 gap-4 flex flex-col">
                     <div className="flex gap-2 items-center">
                         <Image size={20}/> <span className="text-sm font-semibold">Image</span>
@@ -53,7 +53,7 @@ export function withImage<T extends BaseBlockProps>(
                     </div>
                 </div>
             )}
-            {props.block.src && <WrappedComponent block={props.block}/>}
+            {props.block.media_id && <WrappedComponent block={props.block}/>}
         </div>
     }
 }

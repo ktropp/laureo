@@ -13,6 +13,10 @@ export async function getMedia(id: number) {
             file: true,
             title: true,
             alt: true,
+            type: true,
+            size: true,
+            width: true,
+            height: true,
         }
     });
 }
