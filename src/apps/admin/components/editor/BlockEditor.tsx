@@ -278,14 +278,16 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
-    const handleBlockHrefChange = (href: string, blockIndex: string) => {
+    const handleBlockHrefChange = (href: string, isTargetBlank: boolean, blockIndex: string) => {
+        console.log("handleBlockHrefChange", href, isTargetBlank, blockIndex);
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {
                     if (block.index === blockIndex) {
                         return {
                             ...block,
-                            href: href
+                            href: href,
+                            isTargetBlank: isTargetBlank
                         };
                     }
                     if (block.children && block.children.length > 0) {
@@ -302,14 +304,15 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
-    const handleBlockIconChange = (icon: string, blockIndex: string) => {
+    const handleBlockIconChange = (icon: string, iconPosition: 'before' | 'after', blockIndex: string) => {
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {
                     if (block.index === blockIndex) {
                         return {
                             ...block,
-                            icon: icon
+                            icon: icon,
+                            iconPosition: iconPosition
                         };
                     }
                     if (block.children && block.children.length > 0) {
@@ -400,8 +403,8 @@ export default function BlockEditor({content, onChange}: {
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
-                    onHrefChange={(href) => handleBlockHrefChange(href, block.index)}
-                    onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
+                    onHrefChange={(href, isTargetBlank) => handleBlockHrefChange(href, isTargetBlank, block.index)}
+                    onIconChange={(icon, iconPosition) => handleBlockIconChange(icon, iconPosition, block.index)}
                     onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                     onBlockDelete={() => handleBlockDelete(block.index)}
                     onBlockCopy={() => handleBlockCopy(block.index)}
@@ -435,8 +438,8 @@ export default function BlockEditor({content, onChange}: {
                                 onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                                 onContentChange={(text) => handleBlockTextChange(text, block.index)}
                                 onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
-                                onHrefChange={(href) => handleBlockHrefChange(href, block.index)}
-                                onIconChange={(icon) => handleBlockIconChange(icon, block.index)}
+                                onHrefChange={(href, isTargetBlank) => handleBlockHrefChange(href, isTargetBlank, block.index)}
+                                onIconChange={(icon, iconPosition) => handleBlockIconChange(icon, iconPosition, block.index)}
                                 onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                                 onBlockDelete={() => handleBlockDelete(block.index)}
                                 onBlockCopy={() => handleBlockCopy(block.index)}

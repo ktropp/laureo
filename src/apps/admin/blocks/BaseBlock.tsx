@@ -23,6 +23,9 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
 import {withImage} from "./withImage";
+import {Label} from "components/ui/label";
+import {Checkbox} from "../components/ui/checkbox";
+import {Button} from "../components/ui/button";
 
 const BaseBlock = ({
                        children,
@@ -54,6 +57,8 @@ const BaseBlock = ({
     const [isLinkOpen, setIsLinkOpen] = useState(false);
     const [isVariantOpen, setIsVariantOpen] = useState(false);
     const [isIconOpen, setIsIconOpen] = useState(false);
+    const [href, setHref] = useState(blockJson.href || false);
+    const [isTargetBlank, setIsTargetBlank] = useState(false);
 
     if (Block.isText) {
         BlockComponent = withEditable(BlockComponent);
@@ -128,26 +133,37 @@ const BaseBlock = ({
             style={style}
             {...attributes}
             className={`relative outline-1 outline-dashed flex-1 ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/25'}`}
-            tabIndex={Block.isText ? -1 : 0}
+            tabIndex={0}
             onFocus={(e) => {
                 e.stopPropagation();
                 setIsFocused(true)
+                if (Block.isText && !(isLinkOpen || isClassOpen || isVariantOpen || isIconOpen || isTagOpen)) {
+                    setTimeout(() => {
+                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                        if (editableElement) {
+                            //TODO: focus on the clicked letter, not to the beginning!
+                            editableElement.focus();
+                        }
+                    }, 0);
+                }
             }}
             onBlur={handleBlur}
             onKeyDown={(e) => {
+                const selection = window.getSelection();
                 if (isFocused && e.shiftKey && e.altKey && e.key.toLowerCase() === 'z') {
                     e.preventDefault();
                     onBlockDelete();
                 }
-                if (isFocused && !isClassOpen && e.ctrlKey && e.key.toLowerCase() === 'c') {
+                if (isFocused && !(isClassOpen || isLinkOpen || (selection && !selection.isCollapsed)) && e.ctrlKey && e.key.toLowerCase() === 'c') {
                     e.preventDefault();
                     onBlockCopy();
                 }
-                if (isFocused && Block.isParent && !isClassOpen && e.ctrlKey && e.key.toLowerCase() === 'v') {
+                if (isFocused && Block.isParent && !(isClassOpen || isLinkOpen || selection && !selection.isCollapsed) && e.ctrlKey && e.key.toLowerCase() === 'v') {
                     e.preventDefault();
                     onBlockPaste();
                 }
-            }}
+            }
+            }
         >
             <div className={`absolute z-9 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
                 {parentBlock &&
@@ -167,7 +183,8 @@ const BaseBlock = ({
                         >
                             <ParentBlock.icon size={20}/>
                         </button>
-                    </div>}
+                    </div>
+                }
                 <div
                     className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
@@ -290,23 +307,37 @@ const BaseBlock = ({
                                     className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
                                     <div className="p-2">
                                         {Block.icons?.map((Icon, index) => (
-                                            <button
-                                                key={index}
-                                                className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
-                                                onClick={() => {
-                                                    let iconName = getIconName(Icon)
-
-                                                    if (iconName === blockJson.icon) {
-                                                        iconName = null;
-                                                    }
-
-                                                    onIconChange(iconName);
-
-                                                    setIsIconOpen(false);
-                                                }}
-                                            >
-                                                <Icon size={20}/>
-                                            </button>
+                                            <div className="flex flex-row items-center gap-2" key={index}>
+                                                <button
+                                                    className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && blockJson.iconPosition == 'before') ? 'text-laureo-primary' : ''}`}
+                                                    onClick={() => {
+                                                        let iconName = getIconName(Icon)
+                                                        if (iconName === blockJson.icon) {
+                                                            iconName = null;
+                                                        }
+                                                        onIconChange(iconName, 'before');
+                                                        setIsIconOpen(false);
+                                                    }}
+                                                >
+                                                    before
+                                                </button>
+                                                <Icon
+                                                    className={`flex-[1_0_auto] ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
+                                                    size={20}/>
+                                                <button
+                                                    className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && (blockJson.iconPosition == 'after' || !blockJson.iconPosition)) ? 'text-laureo-primary' : ''}`}
+                                                    onClick={() => {
+                                                        let iconName = getIconName(Icon)
+                                                        if (iconName === blockJson.icon) {
+                                                            iconName = null;
+                                                        }
+                                                        onIconChange(iconName, 'after');
+                                                        setIsIconOpen(false);
+                                                    }}
+                                                >
+                                                    after
+                                                </button>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -338,7 +369,10 @@ const BaseBlock = ({
                                             }
 
                                             // Trigger content change
-                                            const event = new Event('input', {bubbles: true});
+                                            const event = new CustomEvent('input', {
+                                                bubbles: true,
+                                                detail: {isOnce: true}
+                                            });
                                             editableElement.dispatchEvent(event);
                                         }
                                     }}
@@ -369,7 +403,10 @@ const BaseBlock = ({
                                             }
 
                                             // Trigger content change
-                                            const event = new Event('input', {bubbles: true});
+                                            const event = new CustomEvent('input', {
+                                                bubbles: true,
+                                                detail: {isOnce: true}
+                                            });
                                             editableElement.dispatchEvent(event);
                                         }
                                     }}
@@ -386,17 +423,94 @@ const BaseBlock = ({
                                 </button>
                                 <div
                                     className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
-                                    <div className="p-2">
-                                        <Input
-                                            id=""
-                                            type="text"
-                                            placeholder="Enter link URL"
-                                            name=""
-                                            defaultValue={blockJson.href}
-                                            onChange={(e) => onHrefChange(e.target.value)}
-                                            onBlur={(e) => onHrefChange(e.target.value)}
-                                        />
-                                    </div>
+                                    {Block.type === 'button' ? (
+                                        <div className="p-2 space-y-3">
+                                            <div>
+                                                <Input
+                                                    id=""
+                                                    type="text"
+                                                    placeholder="Enter link URL"
+                                                    name=""
+                                                    defaultValue={blockJson.href}
+                                                    onChange={(e) => onHrefChange(e.target.value, isTargetBlank)}
+                                                    onBlur={(e) => onHrefChange(e.target.value, isTargetBlank)}
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Label className="mb-0" htmlFor={"target_blank" + index}>Open in new
+                                                    window</Label>
+                                                <Checkbox
+                                                    name="target_blank"
+                                                    id={"target_blank" + index}
+                                                    defaultChecked={blockJson.isTargetBlank}
+                                                    onCheckedChange={(checked) => {
+                                                        setIsTargetBlank(checked);
+                                                        if (blockJson.href) {
+                                                            onHrefChange(blockJson.href, checked);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="p-2 space-y-3">
+                                            <div>
+                                                <Input
+                                                    id=""
+                                                    type="text"
+                                                    placeholder="Enter link URL"
+                                                    name=""
+                                                    onChange={(e) => setHref(e.target.value)}
+                                                    onBlur={(e) => setHref(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <Label className="mb-0" htmlFor={"target_blank" + index}>Open in new
+                                                        window</Label>
+                                                    <Checkbox
+                                                        name="target_blank"
+                                                        id={"target_blank" + index}
+                                                        onCheckedChange={(checked) => setIsTargetBlank(checked)}
+                                                    />
+                                                </div>
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                                                        if (editableElement) {
+                                                            const selection = window.getSelection();
+                                                            const range = selection?.getRangeAt(0);
+
+                                                            if (selection && !selection.isCollapsed) {
+                                                                // There is selected text
+                                                                const selectedText = selection.toString();
+                                                                const link = document.createElement('a');
+                                                                link.textContent = selectedText;
+                                                                link.setAttribute('href', href);
+                                                                if (isTargetBlank) link.setAttribute('target', '_blank');
+                                                                range?.deleteContents();
+                                                                range?.insertNode(link);
+                                                            } else {
+                                                                // No selection, wrap all content
+                                                                const content = editableElement.innerHTML;
+                                                                editableElement.innerHTML = `<a href="${href}" ${isTargetBlank ? 'target="blank"' : ''}>${content}</a>`;
+                                                            }
+
+                                                            // Trigger content change
+                                                            const event = new CustomEvent('input', {
+                                                                bubbles: true,
+                                                                detail: {isOnce: true}
+                                                            });
+                                                            editableElement.dispatchEvent(event);
+
+                                                            setIsLinkOpen(false)
+                                                        }
+                                                    }}
+                                                >Create</Button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}
@@ -471,9 +585,19 @@ const BaseBlock = ({
                     </div>
                 </div>
             </div>
-            <BlockComponent block={blockWithCallback} className={Block.isParent ? 'min-h-7 min-w-20' : ''}>
-                {children}
-                {Block.isParent && isFocused && <BlockAdd onBlockAdd={onBlockAdd} parentBlock={parentBlock}/>}
+            <BlockComponent block
+                                ={
+                blockWithCallback
+            } className
+                                ={
+                Block.isParent ? 'min-h-7 min-w-20' : ''
+            }>
+                {
+                    children
+                }
+                {
+                    Block.isParent && isFocused && <BlockAdd onBlockAdd={onBlockAdd} parentBlock={parentBlock}/>
+                }
             </BlockComponent>
         </div>
     )

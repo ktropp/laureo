@@ -24,32 +24,40 @@ export function withEditable<T extends BaseBlockProps>(
 
         const contentEditableRef = useRef<any>(null);
         const Icon = props.block.icon ? getIconByName(props.block.icon) : null;
-
-        const handleChange = (evt: any) => {
+        const iconPosition = props.block.iconPosition || 'after';
+        const handleBlur = (evt: any) => {
             const content = contentEditableRef.current?.innerHTML || '';
             if (props.block.onContentChange && content !== props.block.text) {
                 props.block.onContentChange(content);
             }
         };
 
+        const handleChange = (evt: any) => {
+            const isOnce = evt.nativeEvent.detail.isOnce || false;
+            if(isOnce){
+                handleBlur(evt);
+            }
+        }
+
         //TODO: icon displays multiple times, fix
         const iconHtml = Icon
-            ? `<span contenteditable="false" class="inline-flex align-middle ml-2">${renderToStaticMarkup(
+            ? `<span contenteditable="false" class="inline-flex align-middle">${renderToStaticMarkup(
                 <Icon size={16}/>
             )}</span>`
             : "";
-        const contentHtml = `${props.block.text || ''}${iconHtml}`;
+        const contentHtml = `${iconPosition == 'before' ? iconHtml : ''}${props.block.text || ''}${iconPosition == 'after' ? iconHtml : ''}`;
 
         const componentProps = {
             className: cn(
                 props.block.className,
-                Icon ? 'flex items-center' : '',
+                Icon ? 'flex items-center gap-2' : '',
                 'focus:outline-0 min-w-20'
             ),
             innerRef: contentEditableRef,
             html: contentHtml,
             tagName: props.block.tagName || 'div',
-            onBlur: handleChange
+            onBlur: handleBlur,
+            onChange: handleChange
         } as T;
 
         return <ContentEditable {...componentProps} />;

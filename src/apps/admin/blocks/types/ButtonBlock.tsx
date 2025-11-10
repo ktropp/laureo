@@ -5,17 +5,21 @@ import blockRegistry from "../blockRegistry";
 
 const ButtonBlock = ({block, ...props}: BlockProps) => {
     const Icon = getIconByName(block?.icon) || null
+    const iconPosition = block?.iconPosition || 'after'
     const sanitizedHtml = block?.text || ''
     const registry = blockRegistry.find(b => b.type === block.type)
+    const target = block.isTargetBlank ? '_blank' : false;
 
     return <a
         className={block.className}
         href={block.href}
+        target={target}
         {...props}
     >
-        <span className="flex items-center">
+        <span className={`flex items-center gap-${registry.spaceSize || 3}`}>
+            {iconPosition == 'before' && Icon && <Icon size={registry.iconSize || 20} className={registry.iconClassName || ''}/>}
             <span dangerouslySetInnerHTML={{__html: sanitizedHtml}}/>
-            {Icon && <Icon size={registry.iconSize || 20} className={registry.iconClassName || 'ml-4'}/>}
+            {iconPosition == 'after' && Icon && <Icon size={registry.iconSize || 20} className={registry.iconClassName || ''}/>}
         </span>
     </a>
 };
@@ -39,7 +43,8 @@ export const blockConfig: BlockMeta = {
     ],
     icons: [],
     iconSize: 20,
-    iconClassName: 'ml-4'
+    spaceSize: 2,
+    iconClassName: ''
 };
 
 export default ButtonBlock;

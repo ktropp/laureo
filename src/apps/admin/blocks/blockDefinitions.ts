@@ -13,6 +13,7 @@ export interface BlockMeta {
   variants?: BlockVariant[];
   icons?: LucideIcon[];
   iconSize?: number;
+  spaceSize?: number;
   iconClassName?: string;
   allowedChildren?: string[];
   disallowChildren?: string[];
@@ -36,6 +37,7 @@ export interface BlockJson {
   className?: string;
   id?: string;
   href?: string;
+  isTargetBlank?: boolean;
   src?: string;
   width?: number;
   height?: number;
@@ -44,6 +46,7 @@ export interface BlockJson {
   target?: string;
   rel?: string;
   icon?: string;
+  iconPosition?: 'before' | 'after';
   children?: BlockJson[];
 }
 
