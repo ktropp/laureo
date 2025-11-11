@@ -8,7 +8,7 @@ const ButtonBlock = ({block, ...props}: BlockProps) => {
     const iconPosition = block?.iconPosition || 'after'
     const sanitizedHtml = block?.text || ''
     const registry = blockRegistry.find(b => b.type === block.type)
-    const target = block.isTargetBlank ? '_blank' : false;
+    const target = block.isTargetBlank ? '_blank' : undefined;
 
     return <a
         className={block.className}

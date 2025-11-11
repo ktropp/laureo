@@ -1,25 +1,26 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {Minus} from "lucide-react";
 
-const ListItemBlock = ({block, ...props}: BlockProps) => {
+const AccordionLink = ({block, ...props}: BlockProps) => {
     const sanitizedHtml = block?.text || ''
-    return <li
+    const Tag = block.tagName;
+    return <Tag
         className={block.className}
         dangerouslySetInnerHTML={{__html: sanitizedHtml}}
         {...props}
-    ></li>
+    ></Tag>
 };
 
 export const blockConfig: BlockMeta = {
-    type: 'list-item',
-    name: 'List Item',
+    type: 'accordion-link',
+    name: 'Accordion link',
     icon: Minus,
     isText: true,
     tagName: 'li',
     className: '',
     allowedParents: [
-        'list'
+        'accordion-links'
     ]
 };
 
-export default ListItemBlock;
+export default AccordionLink;

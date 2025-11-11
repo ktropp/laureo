@@ -16,6 +16,7 @@ export interface BlockMeta {
   spaceSize?: number;
   iconClassName?: string;
   allowedChildren?: string[];
+  allowedParents?: string[];
   disallowChildren?: string[];
 }
 

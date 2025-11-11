@@ -1,8 +1,12 @@
 'use client'
 
+import {Settings} from "@theme/settings";
 import {Sidebar} from "components/sidebar";
 import {usePathname} from "next/navigation";
 import {useState} from "react";
+import Image from "next/image";
+import cmsIcon from "@theme/favicon/favicon.svg";
+//TODO: dynamic import icon
 
 export default function BaseTemplate({
                                          children,
@@ -21,12 +25,19 @@ export default function BaseTemplate({
                         {/* Logo and Header */}
                         <div className="text-center space-y-2">
                             <div className="flex justify-center">
-                                <div
-                                    className="w-12 h-12 bg-laureo-primary rounded-lg flex items-center justify-center">
-                                    <span className="text-laureo-text font-bold text-xl">L</span>
-                                </div>
+                                {cmsIcon ? (
+                                    <div className="w-12 h-12">
+                                        <Image src={cmsIcon} alt={Settings.cmsName ?? 'Laureo CMS'}/>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="w-12 h-12 bg-laureo-primary rounded-md items-center justify-center flex">
+                            <span
+                                className="text-laureo-text font-bold text-xl">{Settings.cmsName ? Settings.cmsName.slice(0, 1).toUpperCase() : 'L'}</span>
+                                    </div>
+                                )}
                             </div>
-                            <h1 className="text-2xl font-bold tracking-tight">Laureo CMS</h1>
+                            <h1 className="text-2xl font-bold tracking-tight">{Settings.cmsName ?? 'Laureo CMS'}</h1>
                         </div>
                         <div className="p-6 border-laureo-border dark:border-laureo-border-dark border-1 rounded-lg">
                             {children}

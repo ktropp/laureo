@@ -17,7 +17,7 @@ import {
     Italic,
     Link, List, ListOrdered, Paintbrush
 } from "lucide-react";
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect, useCallback} from "react";
 import {Input} from "../components/ui/input";
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
@@ -26,6 +26,7 @@ import {withImage} from "./withImage";
 import {Label} from "components/ui/label";
 import {Checkbox} from "../components/ui/checkbox";
 import {Button} from "../components/ui/button";
+import {debounce} from "../lib/utils";
 
 const BaseBlock = ({
                        children,
@@ -121,6 +122,13 @@ const BaseBlock = ({
         'ul': List,
         'ol': ListOrdered,
     }
+
+    const debouncedClassNameChange = useCallback(
+        debounce((value: string) => {
+            onClassNameChange(value);
+        }, 300),
+        [onClassNameChange]
+    )
 
     return (
         <div
@@ -531,7 +539,7 @@ const BaseBlock = ({
                                     placeholder="Enter class name"
                                     name=""
                                     defaultValue={blockJson.className}
-                                    onChange={(e) => onClassNameChange(e.target.value)}
+                                    onChange={(e) => debouncedClassNameChange(e.target.value)}
                                     onBlur={(e) => onClassNameChange(e.target.value)}
                                 />
                             </div>
@@ -596,7 +604,8 @@ const BaseBlock = ({
                     children
                 }
                 {
-                    Block.isParent && isFocused && <BlockAdd onBlockAdd={onBlockAdd} parentBlock={parentBlock}/>
+                    Block.isParent && isFocused &&
+                    <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock}/>
                 }
             </BlockComponent>
         </div>

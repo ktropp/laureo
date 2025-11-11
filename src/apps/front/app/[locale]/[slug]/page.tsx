@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import { getPost } from "actions/data"
 import PageContent from "components/PageContent";
+import {getDictionary} from "../dictionaries";
 
 export async function generateMetadata({
   params,
@@ -27,7 +28,9 @@ export default async function Page({
   if (!page)
     notFound()
 
+  const dict = await getDictionary(param.locale)
+
   return (
-      <PageContent page={page}/>
+      <PageContent page={page} dict={dict}/>
   )
 }

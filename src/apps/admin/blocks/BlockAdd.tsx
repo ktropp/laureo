@@ -7,17 +7,37 @@ import {Input} from "../components/ui/input";
 
 interface BlockAddProps {
     onBlockAdd: (block: BlockJson) => void;
+    Block?: BlockMeta;
     parentBlock?: BlockJson;
 }
 
-export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
+export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
     const inputRef = useRef<HTMLParagraphElement>(null);
     const [isEmpty, setIsEmpty] = useState(true);
     const [showSlashMenu, setShowSlashMenu] = useState(false);
     const [slashMenuPosition, setSlashMenuPosition] = useState({top: 0, left: 0});
-    const [filteredBlocks, setFilteredBlocks] = useState(blockRegistry);
+    const [blockRegistryFiltered, setBlockRegistryFiltered] = useState(blockRegistry)
+    const [filteredBlocks, setFilteredBlocks] = useState(blockRegistryFiltered);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [showMenu, setShowMenu] = useState(false);
+
+    const parentBlockMeta = blockRegistry.find(block => block.type === parentBlock?.type);
+
+    useEffect(() => {
+        if (Block) {
+            const filtered = blockRegistry.filter(block => {
+                if (block.allowedParents) {
+                    return block.allowedParents.includes(Block.type);
+                }
+                if(Block.allowedChildren){
+                    return Block.allowedChildren.includes(block.type);
+                }
+                return true;
+            });
+            setBlockRegistryFiltered(filtered);
+        }
+    }, [Block]);
+
 
     const handleBlockSelection = (type: string) => {
         onBlockAdd(type);
@@ -74,7 +94,7 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
             setSlashMenuPosition({top: rect.bottom, left: rect.left});
 
             const searchQuery = text.slice(1).toLowerCase();
-            const filteredBlocks = blockRegistry.filter(block =>
+            const filteredBlocks = blockRegistryFiltered.filter(block =>
                 block.name.toLowerCase().includes(searchQuery)
             );
 
@@ -95,7 +115,8 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
     };
 
     return (
-        <div className={`flex justify-between items-center relative z-20 ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
+        <div
+            className={`flex justify-between items-center relative z-20 ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
             {!parentBlock && (
                 <p
                     ref={inputRef}
@@ -140,7 +161,7 @@ export const BlockAdd = ({onBlockAdd, parentBlock}: BlockAddProps) => {
                 className="absolute right-0"
                 type="button"
                 onClick={() => {
-                    setFilteredBlocks(blockRegistry);
+                    setFilteredBlocks(blockRegistryFiltered);
                     setSelectedIndex(0);
                     setShowMenu(!showMenu)
                 }}
