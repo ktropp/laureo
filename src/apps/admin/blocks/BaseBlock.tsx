@@ -178,6 +178,7 @@ const BaseBlock = ({
                     <div
                         className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
                         <button title="Select parent block"
+                                type="button"
                                 className="p-1 cursor-pointer hover:text-laureo-primary"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -196,12 +197,14 @@ const BaseBlock = ({
                 <div
                     className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
-                        <button className="p-1 cursor-pointer hover:text-laureo-primary" title={Block.name}>
+                        <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
+                                title={Block.name}>
                             <Block.icon size={20}/>
                         </button>
                         <button
                             className="p-1 cursor-pointer hover:text-laureo-primary"
                             title="Drag to reorder"
+                            type="button"
                             ref={setDraggableNodeRef}
                             {...listeners}
                         >
@@ -211,12 +214,14 @@ const BaseBlock = ({
                             <button
                                 className="cursor-pointer hover:text-laureo-primary"
                                 title="Move up"
+                                type="button"
                             >
                                 <ChevronUp size={20}/>
                             </button>
                             <button
                                 className="cursor-pointer hover:text-laureo-primary"
                                 title="Move down"
+                                type="button"
                             >
                                 <ChevronDown size={20}/>
                             </button>

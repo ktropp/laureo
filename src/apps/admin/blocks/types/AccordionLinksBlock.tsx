@@ -1,11 +1,26 @@
-import {BlockMeta} from "blocks/blockDefinitions";
+import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {ListCollapse} from "lucide-react";
 import {cn} from "../../lib/utils";
+import React from "react";
 
-const AccordionLinksBlock = ({children, block, className}: { block: Block }) => {
+interface AccordionLinksProps extends BlockProps {
+    activeIndex?: number
+}
+const AccordionLinksBlock = ({children, block, className, activeIndex}: AccordionLinksProps) => {
     const Tag = block.tagName;
+    console.log(activeIndex)
 
-    return <Tag className={cn(block.className, className)}>{children}</Tag>
+    return <Tag className={cn(block.className, className)}>
+        {React.Children.map(children, (child, index) => {
+           if (React.isValidElement(child)){
+               return React.cloneElement(child, {
+                   isActive: activeIndex === index,
+                   ...child.props,
+               })
+           }
+           return child
+        })}
+    </Tag>
 };
 
 export const blockConfig: BlockMeta = {

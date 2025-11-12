@@ -8,6 +8,7 @@ type menuLocation = {
 export type Settings = {
     frontendUrl: string,
     cdnUrl: string,
+    appName: string,
     cmsName?: string;
     languages: string[],
     defaultLanguage: string,

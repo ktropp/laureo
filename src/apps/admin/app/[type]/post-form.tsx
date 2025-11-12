@@ -4,7 +4,7 @@ import {Label} from "components/ui/label";
 import {Input} from "components/ui/input";
 import {Button} from "components/ui/button";
 import {postAdd} from "actions/postAdd";
-import {useActionState, useCallback, useState} from "react";
+import {useActionState, useCallback, useState, useEffect} from "react";
 import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "../../components/ui/select";
 import {Textarea} from "components/ui/textarea";
 import {postLangAdd} from "actions/postLangAdd";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import {BlockJson} from "../../blocks/blockDefinitions";
 import {Settings} from "@theme/settings";
 import BlockEditor from "../../components/editor/BlockEditor";
+import {toast} from 'react-toastify';
 
 export function PostForm({post}: { post: Post }) {
     const languages = Settings.languages;
@@ -32,13 +33,38 @@ export function PostForm({post}: { post: Post }) {
 
     const currentPost = state || post || {};
 
-
     const handleBlocksChange = useCallback((newBlocks: BlockJson[]) => {
         setBlocks(newBlocks);
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault(); // Prevent default browser save dialog
+
+                // Find and click the save button
+                const saveButton = document.querySelector('button[id="post-submit"]') as HTMLButtonElement;
+                if (saveButton && !saveButton.disabled) {
+                    saveButton.click();
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     return (
-        <form action={action}>
+        <form action={async (formData) => {
+            const result = await action(formData);
+
+            if (result?.errors) {
+                toast.error('Please check the form for errors');
+                return;
+            }
+
+            toast.success('Successfully saved!');
+        }}>
             <Input
                 type="hidden"
                 name="blocks"
@@ -55,7 +81,7 @@ export function PostForm({post}: { post: Post }) {
                 <div
                     className="min-w-50 w-50 xl:w-100 border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                     <div className="flex justify-between">
-                        <Button type="submit" disabled={pending} className="mb-2">
+                        <Button type="submit" disabled={pending} className="mb-2" id="post-submit">
                             Save
                         </Button>
                         {post.slug ? (<Link href={Settings.frontendUrl + '/' + post.slug} target="_blank">

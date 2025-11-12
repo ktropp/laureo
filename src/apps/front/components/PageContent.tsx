@@ -1,13 +1,13 @@
 import blockRegistry from "@admin/blocks/blockRegistry";
 
-const RenderBlock = ({block, dict}) => {
+const RenderBlock = ({block, dict, ...props}) => {
     const Block = blockRegistry.find(b => b.type === block.type);
     const BlockComponent = Block.component;
 
     return (
-        <BlockComponent block={block} dict={dict}>
+        <BlockComponent block={block} dict={dict} {...props}>
             {block.children?.map((childBlock, index) => (
-                <RenderBlock key={index} block={childBlock} dict={dict}/>
+                <RenderBlock key={index} block={childBlock} dict={dict} {...props}/>
             ))}
         </BlockComponent>
     );

@@ -1,10 +1,14 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {Minus} from "lucide-react";
 
-const AccordionLink = ({block, ...props}: BlockProps) => {
+interface AccordionLinkProps extends BlockProps {
+    isActive?: boolean
+}
+const AccordionLinkBlock = ({block, isActive, ...props}: AccordionLinkProps) => {
     const sanitizedHtml = block?.text || ''
     const Tag = block.tagName;
     return <Tag
+        data-active={isActive || undefined}
         className={block.className}
         dangerouslySetInnerHTML={{__html: sanitizedHtml}}
         {...props}
@@ -23,4 +27,4 @@ export const blockConfig: BlockMeta = {
     ]
 };
 
-export default AccordionLink;
+export default AccordionLinkBlock;

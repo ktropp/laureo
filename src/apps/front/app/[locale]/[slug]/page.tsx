@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { getPost } from "actions/data"
 import PageContent from "components/PageContent";
 import {getDictionary} from "../dictionaries";
+import { Settings } from "@theme/settings";
 
 export async function generateMetadata({
   params,
@@ -11,7 +12,7 @@ export async function generateMetadata({
   const param = await params;
   const page = await getPost(param.slug, param.locale)
   return {
-    title: page?.metaTitle,
+    title: page.metaTitle + " | " + (Settings.appName??"Laureo CMS"),
     description: page?.metaDescription,
     keywords: page?.metaKeywords
   }
