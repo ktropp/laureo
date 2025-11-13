@@ -5,7 +5,7 @@ import {Sidebar} from "components/sidebar";
 import {usePathname} from "next/navigation";
 import {useState} from "react";
 import Image from "next/image";
-import cmsIcon from "@theme/favicon/favicon.svg";
+import cmsIcon from "@theme/icon.svg";
 //TODO: dynamic import icon
 
 export default function BaseTemplate({

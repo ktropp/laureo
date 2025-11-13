@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@theme/*": ["../../../theme/*"],
-      "@admin/*": ["../../src/apps/admin"]
+      "@admin/*": ["../admin/*"],
+      "@front/*": ["../front/*"]
     },
     "target": "ES2017",
     "lib": [

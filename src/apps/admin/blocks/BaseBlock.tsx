@@ -322,6 +322,7 @@ const BaseBlock = ({
                                         {Block.icons?.map((Icon, index) => (
                                             <div className="flex flex-row items-center gap-2" key={index}>
                                                 <button
+                                                    type="button"
                                                     className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && blockJson.iconPosition == 'before') ? 'text-laureo-primary' : ''}`}
                                                     onClick={() => {
                                                         let iconName = getIconName(Icon)
@@ -338,6 +339,7 @@ const BaseBlock = ({
                                                     className={`flex-[1_0_auto] ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
                                                     size={20}/>
                                                 <button
+                                                    type="button"
                                                     className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && (blockJson.iconPosition == 'after' || !blockJson.iconPosition)) ? 'text-laureo-primary' : ''}`}
                                                     onClick={() => {
                                                         let iconName = getIconName(Icon)

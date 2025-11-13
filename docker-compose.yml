@@ -15,6 +15,7 @@ services:
     volumes:
       - ./src/apps/front:/app/src/apps/front
       - ./src/apps/admin:/app/src/apps/admin
+      - ./theme/icon.svg:/app/src/apps/front/app/icon.svg
       - ./theme:/app/theme
       - ./prisma:/app/prisma
     environment:
@@ -36,8 +37,10 @@ services:
       - db
     volumes:
       - ./src/apps/admin:/app/src/apps/admin
+      - ./src/apps/front:/app/src/apps/front
       - ./uploads:/app/uploads   # Admin can write uploaded files here
       - ./theme:/app/theme
+      - ./theme/icon.svg:/app/src/apps/admin/app/icon.svg
       - ./prisma:/app/prisma
     environment:
       - NODE_ENV=development

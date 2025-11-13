@@ -2,6 +2,7 @@
 
 import React, {useState} from "react";
 import AccordionLinksBlockClient from "./AccordionLinksBlock.client";
+import AccordionContentsBlockClient from "./AccordionContentsBlock.client";
 
 export default function AccordionBlockClient({children, block}) {
     const [activeIndex, setActiveIndex] = useState<number>(0)
@@ -17,6 +18,7 @@ export default function AccordionBlockClient({children, block}) {
                         case 'AccordionLinksBlock':
                             return <AccordionLinksBlockClient tagName={child.type} {...child.props} activeIndex={activeIndex} onAccordionChange={(index) => handleAccordionChange(index)}/>
                         case 'AccordionContentsBlock':
+                            return <AccordionContentsBlockClient tagName={child.type} {...child.props} activeIndex={activeIndex}/>
                     }
                 }
                 return child

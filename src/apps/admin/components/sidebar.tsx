@@ -15,7 +15,7 @@ import {usePathname} from "next/navigation";
 import {UserInfo} from "components/user-info";
 import {Settings} from "@theme/settings";
 import Image from "next/image";
-import cmsIcon from "@theme/favicon/favicon.svg";
+import cmsIcon from "@theme/icon.svg";
 //TODO: dynamic import icon
 
 interface SidebarProps {

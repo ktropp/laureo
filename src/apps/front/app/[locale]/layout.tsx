@@ -17,9 +17,9 @@ export default async function RootLayout({
     const locale = await getLocale();
 
     return (
-        <html lang={locale}>
+        <html lang={locale} className="overflow-x-hidden">
         <body
-            className={`${bodyClass} flex flex-col min-h-screen antialiased`}
+            className={`${bodyClass} flex flex-col min-h-screen antialiased overflow-x-hidden`}
         >
         <NextIntlClientProvider>
             <div className="flex-[1_0_auto]">

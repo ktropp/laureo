@@ -1,7 +1,7 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {ChevronsUpDown} from "lucide-react";
 import {cn} from "../../lib/utils";
-import AccordionBlockClient from "front/components/AccordionBlock.client";
+import AccordionBlockClient from "@front/components/AccordionBlock.client";
 
 const AccordionBlock = ({children, block, className}: BlockProps) => {
     const Tag = block.tagName;
