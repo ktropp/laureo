@@ -53,7 +53,7 @@ export function withImage<T extends BaseBlockProps>(
                     </div>
                 </div>
             )}
-            {props.block.media_id && <WrappedComponent block={props.block}/>}
+            {props.block.media_id && <WrappedComponent block={props.block} className="relative z-1"/>}
         </div>
     }
 }

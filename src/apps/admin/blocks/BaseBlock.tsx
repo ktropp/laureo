@@ -130,6 +130,13 @@ const BaseBlock = ({
         [onClassNameChange]
     )
 
+    const debouncedHrefChange = useCallback(
+        debounce((value: string, isTargetBlank: boolean) => {
+            onHrefChange(value, isTargetBlank);
+        }, 300),
+        [onHrefChange]
+    )
+
     return (
         <div
             id={index}
@@ -447,7 +454,7 @@ const BaseBlock = ({
                                                     placeholder="Enter link URL"
                                                     name=""
                                                     defaultValue={blockJson.href}
-                                                    onChange={(e) => onHrefChange(e.target.value, isTargetBlank)}
+                                                    onChange={(e) => debouncedHrefChange(e.target.value, isTargetBlank)}
                                                     onBlur={(e) => onHrefChange(e.target.value, isTargetBlank)}
                                                 />
                                             </div>

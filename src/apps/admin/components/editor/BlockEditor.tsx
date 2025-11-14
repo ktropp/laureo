@@ -226,9 +226,25 @@ export default function BlockEditor({content, onChange}: {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {
                     if (block.index === blockIndex) {
+                        let finalText = text;
+                        if (block.type === 'button') {
+                            // Create a temporary div to parse the HTML
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = text;
+
+                            // Remove all span elements
+                            const spans = tempDiv.getElementsByTagName('span');
+                            while (spans.length > 0) {
+                                spans[0].parentNode?.removeChild(spans[0]);
+                            }
+
+                            // Get the cleaned text
+                            finalText = tempDiv.textContent || '';
+                        }
+
                         return {
                             ...block,
-                            text: text
+                            text: finalText
                         };
                     }
                     if (block.children && block.children.length > 0) {
@@ -428,7 +444,7 @@ export default function BlockEditor({content, onChange}: {
                     items={blocks}
                     strategy={verticalListSortingStrategy}
                 >
-                    {blocks.map((block) => {
+                    {blocks?.map((block) => {
                         return (
                             <BaseBlock
                                 key={block.index}

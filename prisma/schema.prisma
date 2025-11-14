@@ -109,6 +109,11 @@ model MenuLangItem {
   menuLang MenuLang       @relation(fields: [menuLangId], references: [id], onDelete: Cascade)
 }
 
+model GlobalField {
+  slug  String @id
+  value String
+}
+
 enum Role {
   ADMIN
   EDITOR

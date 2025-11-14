@@ -1,11 +1,18 @@
 import {Metadata} from "next";
 import {Settings} from "@theme/settings";
+import {SettingsForm} from "@admin/app/settings/settings-form";
+import { prisma } from "@admin/lib/prisma";
 
 export const metadata: Metadata = {
-    title: "Settings" + " | " + (Settings.cmsName??"Laureo CMS"),
+    title: "Settings" + " | " + (Settings.cmsName ?? "Laureo CMS"),
 };
-export default function Home() {
-  return (
-    <h1 className="text-4xl font-bold">Settings</h1>
-  );
+export default async function SettingsPage() {
+    const globalFields = await prisma.GlobalField.findMany();
+
+    return (
+        <>
+            <h1 className="text-4xl font-bold">Settings</h1>
+            <SettingsForm data={globalFields}/>
+        </>
+    );
 }

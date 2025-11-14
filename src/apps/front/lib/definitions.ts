@@ -5,6 +5,11 @@ type menuLocation = {
     title: string
 }
 
+type globalField = {
+    slug: string,
+    title: string
+}
+
 export type Settings = {
     frontendUrl: string,
     cdnUrl: string,
@@ -15,5 +20,6 @@ export type Settings = {
     adminLanguage: string,
     fonts?: NextFont[],
     bodyClass?: string,
-    menuLocations?: menuLocation[]
+    menuLocations?: menuLocation[],
+    globalFields?: globalField[]
 }

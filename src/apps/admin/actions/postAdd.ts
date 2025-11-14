@@ -154,7 +154,7 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
                 status: status,
                 title: title,
                 slug: slug,
-                blocks: blocks,
+                blocks: blocksParsed,
                 metaTitle: metaTitle,
                 metaDescription: metaDescription,
                 metaKeywords: metaKeywords,

@@ -34,7 +34,7 @@ export function withEditable<T extends BaseBlockProps>(
 
         const handleChange = (evt: any) => {
             const isOnce = evt.nativeEvent.detail.isOnce || false;
-            if(isOnce){
+            if (isOnce) {
                 handleBlur(evt);
             }
         }
@@ -45,13 +45,16 @@ export function withEditable<T extends BaseBlockProps>(
                 <Icon size={16}/>
             )}</span>`
             : "";
-        const contentHtml = `${iconPosition == 'before' ? iconHtml : ''}${props.block.text || ''}${iconPosition == 'after' ? iconHtml : ''}`;
+        const hasExistingIcon = props.block.text?.includes(iconHtml);
+        const contentHtml = hasExistingIcon
+            ? props.block.text
+            : `${iconPosition == 'before' ? iconHtml : ''}${props.block.text || ''}${iconPosition == 'after' ? iconHtml : ''}`;
 
         const componentProps = {
             className: cn(
                 props.block.className,
                 Icon ? 'flex items-center gap-2' : '',
-                'focus:outline-0 min-w-20'
+                'focus:outline-0 min-w-20 min-h-10'
             ),
             innerRef: contentEditableRef,
             html: contentHtml,
