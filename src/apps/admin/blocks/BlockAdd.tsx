@@ -27,7 +27,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
         if (Block) {
             const filtered = blockRegistry.filter(block => {
                 if (block.allowedParents) {
-                    return block.allowedParents.includes(Block.type);
+                    return block.allowedParents.includes(Block.type) || (parentBlockMeta && block.allowedParents.includes(parentBlockMeta.type));
                 }
                 if(Block.allowedChildren){
                     return Block.allowedChildren.includes(block.type);

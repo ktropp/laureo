@@ -1,8 +1,8 @@
-import {BlockMeta} from "blocks/blockDefinitions";
+import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {List} from "lucide-react";
 import {cn} from "../../lib/utils";
 
-const ListBlock = ({children, block, className}: { block: Block }) => {
+const ListBlock = ({children, block, className}: BlockProps) => {
     const Tag = block.tagName;
 
     return <Tag className={cn(block.className, className)}>{children}</Tag>

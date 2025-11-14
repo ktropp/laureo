@@ -1,8 +1,8 @@
-import { BlockMeta } from "blocks/blockDefinitions";
+import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import { Container } from "lucide-react";
 import {cn} from "../../lib/utils";
 
-const ContainerBlock = ({ children, block, className }: { block: Block }) => {
+const ContainerBlock = ({ children, block, className }: BlockProps) => {
   return <div className={cn(block.className, className)}>{children}</div>
 };
 

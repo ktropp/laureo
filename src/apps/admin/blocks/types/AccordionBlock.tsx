@@ -20,10 +20,10 @@ export const blockConfig: BlockMeta = {
     isParent: true,
     tagName: 'div',
     className: '',
-    allowedChildren: [
+    /*allowedChildren: [
         'accordion-links',
         'accordion-contents'
-    ]
+    ]*/
 };
 
 export default AccordionBlock;

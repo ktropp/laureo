@@ -14,7 +14,7 @@ const ImageBlock = ({block, ...props}: BlockProps) => {
                 height={block.height}
             />
         ) : (
-            <div>placeholder todo</div>
+            <div className="bg-slate-200 p-4 flex items-center justify-center w-full h-full"><LucideImage size={20} className="text-slate-500" /></div>
         )}
     </figure>
 };
