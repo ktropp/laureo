@@ -16,6 +16,7 @@ import {UserInfo} from "components/user-info";
 import {Settings} from "@theme/settings";
 import Image from "next/image";
 import cmsIcon from "@theme/icon.svg";
+
 //TODO: dynamic import icon
 
 interface SidebarProps {
@@ -23,17 +24,35 @@ interface SidebarProps {
     onToggle: () => void;
 }
 
-const menuItems = [
-    {icon: LayoutDashboard, label: "Dashboard", href: "/"},
-    {icon: FileText, label: "Pages", href: "/page"},
-    {icon: Images, label: "Media", href: "/media"},
-    {icon: Users, label: "Users", href: '/user'},
-    {icon: List, label: "Menus", href: '/menu'},
-    {icon: SettingsIcon, label: "Settings", href: '/settings'},
-];
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
     const pathname = usePathname()
+
+    let menuItems = [
+        {icon: LayoutDashboard, label: "Dashboard", href: "/"},
+        {icon: FileText, label: "Pages", href: "/page"},
+        {icon: Images, label: "Media", href: "/media"},
+        {icon: Users, label: "Users", href: '/user'},
+        {icon: List, label: "Menus", href: '/menu'},
+        {icon: SettingsIcon, label: "Settings", href: '/settings'},
+    ];
+
+    const customPostTypes = Settings.customPostTypes;
+    if(customPostTypes && customPostTypes.length > 0){
+        const newMenuItems = []
+        customPostTypes.map((customPostType) => {
+            newMenuItems.push({
+                icon: customPostType.icon || FileText,
+                label: customPostType.label || customPostType.slug,
+                href: `/${customPostType.slug}`
+            })
+        })
+        menuItems = [
+            ...menuItems.slice(0, 2),
+            ...newMenuItems,
+            ...menuItems.slice(2, menuItems.length)
+        ]
+    }
 
     return (
         <div className={`

@@ -3,7 +3,7 @@ import {RectangleEllipsis} from "lucide-react";
 import {getIconByName} from "../iconRegistry";
 import blockRegistry from "../blockRegistry";
 
-const ButtonBlock = ({block, ...props}: BlockProps) => {
+const ButtonBlock = ({block, GlobalFields, ...props}: BlockProps) => {
     const Icon = getIconByName(block?.icon) || null
     const iconPosition = block?.iconPosition || 'after'
     const sanitizedHtml = block?.text || ''

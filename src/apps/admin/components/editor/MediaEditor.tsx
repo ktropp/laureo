@@ -7,7 +7,7 @@ import {Settings} from "@theme/settings";
 import {Label} from "components/ui/label";
 import {Input} from "../ui/input";
 
-export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMediaSelect}) {
+export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaEditorClose, onMediaSelect}) {
 
     const accordionItems = [
         {
@@ -37,6 +37,7 @@ export default function MediaEditor({slug, blockIndex, onMediaEditorClose, onMed
                 setIsLoading(true)
                 const data = await getAllMedia()
                 setMediaItems(data)
+                setSelectedMedia(data.find(media => media.id === selectedMediaId))
             } catch (error) {
                 console.error('Error fetching media items:', error)
             } finally {

@@ -1,43 +1,32 @@
 "use server"
 
-import {UserEditFormSchema, UserEditFormState} from "../lib/definitions";
+import {GlobalFieldFormState} from "../lib/definitions";
 import {prisma} from "../lib/prisma";
+import {Settings} from "@theme/settings";
 
-export async function globalFieldsEdit(state: UserEditFormState, formData: FormData) {
-    return false
-    // validate fields
-    const validatedFields = UserEditFormSchema.safeParse({
-        id: formData.get('id'),
-        name: formData.get('name'),
-        surname: formData.get('surname'),
-        role: formData.get('role'),
-    });
+export async function globalFieldsEdit(state: GlobalFieldFormState, formData: FormData) {
+    const globalFields = Settings.globalFields;
 
-    // If any form fields are invalid, return early
-    if (!validatedFields.success) {
-        return {
-            errors: validatedFields.error.flatten().fieldErrors,
-        }
-    }
-
-    const {id, name, surname, role} = validatedFields.data;
-
-    // Update user
-    const result = await prisma.user.update({
-        where: {
-            id: parseInt(id)
-        },
-        data: {
-            name: name,
-            surname: surname,
+    const data = []
+    globalFields.map(field => {
+        if (formData.get(field.slug)) {
+            data.push({slug: field.slug, value: formData.get(field.slug)})
         }
     })
 
-    return {
-        data: {
-            name: name,
-            surname: surname,
-            role: role,
+    if (data.length) {
+        data.map(async field => {
+            await prisma.GlobalField.upsert({
+                where: {slug: field.slug},
+                create: {slug: field.slug, value: field.value},
+                update: {value: field.value}
+            })
+        })
+
+        return {
+            data: await prisma.GlobalField.findMany()
         }
     }
+
+    return false
 }

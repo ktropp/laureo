@@ -177,3 +177,16 @@ export type MenuAddFormState =
     }
 }
     | undefined
+
+export type GlobalFieldFormState =
+    | {
+    errors?: {
+        id?: string[]
+        name?: string[]
+        surname?: string[]
+        role?: string[]
+    }
+    message?: string
+    data?: GlobalField[]
+}
+    | undefined

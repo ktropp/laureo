@@ -30,8 +30,9 @@ export default async function Page({
     notFound()
 
   const dict = await getDictionary(param.locale)
+  const GlobalFields = await prisma.globalField.findMany()
 
   return (
-      <PageContent page={page} dict={dict}/>
+      <PageContent page={page} dict={dict} GlobalFields={GlobalFields}/>
   )
 }

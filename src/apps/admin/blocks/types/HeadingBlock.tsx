@@ -1,7 +1,7 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Heading} from "lucide-react";
 
-const HeadingBlock = ({block, ...props}: BlockProps) => {
+const HeadingBlock = ({block, GlobalFields, ...props}: BlockProps) => {
     const Tag = block.tagName;
     const sanitizedHtml = block?.text || ''
 

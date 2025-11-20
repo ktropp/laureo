@@ -4,7 +4,6 @@ import Image from 'next/image'
 import {cn} from "@admin/lib/utils";
 
 const ImageBlock = ({block, ...props}: BlockProps) => {
-    console.log(props)
     return <figure
         className={cn(block.className, props.className)}
     >

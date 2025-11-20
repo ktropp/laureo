@@ -22,7 +22,8 @@ import MediaEditor from "./MediaEditor";
 
 interface MediaEditorProps {
     slug: string,
-    blockIndex: string
+    blockIndex: string,
+    selectedMediaId?: number | null
 }
 
 export default function BlockEditor({content, onChange}: {
@@ -370,10 +371,11 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
-    const handleMediaEditorOpen = (mediaEditorSlug: string, blockIndex: string) => {
+    const handleMediaEditorOpen = (mediaEditorSlug: string, blockIndex: string, selectedMediaId: number) => {
         setMediaEditorOpen({
             slug: mediaEditorSlug,
             blockIndex: blockIndex,
+            selectedMediaId: selectedMediaId
         });
     }
 
@@ -425,7 +427,7 @@ export default function BlockEditor({content, onChange}: {
                     onBlockDelete={() => handleBlockDelete(block.index)}
                     onBlockCopy={() => handleBlockCopy(block.index)}
                     onBlockPaste={() => handleBlockPaste(block.index)}
-                    onMediaEditorOpen={(slug) => handleMediaEditorOpen(slug, block.index)}
+                    onMediaEditorOpen={(slug, blockIndex, selectedMediaId) => handleMediaEditorOpen(slug, block.index, selectedMediaId || block.media_id || null)}
                 >
                     {block.children && renderBlocks(block.children, block)}
                 </BaseBlock>
@@ -460,7 +462,7 @@ export default function BlockEditor({content, onChange}: {
                                 onBlockDelete={() => handleBlockDelete(block.index)}
                                 onBlockCopy={() => handleBlockCopy(block.index)}
                                 onBlockPaste={() => handleBlockPaste(block.index)}
-                                onMediaEditorOpen={(slug) => handleMediaEditorOpen(slug, block.index)}
+                                onMediaEditorOpen={(slug, blockIndex, selectedMediaId) => handleMediaEditorOpen(slug, block.index, selectedMediaId || block.media_id || null)}
                             >
                                 {block.children && renderBlocks(block.children, block)}
                             </BaseBlock>
@@ -469,7 +471,7 @@ export default function BlockEditor({content, onChange}: {
                 </SortableContext>
             </DndContext>
             <BlockAdd onBlockAdd={handleBlockAdd}></BlockAdd>
-            {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen.slug} blockIndex={mediaEditorOpen.blockIndex}
+            {mediaEditorOpen && <MediaEditor slug={mediaEditorOpen.slug} blockIndex={mediaEditorOpen.blockIndex} selectedMediaId={mediaEditorOpen.selectedMediaId}
                                              onMediaEditorClose={() => setMediaEditorOpen(null)}
                                              onMediaSelect={(media_id, src, alt, title, width, height, blockIndex) => handleMediaEditorSelect(media_id, src, alt, title, width, height, blockIndex)}/>}
         </div>

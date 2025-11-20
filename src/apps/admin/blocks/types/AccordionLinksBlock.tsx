@@ -8,7 +8,6 @@ interface AccordionLinksProps extends BlockProps {
 }
 const AccordionLinksBlock = ({children, block, className, activeIndex}: AccordionLinksProps) => {
     const Tag = block.tagName;
-    console.log(activeIndex)
 
     return <Tag className={cn(block.className, className)}>
         {React.Children.map(children, (child, index) => {

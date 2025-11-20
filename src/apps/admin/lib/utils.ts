@@ -22,3 +22,11 @@ export function debounce(func: Function, wait: number) {
         timeout = setTimeout(() => func(...args), wait);
     };
 }
+
+export function sanitizeFrontendHtml(html: string, GlobalFields: GlobalField[]) {
+    let returnHtml = html
+    GlobalFields?.forEach(field => {
+        returnHtml = returnHtml.replace('['+field.slug+']', field.value)
+    })
+    return returnHtml
+}

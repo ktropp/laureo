@@ -16,11 +16,17 @@ export async function generateMetadata({
 export default async function PostsPage({params,}: { params: { type: string } }) {
     const param = await params
     const data = await prisma.postLang.findMany({
+        where: {
+            post: {
+                type: param.type.toUpperCase()
+            }
+        },
         select: {
+            post: true,
             id: true,
             languageCode: true,
             title: true,
-            slug: true
+            slug: true,
         }
     })
 

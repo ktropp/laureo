@@ -1,4 +1,5 @@
 import {NextFont} from "next/dist/compiled/@next/font";
+import { LucideIcon } from "lucide-react";
 
 type menuLocation = {
     slug: string,
@@ -8,6 +9,18 @@ type menuLocation = {
 type globalField = {
     slug: string,
     title: string
+}
+
+type customPostTypeRewrite = {
+    lang: string,
+    rewrite: string
+}
+
+type customPostType = {
+    slug: string,
+    label: string,
+    icon?: LucideIcon,
+    rewrite?: customPostTypeRewrite[]
 }
 
 export type Settings = {
@@ -21,5 +34,6 @@ export type Settings = {
     fonts?: NextFont[],
     bodyClass?: string,
     menuLocations?: menuLocation[],
-    globalFields?: globalField[]
+    globalFields?: globalField[],
+    customPostTypes?: customPostType[]
 }

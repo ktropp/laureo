@@ -39,6 +39,7 @@ export interface BlockJson {
   id?: string;
   href?: string;
   isTargetBlank?: boolean;
+  media_id?: number;
   src?: string;
   width?: number;
   height?: number;
@@ -53,4 +54,5 @@ export interface BlockJson {
 
 export interface BlockProps extends HTMLAttributes<HTMLElement> {
   block: BlockJson;
+  GlobalFields?: GlobalField[];
 }

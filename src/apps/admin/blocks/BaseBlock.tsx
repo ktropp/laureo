@@ -137,6 +137,14 @@ const BaseBlock = ({
         [onHrefChange]
     )
 
+    const handleBlockIconClick = (type, blockIndex, selectedMediaId) => {
+        switch (type) {
+            case 'image':
+                onMediaEditorOpen('media', blockIndex, selectedMediaId);
+                break;
+        }
+    }
+
     return (
         <div
             id={index}
@@ -205,7 +213,7 @@ const BaseBlock = ({
                     className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
                         <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
-                                title={Block.name}>
+                                title={Block.name} onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
                             <Block.icon size={20}/>
                         </button>
                         <button

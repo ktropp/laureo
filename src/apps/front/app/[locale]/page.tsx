@@ -3,6 +3,7 @@ import { getPost } from "actions/data";
 import PageContent from "components/PageContent";
 import {getDictionary} from "./dictionaries";
 import {Settings} from "@theme/settings";
+import {prisma} from "@front/lib/prisma";
 
 export async function generateMetadata({
   params,
@@ -30,8 +31,9 @@ export default async function Page({
     notFound()
 
   const dict = await getDictionary(param.locale)
+  const GlobalFields = await prisma.globalField.findMany()
 
   return (
-      <PageContent page={page} dict={dict}/>
+      <PageContent page={page} dict={dict} GlobalFields={GlobalFields}/>
   )
 }

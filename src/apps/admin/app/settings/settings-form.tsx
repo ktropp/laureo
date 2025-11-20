@@ -6,6 +6,7 @@ import {globalFieldsEdit} from "@admin/actions/globalFieldsEdit";
 import {Label} from "@admin/components/ui/label";
 import {Input} from "@admin/components/ui/input";
 import {Button} from "@admin/components/ui/button";
+import {toast} from 'react-toastify';
 
 export function SettingsForm({data}: { data: GlobalField[] }) {
     const globalFields = Settings.globalFields
@@ -13,7 +14,16 @@ export function SettingsForm({data}: { data: GlobalField[] }) {
 
     return (
         <div className="max-w-3xl">
-            <form className="space-y-4" action={action}>
+            <form className="space-y-4" action={async (formData) => {
+            const result = await action(formData);
+
+            if (result?.errors) {
+                toast.error('Please check the form for errors');
+                return;
+            }
+
+            toast.success('Successfully saved!');
+        }}>
                 {globalFields.map((field, index) => (
                     <div className="space-y-2" key={index}>
                         <Label htmlFor={field.slug}>{field.title} [{field.slug}]</Label>
@@ -21,7 +31,7 @@ export function SettingsForm({data}: { data: GlobalField[] }) {
                             id={field.slug}
                             type="text"
                             name={field.slug}
-                            defaultValue={state?.data?.[field.slug] || data?.[field.slug] || ''}
+                            defaultValue={state?.data?.filter((item) => item.slug === field.slug)[0]?.value || data?.filter((item) => item.slug === field.slug)[0]?.value || ''}
                         />
                     </div>
                 ))}
