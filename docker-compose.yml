@@ -6,7 +6,7 @@ services:
       dockerfile: src/apps/front/Dockerfile
     container_name: front
     ports:
-      - "3000:3000"   # accessible on host: localhost:3000
+      - "3000:3000"
     networks:
       - app-network
     depends_on:
@@ -29,7 +29,7 @@ services:
       dockerfile: src/apps/admin/Dockerfile
     container_name: admin
     ports:
-      - "3001:3001"   # accessible on host: localhost:3001
+      - "3001:3001"
     networks:
       - app-network
     depends_on:
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./src/apps/admin:/app/src/apps/admin
       - ./src/apps/front:/app/src/apps/front
-      - ./uploads:/app/uploads   # Admin can write uploaded files here
+      - ./uploads:/app/uploads
       - ./theme:/app/theme
       - ./theme/icon.svg:/app/src/apps/admin/app/icon.svg
       - ./prisma:/app/prisma
@@ -53,12 +53,12 @@ services:
       dockerfile: src/apps/cdn/Dockerfile
     container_name: cdn
     ports:
-      - "3002:3002"   # accessible on host: localhost:3002
+      - "3002:3002"
     networks:
       - app-network
     volumes:
       - ./src/apps/cdn:/app/src/apps/cdn
-      - ./uploads:/app/uploads   # CDN serves files from the shared uploads folder
+      - ./uploads:/app/uploads
 
   db:
     image: postgres:15
