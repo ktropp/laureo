@@ -5,9 +5,9 @@ const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'http',
-                hostname: 'cdn',
-                port: '3002',
+                protocol: 'https',
+                hostname: 'cdn.emerge.dev.kareltropp.cz',
+                //port: '3002',
                 pathname: '/**',
             },
         ],

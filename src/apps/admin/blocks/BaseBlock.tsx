@@ -23,6 +23,7 @@ import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
 import {withImage} from "./withImage";
+import {withForm} from "./withForm";
 import {Label} from "components/ui/label";
 import {Checkbox} from "../components/ui/checkbox";
 import {Button} from "../components/ui/button";
@@ -67,6 +68,10 @@ const BaseBlock = ({
 
     if (Block.type === 'image') {
         BlockComponent = withImage(BlockComponent);
+    }
+
+    if (Block.type === 'form') {
+        BlockComponent = withForm(BlockComponent);
     }
 
     const blockRef = useRef(null)
@@ -213,7 +218,8 @@ const BaseBlock = ({
                     className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
                         <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
-                                title={Block.name} onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
+                                title={Block.name}
+                                onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
                             <Block.icon size={20}/>
                         </button>
                         <button
@@ -583,9 +589,10 @@ const BaseBlock = ({
                                     type="button"
                                     onClick={() => {
                                         onBlockCopy()
+                                        setIsOptionsOpen(false);
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Kopírovat</span>
+                                    <span>Copy</span>
                                     <span>Ctrl+C</span>
                                 </button>
                             </div>
@@ -596,7 +603,7 @@ const BaseBlock = ({
                                         onBlockPaste()
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Vložit</span>
+                                    <span>Paste</span>
                                     <span>Ctrl+V</span>
                                 </button>
                             </div>
@@ -607,7 +614,7 @@ const BaseBlock = ({
                                         onBlockDelete()
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Smazat</span>
+                                    <span>Delete</span>
                                     <span>Shift+Alt+Z</span>
                                 </button>
                             </div>
@@ -615,16 +622,8 @@ const BaseBlock = ({
                     </div>
                 </div>
             </div>
-            <BlockComponent block
-                                ={
-                blockWithCallback
-            } className
-                                ={
-                Block.isParent ? 'min-h-7 min-w-20' : ''
-            }>
-                {
-                    children
-                }
+            <BlockComponent block={blockWithCallback} className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}>
+                {children}
                 {
                     Block.isParent && isFocused &&
                     <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock}/>
