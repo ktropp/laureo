@@ -16,11 +16,11 @@ const ButtonBlock = ({block, GlobalFields, ...props}: BlockProps) => {
         target={target}
         {...props}
     >
-        <span className={`flex items-center gap-${registry.spaceSize || 3}`}>
+        {Icon ? <span className={`flex items-center justify-center h-full gap-${registry.spaceSize || 3}`}>
             {iconPosition == 'before' && Icon && <Icon size={registry.iconSize || 20} className={registry.iconClassName || ''}/>}
-            <span dangerouslySetInnerHTML={{__html: sanitizedHtml}}/>
+            {sanitizedHtml && <span dangerouslySetInnerHTML={{__html: sanitizedHtml}}/>}
             {iconPosition == 'after' && Icon && <Icon size={registry.iconSize || 20} className={registry.iconClassName || ''}/>}
-        </span>
+        </span> : sanitizedHtml}
     </a>
 };
 
