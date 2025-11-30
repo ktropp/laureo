@@ -14,7 +14,7 @@ export const getPost = cache(async (slug: string, languageCode: string) => {
   }
   const res = await prisma.postLang.findFirst({
     where: {
-      slug: slug,
+      slug: slug[0],
       languageCode: langCode,
       status: 'PUBLISHED'
     }

@@ -19,7 +19,7 @@ export async function generateMetadata({
 export default async function PostEditPage({
     params,
 }: {
-    params: { id: string }
+    params: { type:string, id: string }
 }) {
   const param = await params
   const post = await prisma.postLang.findUnique({
@@ -49,5 +49,5 @@ export default async function PostEditPage({
     throw new Error('Post not found');
   }
 
-  return <PostForm post={post} />
+  return <PostForm post={post} type={param.type} />
 }

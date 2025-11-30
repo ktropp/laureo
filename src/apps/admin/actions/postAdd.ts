@@ -140,7 +140,8 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
         //add
         const result = await prisma.post.create({
             data: {
-                authorId: author.id
+                authorId: author.id,
+                type: type
             },
             select: {
                 id: true

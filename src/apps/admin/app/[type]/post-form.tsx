@@ -14,7 +14,7 @@ import {Settings} from "@theme/settings";
 import BlockEditor from "../../components/editor/BlockEditor";
 import {toast} from 'react-toastify';
 
-export function PostForm({post}: { post: Post }) {
+export function PostForm({post, type}: { post: Post, type: string }) {
     const languages = Settings.languages;
     let translations;
     if (post.post) {
@@ -98,7 +98,7 @@ export function PostForm({post}: { post: Post }) {
                     <Input
                         type="hidden"
                         name="type"
-                        defaultValue="PAGE"
+                        defaultValue={type.toUpperCase() || 'PAGE'}
                         required
                     />
 
