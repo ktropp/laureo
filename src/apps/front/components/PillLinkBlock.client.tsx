@@ -10,5 +10,6 @@ export default function PillLinkBlockClient({
                                                 ...props
                                             }) {
     const Tag = tagName
+    delete props.GlobalFields
     return <Tag className={className} {...props} data-active={isActive ? isActive : null} onClick={onToggle}></Tag>
 }

@@ -24,7 +24,6 @@ export default async function Page({
   params: { locale: string, slug: string }
 }) {
   const param = await params;
-  console.log(param)
   const page = await getPost(param.slug, param.locale)
 
   if (!page)

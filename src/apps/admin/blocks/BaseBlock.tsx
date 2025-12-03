@@ -42,6 +42,7 @@ const BaseBlock = ({
                        onBlockDelete,
                        onBlockCopy,
                        onBlockPaste,
+                       onBlockLock,
                        onMediaEditorOpen,
                        parentBlock,
                        autoFocus
@@ -193,7 +194,7 @@ const BaseBlock = ({
             }
             }
         >
-            <div className={`absolute z-9 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
+            <div className={`absolute z-99 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
                 {parentBlock &&
                     <div
                         className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
@@ -223,7 +224,7 @@ const BaseBlock = ({
                             <Block.icon size={20}/>
                         </button>
                         <button
-                            className="p-1 cursor-pointer hover:text-laureo-primary"
+                            className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                             title="Drag to reorder"
                             type="button"
                             ref={setDraggableNodeRef}
@@ -233,14 +234,14 @@ const BaseBlock = ({
                         </button>
                         <div className="flex flex-col px-1">
                             <button
-                                className="cursor-pointer hover:text-laureo-primary"
+                                className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                                 title="Move up"
                                 type="button"
                             >
                                 <ChevronUp size={20}/>
                             </button>
                             <button
-                                className="cursor-pointer hover:text-laureo-primary"
+                                className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                                 title="Move down"
                                 type="button"
                             >
@@ -552,7 +553,7 @@ const BaseBlock = ({
                         )}
                         <button
                             type="button"
-                            className="p-1 cursor-pointer hover:text-laureo-primary"
+                            className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                             title="Change class"
                             onClick={() => setIsClassOpen(!isClassOpen)}
                         >
@@ -607,7 +608,7 @@ const BaseBlock = ({
                                     <span>Ctrl+V</span>
                                 </button>
                             </div>
-                            <div className="p-2 border-t">
+                            <div className={`p-2 border-t ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -618,11 +619,23 @@ const BaseBlock = ({
                                     <span>Shift+Alt+Z</span>
                                 </button>
                             </div>
+                            <div className="p-2 border-t">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onBlockLock()
+                                    }}
+                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                    <span>{blockJson.lock ? 'Unlock' : 'Lock'}</span>
+                                    <span></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <BlockComponent block={blockWithCallback} className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}>
+            <BlockComponent block={blockWithCallback}
+                            className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}>
                 {children}
                 {
                     Block.isParent && isFocused &&

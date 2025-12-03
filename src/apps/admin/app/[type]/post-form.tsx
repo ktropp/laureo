@@ -54,6 +54,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
+    let postUrl = Settings.frontendUrl + '/' + post.slug
+    if(type !== 'page'){
+        postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0,2))[0].rewrite + '/' + post.slug
+    }
+
     return (
         <form action={async (formData) => {
             const result = await action(formData);
@@ -84,7 +89,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                         <Button type="submit" disabled={pending} className="mb-2" id="post-submit">
                             Save
                         </Button>
-                        {post.slug ? (<Link href={Settings.frontendUrl + '/' + post.slug} target="_blank">
+                        {post.slug ? (<Link href={postUrl} target="_blank">
                             <Button type="button" variant="outline">Preview</Button>
                         </Link>) : ''}
                     </div>

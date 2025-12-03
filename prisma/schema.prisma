@@ -121,10 +121,6 @@ enum Role {
   CONTRIBUTOR
 }
 
-enum PostType {
-  PAGE
-}
-
 enum PostStatus {
   DRAFT
   PUBLISHED

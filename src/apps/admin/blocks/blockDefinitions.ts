@@ -50,6 +50,7 @@ export interface BlockJson {
   icon?: string;
   iconPosition?: 'before' | 'after';
   children?: BlockJson[];
+  lock?: boolean;
 }
 
 export interface BlockProps extends HTMLAttributes<HTMLElement> {
