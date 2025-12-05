@@ -13,6 +13,7 @@ import {BlockJson} from "../../blocks/blockDefinitions";
 import {Settings} from "@theme/settings";
 import BlockEditor from "../../components/editor/BlockEditor";
 import {toast} from 'react-toastify';
+import MetaEditor from "@admin/components/editor/MetaEditor";
 
 export function PostForm({post, type}: { post: Post, type: string }) {
     const languages = Settings.languages;
@@ -54,8 +55,8 @@ export function PostForm({post, type}: { post: Post, type: string }) {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    let postUrl = Settings.frontendUrl + '/' + post.slug
-    if(type !== 'page'){
+    let postUrl = Settings.frontendUrl + '/' + post?.slug
+    if(type !== 'page' && post.languageCode){
         postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0,2))[0].rewrite + '/' + post.slug
     }
 
@@ -82,6 +83,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                         content={post?.blocks}
                         onChange={handleBlocksChange}
                     />
+                    <MetaEditor postLang={post} type={type} />
                 </div>
                 <div
                     className="min-w-50 w-50 xl:w-100 border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">

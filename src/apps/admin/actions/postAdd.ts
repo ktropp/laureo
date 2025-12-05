@@ -70,6 +70,19 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
         metaKeywords: formData.get('metaKeywords'),
     }
 
+    const postLangMeta = Array.from(formData.entries())
+        .filter(([key]) => key.startsWith('postLangMeta['))
+        .reduce((acc, [key, value]) => {
+            // Extract the key name between brackets
+            const match = key.match(/\[(.*?)\]/);
+            if (match) {
+                const propertyName = match[1];
+                console.log(value)
+                acc[propertyName] = value;
+            }
+            return acc;
+        }, {} as Record<string, string>);
+
     if (dataFromForm.id) {
         const post = await prisma.postLang.findUnique({
             where: {
@@ -112,10 +125,11 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
     const author = await currentUser()
 
     if (dataFromForm.id) {
+        const postLangId = parseInt(dataFromForm.id)
         //update
         return await prisma.postLang.update({
             where: {
-                id: parseInt(dataFromForm.id)
+                id: postLangId
             },
             data: {
                 status: status,
@@ -125,6 +139,23 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
                 metaTitle: metaTitle,
                 metaDescription: metaDescription,
                 metaKeywords: metaKeywords,
+                postLangMeta: {
+                    upsert: Object.entries(postLangMeta).map(([key, value]) => ({
+                        where: {
+                            postLangId_key: {
+                                postLangId: postLangId,
+                                key: key,
+                            }
+                        },
+                        create: {
+                            key: key,
+                            value: value
+                        },
+                        update: {
+                            value: value
+                        }
+                    }))
+                }
             },
             select: {
                 id: true,

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { GridView } from "components/gridview";
 import * as Dialog from '@radix-ui/react-dialog';
 import { postDelete } from "actions/postDelete";
+import {Settings} from "@theme/settings";
 
 export default function PostIndex({ type, initialData }) {
   const [open, setOpen] = useState(false);
@@ -54,7 +55,7 @@ export default function PostIndex({ type, initialData }) {
   return (
     <div>
       <div className="flex items-center mb-6 gap-6">
-        <h1 className="text-4xl font-bold">{PostTypeTitles[type]}</h1>
+        <h1 className="text-4xl font-bold">{PostTypeTitles[type] || Settings.customPostTypes.filter(postType => postType.slug == type)[0].label}</h1>
         <Button asChild><Link href={`/${type}/add`}>Add <CirclePlus className="h-5 w-5" /></Link></Button>
       </div>
       <GridView data={initialData} columns={columns} />

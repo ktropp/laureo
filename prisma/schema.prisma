@@ -51,23 +51,35 @@ model Post {
 }
 
 model PostLang {
-  id              Int        @id @default(autoincrement())
-  created_at      DateTime   @default(now())
-  updated_at      DateTime   @updatedAt
+  id              Int            @id @default(autoincrement())
+  created_at      DateTime       @default(now())
+  updated_at      DateTime       @updatedAt
   postId          Int
-  languageCode    String     @db.VarChar(5)
-  status          PostStatus @default(DRAFT)
+  languageCode    String         @db.VarChar(5)
+  status          PostStatus     @default(DRAFT)
   title           String
   slug            String
-  blocks          Json       @default("{}")
+  blocks          Json           @default("{}")
   searchText      String?
   metaTitle       String?
   metaDescription String?
   metaKeywords    String?
-  post            Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post            Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postLangMeta    PostLangMeta[]
 
   @@unique([postId, languageCode])
   @@index([languageCode])
+}
+
+model PostLangMeta {
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  postLangId Int
+  key        String
+  value      String
+  postLang   PostLang @relation(fields: [postLangId], references: [id], onDelete: Cascade)
+
+  @@id([postLangId, key])
 }
 
 model Menu {
