@@ -12,13 +12,13 @@ interface BaseBlockProps {
     isFocused?: boolean;
 }
 
-export function withForm<T extends BaseBlockProps>(
+export function withServer<T extends BaseBlockProps>(
     WrappedComponent: ComponentType<T>,
 ) {
-    return function FormEditableComponent({
+    return function ServerEditableComponent({
                                                className,
                                                ...props
                                            }: T & WithEditableProps) {
-        return <div className={props.block.className}>{props.children}</div>
+        return <div className={props.block.className}></div>
     }
 }

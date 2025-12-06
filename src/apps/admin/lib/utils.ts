@@ -1,5 +1,6 @@
 import {clsx, type ClassValue} from "clsx"
 import {extendTailwindMerge} from "tailwind-merge"
+import {GlobalField} from "@front/lib/globalFields"
 
 //TODO: this needs to be defined in settings, or parsed from tailwind
 const customTwMerge = extendTailwindMerge({

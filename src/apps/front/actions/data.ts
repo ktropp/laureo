@@ -21,6 +21,18 @@ export const getPost = cache(async (slug: string, languageCode: string) => {
                 post: {
                     type: 'PAGE'
                 }
+            },
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                blocks: true,
+                languageCode: true,
+                metaTitle: true,
+                metaDescription: true,
+                metaKeywords: true,
+                status: true,
+                postLangMeta: true
             }
         })
     } else {
@@ -39,6 +51,18 @@ export const getPost = cache(async (slug: string, languageCode: string) => {
                     post: {
                         type: customPostType.toString().toUpperCase()
                     }
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    slug: true,
+                    blocks: true,
+                    languageCode: true,
+                    metaTitle: true,
+                    metaDescription: true,
+                    metaKeywords: true,
+                    status: true,
+                    postLangMeta: true
                 }
             })
         }

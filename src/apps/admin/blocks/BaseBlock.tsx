@@ -28,6 +28,7 @@ import {Label} from "components/ui/label";
 import {Checkbox} from "../components/ui/checkbox";
 import {Button} from "../components/ui/button";
 import {debounce} from "../lib/utils";
+import {withServer} from "@admin/blocks/withServer";
 
 const BaseBlock = ({
                        children,
@@ -74,6 +75,11 @@ const BaseBlock = ({
     if (Block.type === 'form') {
         BlockComponent = withForm(BlockComponent);
     }
+
+    if (Block.isServer) {
+        BlockComponent = withServer(BlockComponent);
+    }
+
 
     const blockRef = useRef(null)
     useEffect(() => {

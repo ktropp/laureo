@@ -7,6 +7,7 @@ export interface BlockMeta {
   icon?: LucideIcon;
   isParent?: boolean; // if true, can have nested blocks
   isText?: boolean; // if true, is editable as text
+  isServer?: boolean; // if true, admin will have different component than frontend (frontend will be use server)
   tagName?: string; // tagName for editable
   className?: string; // default classes
   tags?: BlockTag[];
