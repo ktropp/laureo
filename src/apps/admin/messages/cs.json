@@ -1,6 +1,44 @@
 {
-  "install": {
-    "title": "Instalace",
-    "description": "Dokončete instalaci vytvořením prvního uživatele."
+  "login": {
+    "error": "Chyba",
+    "title": "Přihlásit se",
+    "description": "Zadejte svou e-mailovou adresu a heslo pro přístup ke svému účtu.",
+    "email": "Email",
+    "password": "Heslo",
+    "email-placeholder": "jan.novak@email.cz",
+    "password-placeholder": "Vaše heslo",
+    "remember": "Pamatovat přihlášení",
+    "forgot": "Zapomněli jste heslo?",
+    "submit": "Přihlásit se"
+  },
+  "sidebar": {
+    "dashboard": "Nástěnka",
+    "pages": "Stránky",
+    "media": "Média",
+    "users": "Uživatelé",
+    "menus": "Menu",
+    "settings": "Nastavení"
+  },
+  "dashboard": {
+    "title": "Nástěnka"
+  },
+  "settings": {
+    "title": "Nastavení",
+    "submit": "Uložit"
+  },
+  "table": {
+    "add": "Přidat",
+    "id": "Id",
+    "language": "Jazyk",
+    "title": "Název",
+    "location": "Umístění",
+    "actions": "Akce",
+    "delete-title": "Potvrdit smazání",
+    "delete-description": "Opravdu chcete smazat tuhle položku? Tato akce nelze vrátit.",
+    "delete-cancel": "Zrušit",
+    "delete-confirm": "Smazat"
+  },
+  "menus": {
+    "heading": "Menu"
   }
 }

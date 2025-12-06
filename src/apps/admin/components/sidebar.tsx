@@ -16,6 +16,7 @@ import {UserInfo} from "components/user-info";
 import {Settings} from "@theme/settings";
 import Image from "next/image";
 import cmsIcon from "@theme/icon.svg";
+import {useTranslations} from "next-intl";
 
 //TODO: dynamic import icon
 
@@ -26,15 +27,16 @@ interface SidebarProps {
 
 
 export function Sidebar({collapsed, onToggle}: SidebarProps) {
+    const t = useTranslations('sidebar');
     const pathname = usePathname()
 
     let menuItems = [
-        {icon: LayoutDashboard, label: "Dashboard", href: "/"},
-        {icon: FileText, label: "Pages", href: "/page"},
-        {icon: Images, label: "Media", href: "/media"},
-        {icon: Users, label: "Users", href: '/user'},
-        {icon: List, label: "Menus", href: '/menu'},
-        {icon: SettingsIcon, label: "Settings", href: '/settings'},
+        {icon: LayoutDashboard, label: t('dashboard'), href: "/"},
+        {icon: FileText, label: t('pages'), href: "/page"},
+        {icon: Images, label: t('media'), href: "/media"},
+        {icon: Users, label: t('users'), href: '/user'},
+        {icon: List, label: t('menus'), href: '/menu'},
+        {icon: SettingsIcon, label: t('settings'), href: '/settings'},
     ];
 
     const customPostTypes = Settings.customPostTypes;

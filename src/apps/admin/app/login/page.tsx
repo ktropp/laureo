@@ -21,7 +21,7 @@ export default function Page({
     params: Promise<{ slug: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const t = useTranslations('install');
+    const t = useTranslations('login');
 
     const [state, action, pending] = useActionState(login, undefined)
     const [showPassword, setShowPassword] = useState(false);
@@ -32,27 +32,27 @@ export default function Page({
         <>
             {state?.message && (<Alert variant="destructive" className="mb-3">
                 <AlertCircle className="h-4 w-4"/>
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{t('error')}</AlertTitle>
                 <AlertDescription>
                     {state?.message}
                 </AlertDescription>
             </Alert>)}
 
             <div className="space-y-1 mb-3">
-                <h2 className="text-xl font-semibold">Login</h2>
+                <h2 className="text-xl font-semibold">{t('title')}</h2>
                 <p className="text-sm text-laureo-text-lighter dark:text-laureo-text-lighter-dark">
-                    Enter your email and password to access your account
+                    {t('description')}
                 </p>
             </div>
             <div>
                 <form className="space-y-4" action={action}>
 
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
-                            placeholder="Enter your email"
+                            placeholder={t('email-placeholder')}
                             name="email"
                             defaultValue={currentUser?.email}
                             required
@@ -61,12 +61,12 @@ export default function Page({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">{t('password')}</Label>
                         <div className="relative">
                             <Input
                                 id="password"
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Enter your password"
+                                placeholder={t('password-placeholder')}
                                 name="password"
                                 defaultValue={currentUser?.password}
                                 required
@@ -97,16 +97,16 @@ export default function Page({
                                 className="rounded border-input"
                             />
                             <Label htmlFor="remember" className="text-sm mb-0">
-                                Remember me
+                                {t('remember')}
                             </Label>
                         </div>
                         <Link href="" className="text-sm text-laureo-primary hover:underline">
-                            Forgot password?
+                            {t('forgot')}
                         </Link>
                     </div>
 
                     <Button type="submit" className="w-full" disabled={pending}>
-                        Login
+                        {t('submit')}
                     </Button>
                 </form>
 
