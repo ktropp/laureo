@@ -11,7 +11,7 @@ export default function AccordionLinksBlockClient({children, tagName, className,
                 if (React.isValidElement(child)) {
                     switch (child._owner.name) {
                         case 'AccordionLinkBlock':
-                            return <AccordionLinkBlockClient tagName={child.type} {...child.props} isActive={activeIndex == index || undefined} onClick={() => onAccordionChange(index)} content={contents && contents[index]??null}/>
+                            return <AccordionLinkBlockClient tagName={child.type} {...child.props} isActive={activeIndex == index || undefined} onClick={() => onAccordionChange(index)} content={(contents && contents[index])??null}/>
                     }
                 }
                 return child
