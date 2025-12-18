@@ -13,7 +13,7 @@ export async function generateMetadata({
   const param = await params;
   const page = await getPost(param.slug, param.locale)
   return {
-    title: page.metaTitle + " | " + (Settings.appName??"Laureo CMS"),
+    title: page?.metaTitle + " | " + (Settings.appName??"Laureo CMS"),
     description: page?.metaDescription,
     keywords: page?.metaKeywords
   }

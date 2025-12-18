@@ -77,7 +77,6 @@ export async function postAdd(state: PostAddFormState, formData: FormData) {
             const match = key.match(/\[(.*?)\]/);
             if (match) {
                 const propertyName = match[1];
-                console.log(value)
                 acc[propertyName] = value;
             }
             return acc;

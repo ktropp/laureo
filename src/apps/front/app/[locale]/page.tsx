@@ -13,9 +13,9 @@ export async function generateMetadata({
   const param = await params;
   const post = await getPost('/', param.locale)
   return {
-    title: post.metaTitle + " | " + (Settings.appName??"Laureo CMS"),
-    description: post.metaDescription,
-    keywords: post.metaKeywords
+    title: post?.metaTitle + " | " + (Settings.appName??"Laureo CMS"),
+    description: post?.metaDescription,
+    keywords: post?.metaKeywords
   }
 }
 
