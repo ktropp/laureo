@@ -22,6 +22,12 @@ function findBlockChildren(blocks: BlockJson[], formId: string): BlockJson[] | n
     return null;
 }
 
+async function loadLocale(languageCode: string) {
+    const {default: locale} = await import(`zod/v4/locales/${languageCode}.js`);
+    z.config(locale());
+}
+
+
 export async function sendForm(state, formData: FormData) {
     const headersList = await headers()
     const referer = headersList.get('referer')
@@ -57,14 +63,40 @@ export async function sendForm(state, formData: FormData) {
             const [, typeWithStar, name, placeholder] = match;
             const isRequired = typeWithStar.endsWith('*');
             const type = typeWithStar.replace('*', '');
-            if (isRequired) {
-                fields.push({
-                    name: name, fieldType: z.string().trim()
-                })
-            } else {
-                fields.push({
-                    name: name, fieldType: z.string().optional()
-                })
+            switch (type) {
+                case 'acceptance':
+                    if (isRequired) {
+                        fields.push({
+                            name: name, fieldType: z.boolean()
+                        })
+                    } else {
+                        fields.push({
+                            name: name, fieldType: z.boolean().optional()
+                        })
+                    }
+                    break;
+                case 'email':
+                    if (isRequired) {
+                        fields.push({
+                            name: name, fieldType: z.string().trim().nonempty().email()
+                        })
+                    } else {
+                        fields.push({
+                            name: name, fieldType: z.string().optional()
+                        })
+                    }
+                    break;
+                default:
+                    if (isRequired) {
+                        fields.push({
+                            name: name, fieldType: z.string().trim().nonempty()
+                        })
+                    } else {
+                        fields.push({
+                            name: name, fieldType: z.string().optional()
+                        })
+                    }
+                    break;
             }
         }
     })
@@ -78,14 +110,15 @@ export async function sendForm(state, formData: FormData) {
 
     const schema = generateSchemaFromFields(fields)
 
-    //load locale zod
-    //https://zod.dev/error-customization#internationalization
+    await loadLocale(languageCode);
 
-    const validatedFields = schema.safeParse(Object.fromEntries(formData.entries()));
+    const data = Object.fromEntries(formData.entries())
+    const validatedFields = schema.safeParse(data);
 
     if (!validatedFields.success) {
         return {
-            errors: validatedFields.error.flatten().fieldErrors
+            errors: validatedFields.error.flatten().fieldErrors,
+            data: data
         }
     }
 
