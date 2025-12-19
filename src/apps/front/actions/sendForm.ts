@@ -4,6 +4,7 @@ import {Settings} from "@theme/settings";
 import {getPost} from "@front/actions/data";
 import {BlockJson} from "@admin/blocks/blockDefinitions";
 import {z} from "zod";
+import {getDictionary} from "@front/app/[locale]/dictionaries";
 
 function findBlockChildren(blocks: BlockJson[], formId: string): BlockJson[] | null {
     for (const block of blocks) {
@@ -47,6 +48,8 @@ export async function sendForm(state, formData: FormData) {
         return null;
     }
 
+    const dict = await getDictionary(languageCode)
+
     const blockChildren = findBlockChildren(postLang.blocks, formId.toString());
 
     let fields = []
@@ -67,7 +70,7 @@ export async function sendForm(state, formData: FormData) {
                 case 'acceptance':
                     if (isRequired) {
                         fields.push({
-                            name: name, fieldType: z.boolean()
+                            name: name, fieldType: z.literal("on", {message: dict.validation.required})
                         })
                     } else {
                         fields.push({
@@ -78,7 +81,8 @@ export async function sendForm(state, formData: FormData) {
                 case 'email':
                     if (isRequired) {
                         fields.push({
-                            name: name, fieldType: z.string().trim().nonempty().email()
+                            name: name,
+                            fieldType: z.string().trim().nonempty(dict.validation.required).email(dict.validation.required)
                         })
                     } else {
                         fields.push({
@@ -89,7 +93,7 @@ export async function sendForm(state, formData: FormData) {
                 default:
                     if (isRequired) {
                         fields.push({
-                            name: name, fieldType: z.string().trim().nonempty()
+                            name: name, fieldType: z.string().trim().nonempty(dict.validation.required)
                         })
                     } else {
                         fields.push({
@@ -125,4 +129,8 @@ export async function sendForm(state, formData: FormData) {
     //send email
 
     //return success
+    return {
+        success: dict.validation.success,
+        data: {}
+    }
 }

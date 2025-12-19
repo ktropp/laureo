@@ -1,0 +1,7 @@
+{
+  "validation": {
+    "required": "Pole je povinné",
+    "email": "Zadejte platný email",
+    "success": "Formulář byl úspěšně odeslán"
+  }
+}

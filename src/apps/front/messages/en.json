@@ -1,0 +1,7 @@
+{
+  "validation": {
+    "required": "Field is required",
+    "email": "Enter valid email",
+    "success": "The form was sent successfully"
+  }
+}

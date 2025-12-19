@@ -8,19 +8,11 @@ import {BlockJson} from "@admin/blocks/blockDefinitions";
 export default function FormBlockClient({children, block}) {
     const [state, action, pending] = useActionState(sendForm, undefined);
 
-    return <form noValidate className={block.className} action={async (formData) => {
-        const result = await action(formData);
-
-        console.log(result)
-        console.log(state)
-
-        if (result?.errors) {
-            //show error message
-        }
-        // show success message
-    }}>
+    return <form noValidate className={block.className} action={action}>
+        {state?.success && <div className="form-success">{state?.success}</div>}
         <input type="hidden" name="formId" value={block.index}/>
         {block.children.map((child: BlockJson, index) => <FormFieldBlockClient key={index} block={child} state={state}/>)}
         {children}
+        {pending && <div>Sending...</div>}
     </form>
 }
