@@ -138,7 +138,7 @@ const BaseBlock = ({
     const debouncedClassNameChange = useCallback(
         debounce((value: string) => {
             onClassNameChange(value);
-        }, 300),
+        }, 1000),
         [onClassNameChange]
     )
 
@@ -574,8 +574,15 @@ const BaseBlock = ({
                                     placeholder="Enter class name"
                                     name=""
                                     defaultValue={blockJson.className}
-                                    onChange={(e) => debouncedClassNameChange(e.target.value)}
-                                    onBlur={(e) => onClassNameChange(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            onClassNameChange(e.target.value);
+                                            setIsClassOpen(false);
+                                        }
+                                    }}
+                                    //onChange={(e) => debouncedClassNameChange(e.target.value)}
+                                    //onBlur={(e) => onClassNameChange(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -650,7 +657,6 @@ const BaseBlock = ({
             </BlockComponent>
         </div>
     )
-        ;
 };
 
 export default BaseBlock;

@@ -3,7 +3,7 @@ import {Settings} from "@theme/settings";
 import BaseBlock from "../../blocks/BaseBlock";
 import {BlockAdd} from "blocks/BlockAdd";
 import BlockRegistry from "../../blocks/blockRegistry";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     DndContext,
     closestCenter,
@@ -263,6 +263,7 @@ export default function BlockEditor({content, onChange}: {
     };
 
     const handleBlockClassNameChange = (className: string, blockIndex: string) => {
+        console.log("handleBlockClassNameChange", className, blockIndex)
 
         fetch('/api/safelist', {
             method: 'POST',

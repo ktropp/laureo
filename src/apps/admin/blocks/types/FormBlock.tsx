@@ -2,8 +2,8 @@ import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {BookText} from "lucide-react";
 import FormBlockClient from "@front/components/FormBlock.client";
 
-const FormBlock = ({children, block}: BlockProps) => {
-    return <FormBlockClient block={block}>{children}</FormBlockClient>
+const FormBlock = ({children, block, dict}: BlockProps) => {
+    return <FormBlockClient block={block} dict={dict}>{children}</FormBlockClient>
 };
 
 export const blockConfig: BlockMeta = {

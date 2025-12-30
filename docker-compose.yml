@@ -22,6 +22,10 @@ services:
       - NODE_ENV=development
       - NEXT_PUBLIC_CDN_HOST=cdn
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
+      # Force Next.js/Webpack to poll for changes every 300ms
+      - WATCHPACK_POLLING=true
+      # Optional: If using Chokidar internally
+      - CHOKIDAR_USEPOLLING=true
 
   admin:
     build:
@@ -46,7 +50,10 @@ services:
       - NODE_ENV=development
       - NEXT_PUBLIC_CDN_HOST=cdn
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
-
+      # Force Next.js/Webpack to poll for changes every 300ms
+      - WATCHPACK_POLLING=true
+      # Optional: If using Chokidar internally
+      - CHOKIDAR_USEPOLLING=true
   cdn:
     build:
       context: .

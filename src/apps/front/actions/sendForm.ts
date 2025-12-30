@@ -5,6 +5,8 @@ import {getPost} from "@front/actions/data";
 import {BlockJson} from "@admin/blocks/blockDefinitions";
 import {z} from "zod";
 import {getDictionary} from "@front/app/[locale]/dictionaries";
+import {getFieldValidationRules, getValidationSchema} from "@front/actions/validate";
+import {sendMail} from "@front/lib/mail";
 
 function findBlockChildren(blocks: BlockJson[], formId: string): BlockJson[] | null {
     for (const block of blocks) {
@@ -28,7 +30,6 @@ async function loadLocale(languageCode: string) {
     z.config(locale());
 }
 
-
 export async function sendForm(state, formData: FormData) {
     const headersList = await headers()
     const referer = headersList.get('referer')
@@ -39,7 +40,7 @@ export async function sendForm(state, formData: FormData) {
     const urlSplit = url.split('/')
     let languageCode = Settings.defaultLanguage.slice(0, 2)
     if (urlSplit.length > 1) {
-        languageCode = Settings.languages.filter(lang => lang.code.slice(0, 2) === urlSplit[0])[0].code || languageCode
+        languageCode = Settings.languages.filter(lang => lang.slice(0, 2) === urlSplit[0])?.[0]?.slice(0,2) || languageCode
     }
     const postLang = await getPost(urlSplit, languageCode)
     const formId = formData.get('formId')
@@ -55,64 +56,14 @@ export async function sendForm(state, formData: FormData) {
     let fields = []
     blockChildren?.map(block => {
         if (block?.text) {
-            const cleanText = block?.text.replace(/<[^>]*>/g, '').trim();
+            const field = getFieldValidationRules(block?.text, dict)
 
-            // Match the pattern: type* name "placeholder"
-            const regex = /^(\w+\*?)[\s]+([^\s"]+)[\s]+"([^"]*)"$/;
-            const match = cleanText.match(regex);
-
-            if (!match) return null;
-
-            const [, typeWithStar, name, placeholder] = match;
-            const isRequired = typeWithStar.endsWith('*');
-            const type = typeWithStar.replace('*', '');
-            switch (type) {
-                case 'acceptance':
-                    if (isRequired) {
-                        fields.push({
-                            name: name, fieldType: z.literal("on", {message: dict.validation.required})
-                        })
-                    } else {
-                        fields.push({
-                            name: name, fieldType: z.boolean().optional()
-                        })
-                    }
-                    break;
-                case 'email':
-                    if (isRequired) {
-                        fields.push({
-                            name: name,
-                            fieldType: z.string().trim().nonempty(dict.validation.required).email(dict.validation.required)
-                        })
-                    } else {
-                        fields.push({
-                            name: name, fieldType: z.string().optional()
-                        })
-                    }
-                    break;
-                default:
-                    if (isRequired) {
-                        fields.push({
-                            name: name, fieldType: z.string().trim().nonempty(dict.validation.required)
-                        })
-                    } else {
-                        fields.push({
-                            name: name, fieldType: z.string().optional()
-                        })
-                    }
-                    break;
-            }
+            if (field)
+                fields.push(field)
         }
     })
-    fields = fields as { name: string, fieldType: z.ZodSchema }[]
 
-    const generateSchemaFromFields = (fields: { name: string; fieldType: z.ZodSchema }[]) => {
-        const schemaObject = Object.fromEntries(fields.map((field) => [field.name, field.fieldType]))
-
-        return z.object(schemaObject)
-    }
-
-    const schema = generateSchemaFromFields(fields)
+    const schema = getValidationSchema(fields)
 
     await loadLocale(languageCode);
 
@@ -127,6 +78,11 @@ export async function sendForm(state, formData: FormData) {
     }
 
     //send email
+    try {
+        //const sent = await sendMail()
+    } catch (error) {
+
+    }
 
     //return success
     return {
