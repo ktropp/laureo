@@ -4,7 +4,7 @@ import {Input} from "components/ui/input";
 import {useRouter} from 'next/navigation';
 import {Settings} from "@theme/settings";
 import Image from "next/image";
-import { deleteMedia } from "actions/deleteMedia";
+import {deleteMedia} from "actions/deleteMedia";
 import {toast} from "react-toastify";
 import {useTranslations} from "next-intl";
 
@@ -26,10 +26,6 @@ export default function MediaModal({media}) {
                 toast.error(result.error || 'Failed to delete media')
             }
         }
-    }
-
-    const handleDownload = () => {
-
     }
 
     if (!media) return null;
@@ -63,7 +59,8 @@ export default function MediaModal({media}) {
                         className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
                         <p><strong>{t('uploaded')}</strong>
                             <span>{new Intl.DateTimeFormat().format(new Date(media.created_at))}</span></p>
-                        <p><strong>{t('user')}</strong> <span>{media.author.name + " " + media.author.surname}</span></p>
+                        <p><strong>{t('user')}</strong> <span>{media.author.name + " " + media.author.surname}</span>
+                        </p>
                         <p><strong>{t('filename')}</strong> <span>{media.file}</span></p>
                         {media.type && <p><strong>{t('filetype')}</strong> <span>{media.type}</span></p>}
                         {media.size && <p><strong>{t('filesize')}</strong> <span>{media.size}</span></p>}
@@ -104,13 +101,7 @@ export default function MediaModal({media}) {
                         </div>
                     </div>
                     <div className="flex gap-4">
-                        <button
-                            type="button"
-                            className="cursor-pointer"
-                            onClick={handleDownload}
-                        >
-                            {t('download')}
-                        </button>
+                        <a href={`${Settings.cdnUrl}/${media.id}_${media.file}`} target="_blank" download={media.file}>{t('download')}</a>
                         <span>|</span>
                         <button
                             type="button"
