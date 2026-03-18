@@ -126,6 +126,8 @@
     "media-title-placeholder": "Fill title",
     "url": "URL",
     "download": "Download file",
-    "delete": "Delete file permanently"
+    "delete": "Delete file permanently",
+    "delete-success": "Item successfully deleted",
+    "delete-error": "Item could not be deleted"
   }
 }

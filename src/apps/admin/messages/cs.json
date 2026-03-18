@@ -69,7 +69,9 @@
     "title-placeholder": "Napište název",
     "url": "URL",
     "url-placeholder": "Napište URL",
-    "add": "Přidat položku"
+    "add": "Přidat položku",
+    "delete-success": "Položka úspěšně smazána",
+    "delete-error": "Položku se nepodařilo smazat"
   },
   "translations": {
     "title": "Překlady",

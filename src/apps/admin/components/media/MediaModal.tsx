@@ -9,15 +9,16 @@ import {toast} from "react-toastify";
 import {useTranslations} from "next-intl";
 
 export default function MediaModal({media}) {
-    const t = useTranslations('media-item');
-    const router = useRouter();
+    const t = useTranslations('media-item')
+    const tTable = useTranslations('table')
+    const router = useRouter()
 
     const handleClose = () => {
-        router.push('/media');
+        router.push('/media')
     };
 
     const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete this file?')) {
+        if (window.confirm(tTable('delete-description'))) {
             const result = await deleteMedia(media.id)
             if (result.success) {
                 toast.success('Media deleted successfully')

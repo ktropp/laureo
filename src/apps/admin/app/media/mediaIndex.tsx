@@ -5,9 +5,12 @@ import {CirclePlus, X} from "lucide-react";
 import {useDropzone} from 'react-dropzone'
 import MediaListing from "../../components/media/MediaListing";
 import {useTranslations} from "next-intl";
+import {useRouter} from 'next/navigation';
 
 export default function MediaIndex({initialData}) {
     const t = useTranslations('media');
+    const router = useRouter()
+
     async function handleFileUpload(acceptedFiles) {
         if (!acceptedFiles || acceptedFiles === 0) {
             return; // User canceled file selection
@@ -23,6 +26,8 @@ export default function MediaIndex({initialData}) {
             method: 'POST',
             body: formData
         })
+
+        router.push('/media')
     }
 
     const onDrop = useCallback(acceptedFiles => {
