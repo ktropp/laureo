@@ -7,8 +7,12 @@ import Link from "next/link"
 import {userDelete} from "../../actions/userDelete";
 import {useState} from "react";
 import * as Dialog from '@radix-ui/react-dialog';
+import {useTranslations} from "next-intl";
 
 export default function UsersIndex({initialData}) {
+    const t = useTranslations('users');
+    const tTable = useTranslations('table');
+
     const [open, setOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
 
@@ -22,12 +26,12 @@ export default function UsersIndex({initialData}) {
 
     const columns = [
         {header: "Id", accessor: "id"},
-        {header: "Email", accessor: "email"},
-        {header: "Name", accessor: "name"},
-        {header: "Surname", accessor: "surname"},
-        {header: "Role", accessor: "role"},
+        {header: t('table-email'), accessor: "email"},
+        {header: t('table-name'), accessor: "name"},
+        {header: t('table-surname'), accessor: "surname"},
+        {header: t('table-role'), accessor: "role"},
         {
-            header: "Actions",
+            header: tTable('actions'),
             accessor: "actions",
             render: (value, row) => (
                 <div className="flex gap-2">
@@ -50,8 +54,8 @@ export default function UsersIndex({initialData}) {
     return (
         <div>
             <div className="flex items-center mb-6 gap-6">
-                <h1 className="text-4xl font-bold">Users</h1>
-                <Button asChild><Link href="/user/add">Add <CirclePlus className="h-5 w-5"/></Link></Button>
+                <h1 className="text-4xl font-bold">{t('title')}</h1>
+                <Button asChild><Link href="/user/add">{tTable('add')} <CirclePlus className="h-5 w-5"/></Link></Button>
             </div>
             <GridView data={initialData} columns={columns}/>
 
@@ -61,23 +65,23 @@ export default function UsersIndex({initialData}) {
                     <Dialog.Content
                         className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white dark:bg-slate-900 rounded-lg p-6 shadow-lg">
                         <Dialog.Title className="text-lg font-semibold mb-4">
-                            Confirm Deletion
+                            {tTable('delete-title')}
                         </Dialog.Title>
                         <Dialog.Description className="mb-5">
-                            Are you sure you want to delete this user? This action cannot be undone.
+                            {tTable('delete-description')}
                         </Dialog.Description>
                         <div className="flex justify-end gap-3">
                             <Button
                                 variant="outline"
                                 onClick={() => setOpen(false)}
                             >
-                                Cancel
+                                {tTable('delete-cancel')}
                             </Button>
                             <Button
                                 variant="destructive"
                                 onClick={handleDelete}
                             >
-                                Delete
+                                {tTable('delete-confirm')}
                             </Button>
                         </div>
                     </Dialog.Content>

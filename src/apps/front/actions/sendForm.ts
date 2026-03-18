@@ -79,7 +79,8 @@ export async function sendForm(state, formData: FormData) {
 
     //send email
     try {
-        //const sent = await sendMail()
+        console.log(validatedFields.data)
+        //const sent = await sendMail(Settings.siteEmail)
     } catch (error) {
 
     }

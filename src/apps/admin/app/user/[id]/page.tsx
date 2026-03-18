@@ -1,14 +1,23 @@
-import { prisma } from "lib/prisma";
-import { UserForm } from "./user-form";
+import {prisma} from "lib/prisma";
+import {UserForm} from "./user-form";
+import {getTranslations} from "next-intl/server";
+import {Settings} from "@theme/settings";
 
+export async function generateMetadata() {
+    const t = await getTranslations('user')
+    return {
+        title: t('meta-title') + " | " + (Settings.cmsName ?? "Laureo CMS"),
+    }
+}
 export default async function UserPage({
-    params,
-}: {
+                                           params,
+                                       }: {
     params: { id: string }
 }) {
+    const param = await params
     const user = await prisma.user.findUnique({
         where: {
-            id: parseInt(params.id)
+            id: parseInt(param.id)
         },
         select: {
             id: true,
@@ -23,5 +32,5 @@ export default async function UserPage({
         throw new Error('User not found');
     }
 
-    return <UserForm user={user} />;
+    return <UserForm user={user}/>;
 }

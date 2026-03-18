@@ -10,8 +10,12 @@ import {Settings} from "@theme/settings";
 import {useActionState} from "react";
 import {menuAdd} from "actions/menuAdd";
 import MenuBuilder from "components/menu/MenuBuilder";
+import {useTranslations} from "next-intl";
 
 export function MenuForm({menu}: { menu: Menu }) {
+    const t = useTranslations('menus')
+    const tTranslations = useTranslations('translations')
+
     const languages = Settings.languages;
     let translations;
     if (menu.menu) {
@@ -39,7 +43,7 @@ export function MenuForm({menu}: { menu: Menu }) {
                 className="w-full max-w-md border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                 <form action={action}>
                     <Button type="submit" disabled={pending} className="mb-2">
-                        Save
+                        {t('save')}
                     </Button>
 
                     <Input
@@ -49,11 +53,11 @@ export function MenuForm({menu}: { menu: Menu }) {
                     />
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="location">Location</Label>
+                        <Label htmlFor="location">{t('location')}</Label>
                         <Select defaultValue={currentMenu.menu?.location || ''} disabled={currentMenu.menu?.location}
                                 name="location">
                             <SelectTrigger>
-                                <SelectValue placeholder="Choose location"/>
+                                <SelectValue placeholder={t('location-placeholder')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {Settings.menuLocations.map(item => (
@@ -65,11 +69,11 @@ export function MenuForm({menu}: { menu: Menu }) {
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="languageCode">Language</Label>
+                        <Label htmlFor="languageCode">{t('language')}</Label>
                         <Select defaultValue={currentMenu.languageCode || defaultLanguage} name="languageCode"
                                 disabled={currentMenu.languageCode}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Choose language"/>
+                                <SelectValue placeholder={t('language-placeholder')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {languages?.map(item => (
@@ -81,11 +85,11 @@ export function MenuForm({menu}: { menu: Menu }) {
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="title">Title</Label>
+                        <Label htmlFor="title">{t('title')}</Label>
                         <Input
                             id="title"
                             type="text"
-                            placeholder="Enter title"
+                            placeholder={t('title-placeholder')}
                             name="title"
                             required
                             defaultValue={currentMenu.title}
@@ -95,7 +99,7 @@ export function MenuForm({menu}: { menu: Menu }) {
 
                     <div className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
-                    <h2 className="text-xl mt-5 font-semibold">Translations</h2>
+                    <h2 className="text-xl mt-5 font-semibold">{tTranslations('title')}</h2>
 
                     {translations?.filter(lang => lang.languageCode !== currentMenu.languageCode).map((lang, index) => (
                         <div key={index} className="flex items-center space-y2 mb-2">
@@ -107,8 +111,8 @@ export function MenuForm({menu}: { menu: Menu }) {
                             />
                             {lang.menuLang ? (
                                 <Link href={`/menu/${lang.menuLang.id}`}><Button
-                                    type="button">Edit</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => menuLangAdd(currentMenu.menuId, lang.languageCode)}>Create</Button>)}
+                                    type="button">{tTranslations('edit')}</Button></Link>) : (<Button type="button"
+                                                                                   onClick={() => menuLangAdd(currentMenu.menuId, lang.languageCode)}>{tTranslations('create')}</Button>)}
                         </div>
                     ))}
                 </form>

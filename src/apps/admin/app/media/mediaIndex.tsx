@@ -4,9 +4,10 @@ import {Button} from "components/ui/button";
 import {CirclePlus, X} from "lucide-react";
 import {useDropzone} from 'react-dropzone'
 import MediaListing from "../../components/media/MediaListing";
-import MediaModal from "../../components/media/MediaModal";
+import {useTranslations} from "next-intl";
 
 export default function MediaIndex({initialData}) {
+    const t = useTranslations('media');
     async function handleFileUpload(acceptedFiles) {
         if (!acceptedFiles || acceptedFiles === 0) {
             return; // User canceled file selection
@@ -34,9 +35,9 @@ export default function MediaIndex({initialData}) {
     return (
         <div>
             <div className="flex items-center mb-6 gap-6">
-                <h1 className="text-4xl font-bold">Media</h1>
+                <h1 className="text-4xl font-bold">{t('title')}</h1>
                 <Button onClick={() => setIsInputVisible(!isInputVisible)}>
-                    {isInputVisible ? 'Cancel' : 'Add'}
+                    {isInputVisible ? t('cancel') : t('add')}
                     {isInputVisible ? <X className="h-5 w-5"/> : <CirclePlus className="h-5 w-5"/>}
                 </Button>
             </div>
@@ -47,8 +48,8 @@ export default function MediaIndex({initialData}) {
                 <input {...getInputProps()} />
                 {
                     isDragActive ?
-                        <p>Drop the files here ...</p> :
-                        <p>Drag 'n' drop some files here, or click to select files</p>
+                        <p>{t('drop')}</p> :
+                        <p>{t('drag')}</p>
                 }
             </div>
             <MediaListing data={initialData}/>

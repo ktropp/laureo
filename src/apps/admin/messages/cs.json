@@ -20,10 +20,20 @@
     "settings": "Nastavení"
   },
   "dashboard": {
+    "meta-title": "Nástěnka",
     "title": "Nástěnka"
+  },
+  "pages": {
+    "meta-title": "Stránky",
+    "title": "Stránky"
+  },
+  "posts": {
+    "meta-title": "Příspěvky",
+    "title": "Příspěvky"
   },
   "settings": {
     "title": "Nastavení",
+    "meta-title": "Nastavení",
     "submit": "Uložit"
   },
   "table": {
@@ -33,12 +43,89 @@
     "title": "Název",
     "location": "Umístění",
     "actions": "Akce",
+    "slug": "Url",
     "delete-title": "Potvrdit smazání",
     "delete-description": "Opravdu chcete smazat tuhle položku? Tato akce nelze vrátit.",
     "delete-cancel": "Zrušit",
     "delete-confirm": "Smazat"
   },
   "menus": {
-    "heading": "Menu"
+    "heading": "Menu",
+    "meta-title": "Menu",
+    "save": "Uložit",
+    "location": "Umístění",
+    "location-placeholder": "Vyberte umístění",
+    "language": "Jazyk",
+    "language-placeholder": "Vyberte jazyk",
+    "title": "Název",
+    "title-placeholder": "Napište název"
+  },
+  "menu-item": {
+    "edit": "Editovat",
+    "delete": "Smazat",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "title": "Název",
+    "title-placeholder": "Napište název",
+    "url": "URL",
+    "url-placeholder": "Napište URL",
+    "add": "Přidat položku"
+  },
+  "translations": {
+    "title": "Překlady",
+    "edit": "Editovat",
+    "create": "Vytvořit"
+  },
+  "users": {
+    "meta-title": "Uživatelé",
+    "title": "Uživatelé",
+    "table-email": "Email",
+    "table-name": "Jméno",
+    "table-surname": "Příjmení",
+    "table-role": "Role"
+  },
+  "user": {
+    "meta-title": "Editace uživatele",
+    "title": "Editace uživatele",
+    "email": "Email",
+    "email-placeholder": "Zadejte email",
+    "name": "Jméno",
+    "name-placeholder": "Zadejte jméno",
+    "surname": "Příjmení",
+    "surname-placeholder": "Zadejte příjmení",
+    "role": "Role",
+    "role-placeholder": "Vyberte roli",
+    "update": "Uložit"
+  },
+  "roles": {
+    "admin": "Administrátor",
+    "editor": "Editor",
+    "author": "Autor",
+    "contributor": "Přispěvatel"
+  },
+  "media": {
+    "meta-title": "Média",
+    "title": "Média",
+    "add": "Přidat",
+    "cancel": "Zrušit",
+    "drop": "Přetáhněte soubory sem",
+    "drag": "Přetáhněte soubory nebo kliknutím vyberte"
+  },
+  "media-item": {
+    "meta-title": "Detail média",
+    "title": "Detail média",
+    "uploaded": "Nahráno: ",
+    "user": "Uživatel: ",
+    "filename": "Název souboru: ",
+    "filetype": "Typ souboru: ",
+    "filesize": "Velikost souboru: ",
+    "dimensions": "Rozměry: ",
+    "alt": "Alternativní název",
+    "alt-description": "Vyplňte alternativní název",
+    "media-title": "Název",
+    "media-title-placeholder": "Vyplňte název",
+    "url": "URL",
+    "download": "Stáhnout soubor",
+    "delete": "Smazat trvale soubor"
   }
 }

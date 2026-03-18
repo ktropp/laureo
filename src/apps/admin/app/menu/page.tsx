@@ -1,11 +1,14 @@
 import {prisma} from "lib/prisma";
 import MenuIndex from "./menuIndex";
-import {Metadata} from "next";
 import {Settings} from "@theme/settings";
+import {getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Menus" + " | " + (Settings.cmsName??"Laureo CMS"),
-};
+export async function generateMetadata() {
+    const t = await getTranslations('menus')
+    return {
+        title: t('meta-title') + " | " + (Settings.cmsName ?? "Laureo CMS"),
+    }
+}
 
 export default async function MenuPage({params,}: { params: { type: string } }) {
     const data = await prisma.menuLang.findMany({

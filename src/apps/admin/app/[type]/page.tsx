@@ -1,6 +1,7 @@
 import {prisma} from "lib/prisma";
 import PostIndex from "./postIndex";
 import {Settings} from "@theme/settings";
+import {getTranslations} from "next-intl/server";
 
 export async function generateMetadata({
                                            params,
@@ -8,8 +9,14 @@ export async function generateMetadata({
     params: { type: string }
 }) {
     const param = await params;
+    const tPosts = await getTranslations('posts')
+    const tPages = await getTranslations('pages')
+    const PostTypeTitles = {
+        page: tPages('meta-title'),
+        post: tPosts('meta-title'),
+    }
     return {
-        title: param.type.charAt(0).toUpperCase() + param.type.slice(1) + "s" + " | " + (Settings.cmsName ?? "Laureo CMS"),
+        title: PostTypeTitles[param.type] || Settings.customPostTypes.filter(postType => postType.slug == param.type)[0].label + " | " + (Settings.cmsName ?? "Laureo CMS"),
     }
 }
 

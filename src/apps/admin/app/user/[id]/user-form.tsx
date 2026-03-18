@@ -7,6 +7,7 @@ import {Button} from "components/ui/button";
 import {Select, SelectTrigger, SelectValue, SelectItem, SelectContent} from "components/ui/select";
 import {Alert, AlertTitle, AlertDescription} from "components/ui/alert";
 import {AlertCircle} from "lucide-react";
+import {useTranslations} from "next-intl";
 
 interface User {
     id: number;
@@ -17,13 +18,16 @@ interface User {
 }
 
 export function UserForm({user}: { user: User }) {
+    const t = useTranslations('user');
+    const tRoles = useTranslations('roles')
+
     const [state, action, pending] = useActionState(userEdit, undefined);
 
     const currentUser = state?.data || user;
 
     return (
         <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold mb-8">User</h1>
+            <h1 className="text-4xl font-bold mb-8">{t('title')}</h1>
             {state?.message && (<Alert variant="destructive" className="mb-3">
                 <AlertCircle className="h-4 w-4"/>
                 <AlertTitle>Error</AlertTitle>
@@ -34,11 +38,11 @@ export function UserForm({user}: { user: User }) {
             <form className="space-y-4" action={action}>
                 <input type="hidden" name="id" value={user.id}/>
                 <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('email')}</Label>
                     <Input
                         id="email"
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={t('email-placeholder')}
                         name="email"
                         defaultValue={user.email}
                         required
@@ -47,11 +51,11 @@ export function UserForm({user}: { user: User }) {
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">{t('name')}</Label>
                     <Input
                         id="name"
                         type="text"
-                        placeholder="Enter your name"
+                        placeholder={t('name-placeholder')}
                         name="name"
                         defaultValue={currentUser.name}
                         error={state?.errors?.name}
@@ -59,11 +63,11 @@ export function UserForm({user}: { user: User }) {
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="surname">Surname</Label>
+                    <Label htmlFor="surname">{t('surname')}</Label>
                     <Input
                         id="surname"
                         type="text"
-                        placeholder="Enter your surname"
+                        placeholder={t('surname-placeholder')}
                         name="surname"
                         defaultValue={currentUser.surname}
                         error={state?.errors?.surname}
@@ -71,22 +75,22 @@ export function UserForm({user}: { user: User }) {
                 </div>
 
                 <div>
-                    <Label htmlFor="role">Role</Label>
+                    <Label htmlFor="role">{t('role')}</Label>
                     <Select name="role" defaultValue={currentUser.role} required>
                         <SelectTrigger>
-                            <SelectValue placeholder="Choose an role"/>
+                            <SelectValue placeholder={t('role-placeholder')}/>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="ADMIN">Admin</SelectItem>
-                            <SelectItem value="EDITOR">Editor</SelectItem>
-                            <SelectItem value="AUTHOR">Author</SelectItem>
-                            <SelectItem value="CONTRIBUTOR">Contributor</SelectItem>
+                            <SelectItem value="ADMIN">{tRoles('admin')}</SelectItem>
+                            <SelectItem value="EDITOR">{tRoles('editor')}</SelectItem>
+                            <SelectItem value="AUTHOR">{tRoles('author')}</SelectItem>
+                            <SelectItem value="CONTRIBUTOR">{tRoles('contributor')}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 <Button type="submit" disabled={pending}>
-                    Update
+                    {t('update')}
                 </Button>
             </form>
         </div>

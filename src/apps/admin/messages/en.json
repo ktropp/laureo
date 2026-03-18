@@ -20,10 +20,112 @@
     "settings": "Settings"
   },
   "dashboard": {
+    "meta-title": "Dashboard",
     "title": "Dashboard"
+  },
+  "pages": {
+    "meta-title": "Pages",
+    "title": "Pages"
+  },
+  "posts": {
+    "meta-title": "Posts",
+    "title": "Posts"
   },
   "settings": {
     "title": "Settings",
+    "meta-title": "Settings",
     "submit": "Save"
+  },
+  "table": {
+    "add": "Add",
+    "id": "Id",
+    "language": "Language",
+    "title": "Title",
+    "location": "Location",
+    "actions": "Actions",
+    "slug": "Url slug",
+    "delete-title": "Confirm deletion",
+    "delete-description": "Do you really want to delete this item? This action cannot be reversed.",
+    "delete-cancel": "Cancel",
+    "delete-confirm": "Delete"
+  },
+  "menus": {
+    "heading": "Menu",
+    "meta-title": "Menus",
+    "save": "Save",
+    "location": "Location",
+    "location-placeholder": "Choose location",
+    "language": "Language",
+    "language-placeholder": "Choose language",
+    "title": "Title",
+    "title-placeholder": "Write title"
+  },
+  "menu-item": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "title": "Title",
+    "title-placeholder": "Write title",
+    "url": "URL",
+    "url-placeholder": "Write URL",
+    "add": "Add item"
+  },
+  "translations": {
+    "title": "Translations",
+    "edit": "Edit",
+    "create": "Create"
+  },
+  "users": {
+    "meta-title": "Users",
+    "title": "Users",
+    "table-email": "Email",
+    "table-name": "Name",
+    "table-surname": "Surname",
+    "table-role": "Role"
+  },
+  "user": {
+    "meta-title": "Edit user",
+    "title": "Edit user",
+    "email": "Email",
+    "email-placeholder": "Write email",
+    "name": "Name",
+    "name-placeholder": "Write name",
+    "surname": "Surname",
+    "surname-placeholder": "Write surname",
+    "role": "Role",
+    "role-placeholder": "Choose a role",
+    "update": "Update"
+  },
+  "roles": {
+    "admin": "Admin",
+    "editor": "Editor",
+    "author": "Author",
+    "contributor": "Contributor"
+  },
+  "media": {
+    "meta-title": "Media",
+    "title": "Media",
+    "add": "Add",
+    "cancel": "Cancel",
+    "drop": "Drop files here",
+    "drag": "Drag files here or click to pick files"
+  },
+  "media-item": {
+    "meta-title": "Media detail",
+    "title": "Media detail",
+    "uploaded": "Uploaded: ",
+    "user": "User: ",
+    "filename": "File name: ",
+    "filetype": "File type: ",
+    "filesize": "File size: ",
+    "dimensions": "Dimensions: ",
+    "alt": "Alternative title",
+    "alt-description": "Fill alternative title",
+    "media-title": "Title",
+    "media-title-placeholder": "Fill title",
+    "url": "URL",
+    "download": "Download file",
+    "delete": "Delete file permanently"
   }
 }

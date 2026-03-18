@@ -1,10 +1,14 @@
-import {Metadata} from "next";
 import {Settings} from "@theme/settings";
 import {useTranslations} from "next-intl";
+import {getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Dashboard" + " | " + (Settings.cmsName ?? "Laureo CMS"),
-};
+export async function generateMetadata() {
+    const t = await getTranslations('dashboard')
+    return {
+        title: t('meta-title') + " | " + (Settings.cmsName ?? "Laureo CMS"),
+    }
+}
+
 export default function Home() {
     const t = useTranslations('dashboard');
     return (

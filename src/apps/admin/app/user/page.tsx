@@ -1,11 +1,14 @@
 import UsersIndex from "./userIndex";
 import {prisma} from "lib/prisma";
-import {Metadata} from "next";
 import {Settings} from "@theme/settings";
+import {getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Users" + " | " + (Settings.cmsName??"Laureo CMS"),
-};
+export async function generateMetadata() {
+    const t = await getTranslations('users')
+    return {
+        title: t('meta-title') + " | " + (Settings.cmsName ?? "Laureo CMS"),
+    }
+}
 
 export default async function UsersPage() {
 

@@ -4,6 +4,7 @@ import {Input} from "components/ui/input";
 import {Label} from "components/ui/label";
 import React, {useState, useEffect} from "react";
 import {MenuLang, MenuLangItem} from "@prisma/client";
+import {useTranslations} from "next-intl";
 
 // Helper function to build tree structure
 const buildTree = (items: MenuLangItem[]): MenuLangItem[] => {
@@ -66,6 +67,7 @@ const deleteItemFromTree = (items: MenuLangItem[], idToDelete: string): MenuLang
 };
 
 function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
+    const t = useTranslations('menu-item')
     const [items, setItems] = useState<MenuLangItem[]>([]);
     const [newItem, setNewItem] = useState({title: '', url: ''});
 
@@ -161,8 +163,8 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
                                 onChange={(e) => setEditedItem({...editedItem, url: e.target.value})}
                                 className="flex-1"
                             />
-                            <Button onClick={handleSave}>Save</Button>
-                            <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+                            <Button onClick={handleSave}>{t('save')}</Button>
+                            <Button variant="outline" onClick={() => setIsEditing(false)}>{t('cancel')}</Button>
                         </div>
                     ) : (
                         <div className="flex-1 flex items-center justify-between">
@@ -171,9 +173,9 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
                                 <div className="text-sm text-gray-500">{props.item.url}</div>
                             </div>
                             <div className="space-x-2">
-                                <Button variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+                                <Button variant="outline" onClick={() => setIsEditing(true)}>{t('edit')}</Button>
                                 <Button variant="destructive"
-                                        onClick={() => handleDelete(props.item.id)}>Delete</Button>
+                                        onClick={() => handleDelete(props.item.id)}>{t('delete')}</Button>
                             </div>
                         </div>
                     )}
@@ -186,26 +188,26 @@ function MenuBuilder({menuLang}: { menuLang: MenuLang }) {
             <form onSubmit={handleAddItem}
                   className="space-y-4 p-4 border border-laureo-border dark:border-laureo-border-dark rounded-md">
                 <div>
-                    <Label htmlFor="menuTitle">Menu Item Title</Label>
+                    <Label htmlFor="menuTitle">{t('title')}</Label>
                     <Input
                         id="menuTitle"
                         value={newItem.title}
                         onChange={(e) => setNewItem({...newItem, title: e.target.value})}
-                        placeholder="Enter menu item title"
+                        placeholder={t('title-placeholder')}
                         required
                     />
                 </div>
                 <div>
-                    <Label htmlFor="menuUrl">URL</Label>
+                    <Label htmlFor="menuUrl">{t('url')}</Label>
                     <Input
                         id="menuUrl"
                         value={newItem.url}
                         onChange={(e) => setNewItem({...newItem, url: e.target.value})}
-                        placeholder="Enter URL"
+                        placeholder={t('url-placeholder')}
                         required
                     />
                 </div>
-                <Button type="submit">Add Menu Item</Button>
+                <Button type="submit">{t('add')}</Button>
             </form>
 
             <div className="flex gap-2 flex-col">

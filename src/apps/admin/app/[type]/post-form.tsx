@@ -61,7 +61,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
     }
 
     return (
-        <form action={async (formData) => {
+        <form spellCheck={false} action={async (formData) => {
             const result = await action(formData);
 
             if (result?.errors) {
