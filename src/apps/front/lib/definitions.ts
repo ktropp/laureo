@@ -52,7 +52,8 @@ export type Settings = {
     frontendUrl: string,
     cdnUrl: string,
     appName: string,
-    cmsName?: string;
+    cmsName?: string,
+    siteEmail: string,
     languages: string[],
     defaultLanguage: string,
     adminLanguage: string,
