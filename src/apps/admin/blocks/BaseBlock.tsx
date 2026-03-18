@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import React, {useState, useRef, useEffect, useCallback} from "react";
 import {Input} from "../components/ui/input";
+import {Textarea} from "../components/ui/textarea";
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 import {getIconName} from "./iconRegistry";
@@ -138,7 +139,7 @@ const BaseBlock = ({
     const debouncedClassNameChange = useCallback(
         debounce((value: string) => {
             onClassNameChange(value);
-        }, 1000),
+        }, 500),
         [onClassNameChange]
     )
 
@@ -157,20 +158,31 @@ const BaseBlock = ({
         }
     }
 
+    const handleBlockClassNameToggle = () => {
+        setIsClassOpen(!isClassOpen)
+        const editableElement = blockRef.current.querySelector('.classname-textarea')
+        if (editableElement) {
+            //TODO: focus at the end of the textarea
+            setTimeout(() => {
+                editableElement.focus()
+            }, 0)
+        }
+    }
+
     return (
         <div
             id={index}
             data-block-index={index}
             ref={(node) => {
-                setNodeRef(node);
-                blockRef.current = node;
+                setNodeRef(node)
+                blockRef.current = node
             }}
             style={style}
             {...attributes}
             className={`relative outline-1 outline-dashed flex-1 ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
             tabIndex={0}
             onFocus={(e) => {
-                e.stopPropagation();
+                e.stopPropagation()
                 setIsFocused(true)
                 if (Block.isText && !(isLinkOpen || isClassOpen || isVariantOpen || isIconOpen || isTagOpen)) {
                     setTimeout(() => {
@@ -184,18 +196,22 @@ const BaseBlock = ({
             }}
             onBlur={handleBlur}
             onKeyDown={(e) => {
-                const selection = window.getSelection();
+                const selection = window.getSelection()
                 if (isFocused && e.shiftKey && e.altKey && e.key.toLowerCase() === 'z') {
-                    e.preventDefault();
-                    onBlockDelete();
+                    e.preventDefault()
+                    onBlockDelete()
                 }
                 if (isFocused && !(isClassOpen || isLinkOpen || (selection && !selection.isCollapsed)) && e.ctrlKey && e.key.toLowerCase() === 'c') {
-                    e.preventDefault();
-                    onBlockCopy();
+                    e.preventDefault()
+                    onBlockCopy()
                 }
                 if (isFocused && Block.isParent && !(isClassOpen || isLinkOpen || selection && !selection.isCollapsed) && e.ctrlKey && e.key.toLowerCase() === 'v') {
-                    e.preventDefault();
-                    onBlockPaste();
+                    e.preventDefault()
+                    onBlockPaste()
+                }
+                if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'e') {
+                    e.preventDefault()
+                    handleBlockClassNameToggle()
                 }
             }
             }
@@ -561,31 +577,10 @@ const BaseBlock = ({
                             type="button"
                             className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                             title="Change class"
-                            onClick={() => setIsClassOpen(!isClassOpen)}
+                            onClick={() => handleBlockClassNameToggle()}
                         >
                             <Braces size={20}/>
                         </button>
-                        <div
-                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-full flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
-                            <div className="p-2">
-                                <Input
-                                    id=""
-                                    type="text"
-                                    placeholder="Enter class name"
-                                    name=""
-                                    defaultValue={blockJson.className}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            onClassNameChange(e.target.value);
-                                            setIsClassOpen(false);
-                                        }
-                                    }}
-                                    //onChange={(e) => debouncedClassNameChange(e.target.value)}
-                                    //onBlur={(e) => onClassNameChange(e.target.value)}
-                                />
-                            </div>
-                        </div>
                     </div>
                     <div
                         className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
@@ -645,6 +640,28 @@ const BaseBlock = ({
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div
+                className={`fixed min-w-50 w-50 xl:w-100 h-full z-99 top-0 right-0 bg-laureo-body dark:bg-laureo-body-dark border flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
+                <div className="p-4 h-full">
+                    <Textarea
+                        id=""
+                        type="text"
+                        placeholder="Enter class name"
+                        name=""
+                        className="h-full classname-textarea"
+                        defaultValue={blockJson.className}
+                        /*onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                onClassNameChange(e.target.value);
+                                setIsClassOpen(false);
+                            }
+                        }}*/
+                        onChange={(e) => debouncedClassNameChange(e.target.value)}
+                        onBlur={(e) => onClassNameChange(e.target.value)}
+                    />
                 </div>
             </div>
             <BlockComponent block={blockWithCallback}

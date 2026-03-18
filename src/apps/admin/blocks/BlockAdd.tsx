@@ -4,6 +4,7 @@ import blockRegistry from "./blockRegistry";
 import {Plus, Search} from "lucide-react";
 import {BlockJson, BlockMeta} from "./blockDefinitions";
 import {Input} from "../components/ui/input";
+import {useTranslations} from "next-intl";
 
 interface BlockAddProps {
     onBlockAdd: (block: BlockJson) => void;
@@ -12,6 +13,7 @@ interface BlockAddProps {
 }
 
 export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
+    const t = useTranslations('block')
     const inputRef = useRef<HTMLParagraphElement>(null);
     const [isEmpty, setIsEmpty] = useState(true);
     const [showSlashMenu, setShowSlashMenu] = useState(false);
@@ -29,7 +31,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                 if (block.allowedParents) {
                     return block.allowedParents.includes(Block.type) || (parentBlockMeta && block.allowedParents.includes(parentBlockMeta.type));
                 }
-                if(Block.allowedChildren){
+                if (Block.allowedChildren) {
                     return Block.allowedChildren.includes(block.type);
                 }
                 return true;
@@ -128,7 +130,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                 >
                     {isEmpty && (
                         <span className="absolute pointer-events-none opacity-60"
-                              data-rich-text-placeholder="Write / for block selection"></span>
+                              data-rich-text-placeholder={t('add-placeholder')}></span>
                     )}
                 </p>
             )}
@@ -150,7 +152,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                             onMouseEnter={() => handleMenuItemMouseEnter(index)}
                         >
                             {block.icon && <block.icon size={20}/>}
-                            {block.name}
+                            {t(block.type).startsWith('block.') ? block.name : t(block.type)}
                         </Button>
                     ))}
                 </div>
@@ -192,7 +194,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                                         onMouseEnter={() => handleMenuItemMouseEnter(index)}
                                     >
                                         {block.icon && <block.icon size={20}/>}
-                                        {block.name}
+                                        {t(block.type).startsWith('block.') ? block.name : t(block.type)}
                                     </Button>
                                 ))}
                             </div>

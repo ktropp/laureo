@@ -129,5 +129,9 @@
     "delete": "Delete file permanently",
     "delete-success": "Item successfully deleted",
     "delete-error": "Item could not be deleted"
+  },
+  "block": {
+    "add-placeholder": "Write / for block selection",
+    "heading": "Heading"
   }
 }

@@ -129,5 +129,19 @@
     "url": "URL",
     "download": "Stáhnout soubor",
     "delete": "Smazat trvale soubor"
+  },
+  "block": {
+    "add-placeholder": "Napište / pro vybrání bloku",
+    "heading": "Nadpis",
+    "button": "Tlačítko",
+    "container": "Kontejner",
+    "form": "Formulář",
+    "form-field": "Pole formuláře",
+    "form-submit": "Tlačítko formuláře",
+    "group": "Skupina",
+    "image": "Obrázek",
+    "list": "Seznam",
+    "list-item": "Položka seznamu",
+    "paragraph": "Odstavec"
   }
 }
