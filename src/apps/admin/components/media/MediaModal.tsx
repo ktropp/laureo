@@ -13,7 +13,7 @@ export default function MediaModal({media}) {
     const router = useRouter();
 
     const handleClose = () => {
-        router.push('/media', undefined, {shallow: true});
+        router.push('/media');
     };
 
     const handleDelete = async () => {
