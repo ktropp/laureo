@@ -2,6 +2,7 @@ import {prisma} from "lib/prisma";
 import {UserForm} from "./user-form";
 import {getTranslations} from "next-intl/server";
 import {Settings} from "@theme/settings";
+import {currentUser} from "@admin/lib/session";
 
 export async function generateMetadata() {
     const t = await getTranslations('user')
@@ -32,5 +33,7 @@ export default async function UserPage({
         throw new Error('User not found');
     }
 
-    return <UserForm user={user}/>;
+    const loggedUser = await currentUser()
+
+    return <UserForm user={user} loggedUser={loggedUser}/>;
 }

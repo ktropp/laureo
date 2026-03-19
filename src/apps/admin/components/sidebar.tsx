@@ -115,7 +115,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             <div className="p-4 border-t border-laureo-border dark:border-laureo-border-dark">
                 {/* User Info */}
                 <div
-                    className={`flex items-center gap-3 justify-center xl:justify-start flex-col ${collapsed ? 'xl:justify-center xl:flex-col' : 'xl:flex-row'}`}>
+                    className={`flex items-center gap-3 justify-center xl:justify-between flex-col ${collapsed ? 'xl:justify-center xl:flex-col' : 'xl:flex-row'}`}>
                     <UserInfo collapsed={collapsed}/>
                     <form action={logout}>
                         <Button variant="ghost" size="sm" className="p-1" type="submit">

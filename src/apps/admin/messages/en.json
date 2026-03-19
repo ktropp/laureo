@@ -132,7 +132,30 @@
   },
   "block": {
     "add-placeholder": "Write / for block selection",
-    "heading": "Heading"
+    "heading": "Heading",
+    "select-parent": "Select parent block",
+    "drag-handle": "Drag to reorded",
+    "move-up": "Move up",
+    "move-down": "Move down",
+    "change-tag": "Change tag",
+    "change-variant": "Change variant",
+    "change-icon": "Change icon",
+    "icon-before": "before",
+    "icon-after": "after",
+    "bold": "Bold",
+    "italic": "Italic",
+    "link": "Link",
+    "link-placeholder": "Fill link url",
+    "link-blank": "Open in a new window",
+    "link-create": "Create",
+    "change-class": "Change CSS classes",
+    "class-placeholder": "Fill CSS classes",
+    "more-options": "More options",
+    "copy": "Copy",
+    "paste": "Paste",
+    "delete": "Delete",
+    "lock": "Lock",
+    "unlock": "Unlock"
   },
   "post-form": {
     "error": "Form contains errors",
@@ -146,7 +169,11 @@
     "title": "Title",
     "title-placeholder": "Fill title",
     "url": "Url",
-    "url-placeholder": "Fill url"
+    "url-placeholder": "Fill url",
+    "more-title": "More options",
+    "more-copy-all": "Copy all blocks",
+    "more-lock-all": "Lock all blocks",
+    "more-unlock-all": "Unlock all blocks"
   },
   "statuses": {
     "draft": "Draft",

@@ -30,6 +30,7 @@ import {Checkbox} from "../components/ui/checkbox";
 import {Button} from "../components/ui/button";
 import {debounce} from "../lib/utils";
 import {withServer} from "@admin/blocks/withServer";
+import {useTranslations} from "next-intl";
 
 const BaseBlock = ({
                        children,
@@ -169,6 +170,8 @@ const BaseBlock = ({
         }
     }
 
+    const t = useTranslations('block')
+
     return (
         <div
             id={index}
@@ -216,11 +219,11 @@ const BaseBlock = ({
             }
             }
         >
-            <div className={`absolute z-99 gap-2 -translate-y-15 text-base ${isFocused ? 'flex' : 'hidden'}`}>
+            <div className={`absolute z-99 gap-2 -translate-y-19 text-base ${isFocused ? 'flex' : 'hidden'}`}>
                 {parentBlock &&
                     <div
                         className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
-                        <button title="Select parent block"
+                        <button title={t('select-parent')}
                                 type="button"
                                 className="p-1 cursor-pointer hover:text-laureo-primary"
                                 onClick={(e) => {
@@ -238,7 +241,7 @@ const BaseBlock = ({
                     </div>
                 }
                 <div
-                    className="font-(family-name:--font-roboto) border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
+                    className="font-(family-name:--font-roboto) border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
                     <div className="p-2 flex flex-row items-center gap-1">
                         <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
                                 title={Block.name}
@@ -247,7 +250,7 @@ const BaseBlock = ({
                         </button>
                         <button
                             className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                            title="Drag to reorder"
+                            title={t('drag-handle')}
                             type="button"
                             ref={setDraggableNodeRef}
                             {...listeners}
@@ -257,27 +260,27 @@ const BaseBlock = ({
                         <div className="flex flex-col px-1">
                             <button
                                 className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                                title="Move up"
+                                title={t('move-up')}
                                 type="button"
                             >
                                 <ChevronUp size={20}/>
                             </button>
                             <button
                                 className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                                title="Move down"
+                                title={t('move-down')}
                                 type="button"
                             >
                                 <ChevronDown size={20}/>
                             </button>
                         </div>
                     </div>
-                    <div className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
+                    <div className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
                         {Block.tags && (
                             <div className="relative">
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Change tag"
+                                    title={t('change-tag')}
                                     onClick={() => setIsTagOpen(!isTagOpen)}
                                 >
                                     {blockJson.tagName && tagNameIcons[blockJson.tagName] ? (
@@ -288,7 +291,7 @@ const BaseBlock = ({
                                     ) : blockJson.tagName || 'div'}
                                 </button>
                                 <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isTagOpen ? 'flex' : 'hidden'}`}>
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isTagOpen ? 'flex' : 'hidden'}`}>
                                     <div className="p-2">
                                         {Block.tags?.map((tag, index) => (
                                             <button
@@ -322,13 +325,13 @@ const BaseBlock = ({
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Change variant"
+                                    title={t('change-variant')}
                                     onClick={() => setIsVariantOpen(!isVariantOpen)}
                                 >
                                     <Paintbrush size={20}/>
                                 </button>
                                 <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isVariantOpen ? 'flex' : 'hidden'}`}>
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isVariantOpen ? 'flex' : 'hidden'}`}>
                                     <div className="p-2">
                                         {Block.variants?.map((variant, index) => (
                                             <button
@@ -355,13 +358,13 @@ const BaseBlock = ({
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Change icon"
+                                    title={t('change-icon')}
                                     onClick={() => setIsIconOpen(!isIconOpen)}
                                 >
                                     <Diamond size={20}/>
                                 </button>
                                 <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
+                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
                                     <div className="p-2">
                                         {Block.icons?.map((Icon, index) => (
                                             <div className="flex flex-row items-center gap-2" key={index}>
@@ -377,7 +380,7 @@ const BaseBlock = ({
                                                         setIsIconOpen(false);
                                                     }}
                                                 >
-                                                    before
+                                                    {t('icon-before')}
                                                 </button>
                                                 <Icon
                                                     className={`flex-[1_0_auto] ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
@@ -394,7 +397,7 @@ const BaseBlock = ({
                                                         setIsIconOpen(false);
                                                     }}
                                                 >
-                                                    after
+                                                    {t('icon-after')}
                                                 </button>
                                             </div>
                                         ))}
@@ -407,7 +410,7 @@ const BaseBlock = ({
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Bold"
+                                    title={t('bold')}
                                     onClick={() => {
                                         const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
                                         if (editableElement) {
@@ -441,7 +444,7 @@ const BaseBlock = ({
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Italic"
+                                    title={t('italic')}
                                     onClick={() => {
                                         const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
                                         if (editableElement) {
@@ -475,20 +478,20 @@ const BaseBlock = ({
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title="Link"
+                                    title={t('link')}
                                     onClick={() => setIsLinkOpen(!isLinkOpen)}
                                 >
                                     <Link size={20}/>
                                 </button>
                                 <div
-                                    className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
+                                    className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
                                     {Block.type === 'button' ? (
                                         <div className="p-2 space-y-3">
                                             <div>
                                                 <Input
                                                     id=""
                                                     type="text"
-                                                    placeholder="Enter link URL"
+                                                    placeholder={t('link-placeholder')}
                                                     name=""
                                                     defaultValue={blockJson.href}
                                                     onChange={(e) => debouncedHrefChange(e.target.value, isTargetBlank)}
@@ -496,8 +499,7 @@ const BaseBlock = ({
                                                 />
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Label className="mb-0" htmlFor={"target_blank" + index}>Open in new
-                                                    window</Label>
+                                                <Label className="mb-0" htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
                                                 <Checkbox
                                                     name="target_blank"
                                                     id={"target_blank" + index}
@@ -517,7 +519,7 @@ const BaseBlock = ({
                                                 <Input
                                                     id=""
                                                     type="text"
-                                                    placeholder="Enter link URL"
+                                                    placeholder={t('link-placeholder')}
                                                     name=""
                                                     onChange={(e) => setHref(e.target.value)}
                                                     onBlur={(e) => setHref(e.target.value)}
@@ -525,8 +527,7 @@ const BaseBlock = ({
                                             </div>
                                             <div className="flex justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <Label className="mb-0" htmlFor={"target_blank" + index}>Open in new
-                                                        window</Label>
+                                                    <Label className="mb-0" htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
                                                     <Checkbox
                                                         name="target_blank"
                                                         id={"target_blank" + index}
@@ -566,7 +567,7 @@ const BaseBlock = ({
                                                             setIsLinkOpen(false)
                                                         }
                                                     }}
-                                                >Create</Button>
+                                                >{t('link-create')}</Button>
                                             </div>
                                         </div>
                                     )}
@@ -576,23 +577,23 @@ const BaseBlock = ({
                         <button
                             type="button"
                             className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                            title="Change class"
+                            title={t('change-class')}
                             onClick={() => handleBlockClassNameToggle()}
                         >
                             <Braces size={20}/>
                         </button>
                     </div>
                     <div
-                        className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l h-full">
+                        className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
                         <button
                             type="button"
                             className="p-1 cursor-pointer hover:text-laureo-primary"
-                            title="More options"
+                            title={t('more-options')}
                             onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
                             <EllipsisVertical size={20}/>
                         </button>
                         <div
-                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
+                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border-laureo-border dark:border-laureo-border-dark border min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
                             <div className="p-2">
                                 <button
                                     type="button"
@@ -601,40 +602,40 @@ const BaseBlock = ({
                                         setIsOptionsOpen(false);
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Copy</span>
+                                    <span>{t('copy')}</span>
                                     <span>Ctrl+C</span>
                                 </button>
                             </div>
-                            <div className="p-2 border-t">
+                            <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         onBlockPaste()
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Paste</span>
+                                    <span>{t('paste')}</span>
                                     <span>Ctrl+V</span>
                                 </button>
                             </div>
-                            <div className={`p-2 border-t ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <div className={`p-2 border-t border-laureo-border dark:border-laureo-border-dark ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
                                 <button
                                     type="button"
                                     onClick={() => {
                                         onBlockDelete()
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>Delete</span>
+                                    <span>{t('delete')}</span>
                                     <span>Shift+Alt+Z</span>
                                 </button>
                             </div>
-                            <div className="p-2 border-t">
+                            <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         onBlockLock()
                                     }}
                                     className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>{blockJson.lock ? 'Unlock' : 'Lock'}</span>
+                                    <span>{blockJson.lock ? t('unlock') : t('lock')}</span>
                                     <span></span>
                                 </button>
                             </div>
@@ -647,8 +648,7 @@ const BaseBlock = ({
                 <div className="p-4 h-full">
                     <Textarea
                         id=""
-                        type="text"
-                        placeholder="Enter class name"
+                        placeholder={t('class-placeholder')}
                         name=""
                         className="h-full classname-textarea"
                         defaultValue={blockJson.className}

@@ -17,7 +17,7 @@ interface User {
     role: string;
 }
 
-export function UserForm({user}: { user: User }) {
+export function UserForm({user, loggedUser}: { user: User, loggedUser: User }) {
     const t = useTranslations('user');
     const tRoles = useTranslations('roles')
 
@@ -76,7 +76,7 @@ export function UserForm({user}: { user: User }) {
 
                 <div>
                     <Label htmlFor="role">{t('role')}</Label>
-                    <Select name="role" defaultValue={currentUser.role} required>
+                    <Select name="role" defaultValue={currentUser.role} required disabled={currentUser.id === loggedUser.id}>
                         <SelectTrigger>
                             <SelectValue placeholder={t('role-placeholder')}/>
                         </SelectTrigger>

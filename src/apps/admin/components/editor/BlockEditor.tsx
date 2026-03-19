@@ -506,15 +506,83 @@ export default function BlockEditor({content, onChange}: {
 
     function handleDragEnd(event) {
         const {active, over} = event;
-        console.log("TODO: " + event)
 
-        if (active.id !== over.id) {
-            setBlocks((items) => {
-                const oldIndex = items.indexOf(active.id);
-                const newIndex = items.indexOf(over.id);
-
-                return arrayMove(items, oldIndex, newIndex);
-            });
+        if (!over || active.id === over.id) {
+            return;
         }
+
+        setBlocks((items) => {
+            // Helper function to remove the dragged block from the tree
+            const removeItemByIndex = (blocks: BlockJson[], index: string): {
+                block?: BlockJson;
+                remainingBlocks: BlockJson[]
+            } => {
+                for (let i = 0; i < blocks.length; i++) {
+                    const block = blocks[i];
+                    if (block.index === index) {
+                        return {
+                            block,
+                            remainingBlocks: [...blocks.slice(0, i), ...blocks.slice(i + 1)],
+                        };
+                    } else if (block.children?.length) {
+                        const result = removeItemByIndex(block.children, index);
+                        if (result.block) {
+                            return {
+                                block: result.block,
+                                remainingBlocks: blocks.map((b, j) =>
+                                    i === j ? {...b, children: result.remainingBlocks} : b
+                                ),
+                            };
+                        }
+                    }
+                }
+
+                return {remainingBlocks: blocks};
+            };
+
+            // Helper function to insert the block at the same level as the `over` block
+            const insertItemAtSameLevel = (
+                blocks: BlockJson[],
+                item: BlockJson,
+                targetIndex: string
+            ): BlockJson[] => {
+                let inserted = false;
+
+                const newBlocks = blocks.flatMap((block) => {
+                    if (block.index === targetIndex && !inserted) {
+                        inserted = true;
+                        // Insert the item after the matching block
+                        return [block, item];
+                    }
+
+                    if (block.children?.length) {
+                        return [
+                            {
+                                ...block,
+                                children: insertItemAtSameLevel(block.children, item, targetIndex)
+                            },
+                        ];
+                    }
+
+                    return [block];
+                });
+
+                // Fallback if the targetIndex was at the top level and wasn't inserted elsewhere
+                if (!inserted && blocks.some((block) => block.index === targetIndex)) {
+                    return [...blocks, item];
+                }
+
+                return newBlocks;
+            };
+
+            // Remove the block from its original position
+            const {block: draggedBlock, remainingBlocks} = removeItemByIndex(items, active.id);
+            if (!draggedBlock) {
+                return items; // No block to move, return unchanged
+            }
+
+            // Place it at the same level as the `over` block
+            return insertItemAtSameLevel(remainingBlocks, draggedBlock, over.id);
+        });
     }
 }

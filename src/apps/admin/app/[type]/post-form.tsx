@@ -15,6 +15,7 @@ import BlockEditor from "../../components/editor/BlockEditor";
 import {toast} from 'react-toastify';
 import MetaEditor from "@admin/components/editor/MetaEditor";
 import {useTranslations} from "next-intl";
+import {EllipsisVertical} from "lucide-react";
 
 export function PostForm({post, type}: { post: Post, type: string }) {
     const t = useTranslations('post-form')
@@ -36,6 +37,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
 
     const [state, action, pending] = useActionState(postAdd, undefined);
     const [blocks, setBlocks] = useState<Array<BlockJson>>(post?.blocks || []);
+    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
     const currentPost = state || post || {};
 
@@ -62,7 +64,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
 
     let postUrl = Settings.frontendUrl + '/' + post?.slug
     if (type === 'page' && Settings.defaultLanguage !== post.languageCode) {
-        postUrl = Settings.frontendUrl + '/' + post.languageCode.slice(0,2) + '/' + post?.slug
+        postUrl = Settings.frontendUrl + '/' + post.languageCode.slice(0, 2) + '/' + post?.slug
     }
     if (type !== 'page' && post.languageCode) {
         postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0, 2))[0].rewrite + '/' + post.slug
@@ -99,9 +101,54 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                         <Button type="submit" disabled={pending} className="mb-2" id="post-submit">
                             {t('save')}
                         </Button>
-                        {post.slug ? (<Link href={postUrl} target="_blank">
-                            <Button type="button" variant="outline">{t('preview')}</Button>
-                        </Link>) : ''}
+                        <div className="flex items-center">
+                            {post.slug ? (<Link href={postUrl} target="_blank">
+                                <Button type="button" variant="outline">{t('preview')}</Button>
+                            </Link>) : ''}
+                            <div className="relative">
+                                <Button
+                                    type="button"
+                                    variant="link"
+                                    title={t('more-title')}
+                                    onClick={() => setIsOptionsOpen(!isOptionsOpen)}
+                                >
+                                    <EllipsisVertical></EllipsisVertical>
+                                </Button>
+                                <div
+                                    className={`absolute z-2 top-12 right-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsOptionsOpen(false);
+                                            }}
+                                            className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                            <span>{t('more-copy-all')}</span>
+                                        </button>
+                                    </div>
+                                    <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsOptionsOpen(false);
+                                            }}
+                                            className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                            <span>{t('more-lock-all')}</span>
+                                        </button>
+                                    </div>
+                                    <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsOptionsOpen(false);
+                                            }}
+                                            className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                            <span>{t('more-unlock-all')}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <Input

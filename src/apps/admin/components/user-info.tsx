@@ -38,7 +38,9 @@ export function UserInfo({collapsed}) {
 
     if (loading) {
         return (
-            <>
+            <div
+            className="cursor-pointer flex items-center gap-3"
+            >
                 <Avatar className="h-8 w-8">
                     <AvatarImage src={undefined}/>
                     <AvatarFallback></AvatarFallback>
@@ -47,7 +49,7 @@ export function UserInfo({collapsed}) {
                     <p className="text-sm font-medium truncate"></p>
                     <p className="text-xs text-laureo-text-lighter dark:text-laureo-text-lighter-dark truncate"></p>
                 </div>
-            </>
+            </div>
         )
     }
 
@@ -56,7 +58,10 @@ export function UserInfo({collapsed}) {
     }
 
     return (
-        <>
+        <div
+            className="cursor-pointer flex items-center gap-3"
+            onClick={() => window.location.href = '/user/' + user.id}
+        >
             <Avatar className="h-8 w-8">
                 <AvatarImage src={user.image || undefined}/>
                 <AvatarFallback>{user.name?.[0] || 'U'}</AvatarFallback>
@@ -65,6 +70,6 @@ export function UserInfo({collapsed}) {
                 <p className="text-sm font-medium truncate">{(user.name + ' ' + user.surname) || user.email}</p>
                 <p className="text-xs text-laureo-text-lighter dark:text-laureo-text-lighter-dark truncate capitalize">{user.role.toLowerCase()}</p>
             </div>
-        </>
+        </div>
     )
 }
