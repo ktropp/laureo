@@ -61,8 +61,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
     }, []);
 
     let postUrl = Settings.frontendUrl + '/' + post?.slug
-    if(type !== 'page' && post.languageCode){
-        postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0,2))[0].rewrite + '/' + post.slug
+    if (type === 'page' && Settings.defaultLanguage !== post.languageCode) {
+        postUrl = Settings.frontendUrl + '/' + post.languageCode.slice(0,2) + '/' + post?.slug
+    }
+    if (type !== 'page' && post.languageCode) {
+        postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0, 2))[0].rewrite + '/' + post.slug
     }
 
     return (
@@ -88,7 +91,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                         content={post?.blocks}
                         onChange={handleBlocksChange}
                     />
-                    <MetaEditor postLang={post} type={type} />
+                    <MetaEditor postLang={post} type={type}/>
                 </div>
                 <div
                     className="min-w-50 w-50 xl:w-100 border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
@@ -225,7 +228,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                             {lang.postLang ? (
                                 <Link href={`/${currentPost.post?.type.toLowerCase()}/${lang.postLang.id}`}><Button
                                     type="button">{tTranslations('edit')}</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => postLangAdd(currentPost.postId, lang.languageCode)}>{tTranslations('create')}</Button>)}
+                                                                                                      onClick={() => postLangAdd(currentPost.postId, lang.languageCode)}>{tTranslations('create')}</Button>)}
                         </div>
                     ))}
                 </div>

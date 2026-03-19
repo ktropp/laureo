@@ -6,7 +6,7 @@ import {
     Images,
     List,
     Menu,
-    LogOut
+    LogOut, X
 } from "lucide-react";
 import {Button} from "components/ui/button";
 import {logout} from "actions/logout";
@@ -17,6 +17,7 @@ import {Settings} from "@theme/settings";
 import Image from "next/image";
 import cmsIcon from "@theme/icon.svg";
 import {useTranslations} from "next-intl";
+import {useState} from "react";
 
 //TODO: dynamic import icon
 
@@ -30,6 +31,8 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
     const t = useTranslations('sidebar');
     const pathname = usePathname()
 
+    const [activeVersionModal, setActiveVersionModal] = useState(false);
+
     let menuItems = [
         {icon: LayoutDashboard, label: t('dashboard'), href: "/"},
         {icon: FileText, label: t('pages'), href: "/page"},
@@ -40,7 +43,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
     ];
 
     const customPostTypes = Settings.customPostTypes;
-    if(customPostTypes && customPostTypes.length > 0){
+    if (customPostTypes && customPostTypes.length > 0) {
         const newMenuItems = []
         customPostTypes.map((customPostType) => {
             newMenuItems.push({
@@ -58,7 +61,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
 
     return (
         <div className={`
-      fixed left-0 top-0 h-full bg-card border-r border-laureo-border dark:border-laureo-border-dark transition-all duration-300 z-50 w-16
+      fixed left-0 top-0 h-full bg-card border-r border-laureo-border dark:border-laureo-border-dark transition-all duration-300 z-50 w-16 flex flex-col
       ${collapsed ? 'xl:w-16' : 'xl:w-64'}
     `}>
             {/* Header */}
@@ -89,7 +92,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 p-4">
+            <nav className="p-4">
                 <div className="space-y-2">
                     {menuItems.map((item, index) => (
                         <Link
@@ -120,6 +123,50 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                         </Button>
                     </form>
                 </div>
+            </div>
+
+            {/* Version info */}
+            <div className="p-4 mt-auto border-t border-laureo-border dark:border-laureo-border-dark">
+                <Button
+                    variant="link"
+                    onClick={() => setActiveVersionModal(true)}
+                >
+                    {t('version')} 1.0.0
+                </Button>
+                {activeVersionModal &&
+                <div
+                    className="fixed w-full h-full top-0 left-0 flex items-center justify-center bg-black/70 z-90 p-4 xl:p-8">
+                    <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-md w-full h-full max-w-200">
+                        <div
+                            className="flex justify-between border-b border-laureo-border dark:border-laureo-border-dark">
+                            <div className="text-xl font-semibold p-4">{t('whats-new')}</div>
+                            <div className="flex">
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveVersionModal(false)}
+                                    className="cursor-pointer p-4 w-15 h-15 flex items-center justify-center border-l border-laureo-border rounded-tr-md dark:border-laureo-border-dark hover:bg-laureo-secondary hover:text-laureo-body transition-colors"
+                                >
+                                    <X size={20}/>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex h-[calc(100%-61px)]">
+                            <div className="flex flex-col gap-4 p-4">
+                                <h2 className="text-lg font-semibold">Todo</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
+                                <ul className="list-disc pl-5">
+                                    <li>Lorem ipsum</li>
+                                    <li>Lorem ipsum</li>
+                                    <li>Lorem ipsum</li>
+                                </ul>
+                                <h2 className="text-lg font-semibold">Todo</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
+                                <h2 className="text-lg font-semibold">Todo</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>}
             </div>
         </div>
     );

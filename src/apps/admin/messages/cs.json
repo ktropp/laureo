@@ -17,7 +17,9 @@
     "media": "Média",
     "users": "Uživatelé",
     "menus": "Menu",
-    "settings": "Nastavení"
+    "settings": "Nastavení",
+    "version": "Verze",
+    "whats-new": "Co je nového?"
   },
   "dashboard": {
     "meta-title": "Nástěnka",
