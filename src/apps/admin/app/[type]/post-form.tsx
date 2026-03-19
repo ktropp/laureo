@@ -14,8 +14,13 @@ import {Settings} from "@theme/settings";
 import BlockEditor from "../../components/editor/BlockEditor";
 import {toast} from 'react-toastify';
 import MetaEditor from "@admin/components/editor/MetaEditor";
+import {useTranslations} from "next-intl";
 
 export function PostForm({post, type}: { post: Post, type: string }) {
+    const t = useTranslations('post-form')
+    const tStatuses = useTranslations('statuses')
+    const tSeo = useTranslations('seo')
+    const tTranslations = useTranslations('translations')
     const languages = Settings.languages;
     let translations;
     if (post.post) {
@@ -65,11 +70,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
             const result = await action(formData);
 
             if (result?.errors) {
-                toast.error('Please check the form for errors');
+                toast.error(t('error'));
                 return;
             }
 
-            toast.success('Successfully saved!');
+            toast.success(t('success'));
         }}>
             <Input
                 type="hidden"
@@ -89,10 +94,10 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     className="min-w-50 w-50 xl:w-100 border-l min-h-sidebar-height pl-3 ml-3 border-laureo-border dark:border-laureo-border-dark">
                     <div className="flex justify-between">
                         <Button type="submit" disabled={pending} className="mb-2" id="post-submit">
-                            Save
+                            {t('save')}
                         </Button>
                         {post.slug ? (<Link href={postUrl} target="_blank">
-                            <Button type="button" variant="outline">Preview</Button>
+                            <Button type="button" variant="outline">{t('preview')}</Button>
                         </Link>) : ''}
                     </div>
 
@@ -110,24 +115,24 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     />
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="status">Status</Label>
+                        <Label htmlFor="status">{t('status')}</Label>
                         <Select defaultValue={currentPost.status || 'DRAFT'} name="status">
                             <SelectTrigger>
-                                <SelectValue placeholder="Choose status"/>
+                                <SelectValue placeholder={t('status-placeholder')}/>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem key="DRAFT" value="DRAFT">Draft</SelectItem>
-                                <SelectItem key="PUBLISHED" value="PUBLISHED">Published</SelectItem>
+                                <SelectItem key="DRAFT" value="DRAFT">{tStatuses('draft')}</SelectItem>
+                                <SelectItem key="PUBLISHED" value="PUBLISHED">{tStatuses('published')}</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="languageCode">Language</Label>
+                        <Label htmlFor="languageCode">{t('language')}</Label>
                         <Select defaultValue={currentPost.languageCode || defaultLanguage} name="languageCode"
                                 disabled={currentPost.languageCode}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Choose language"/>
+                                <SelectValue placeholder={t('language-placeholder')}/>
                             </SelectTrigger>
                             <SelectContent>
                                 {languages?.map(item => (
@@ -139,11 +144,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="title">Title</Label>
+                        <Label htmlFor="title">{t('title')}</Label>
                         <Input
                             id="title"
                             type="text"
-                            placeholder="Enter title"
+                            placeholder={t('title-placeholder')}
                             name="title"
                             required
                             defaultValue={currentPost.title}
@@ -152,11 +157,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="slug">Url</Label>
+                        <Label htmlFor="slug">{t('url')}</Label>
                         <Input
                             id="slug"
                             type="text"
-                            placeholder="Enter url"
+                            placeholder={t('url-placeholder')}
                             name="slug"
                             required
                             defaultValue={currentPost.slug}
@@ -167,14 +172,14 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     <div
                         className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
-                    <h2 className="text-xl mt-5 font-semibold">Seo</h2>
+                    <h2 className="text-xl mt-5 font-semibold">{tSeo('title')}</h2>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="meta_title">Meta title</Label>
+                        <Label htmlFor="meta_title">{tSeo('meta-title')}</Label>
                         <Input
                             id="meta_title"
                             type="text"
-                            placeholder="Enter meta title"
+                            placeholder={tSeo('meta-title-placeholder')}
                             name="metaTitle"
                             defaultValue={currentPost.metaTitle}
                             error={state?.errors?.metaTitle}
@@ -182,10 +187,10 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     </div>
 
                     <div className="space-y2 mb-2">
-                        <Label htmlFor="meta_description">Meta description</Label>
+                        <Label htmlFor="meta_description">{tSeo('meta-description')}</Label>
                         <Textarea
                             id="meta_description"
-                            placeholder="Enter meta description"
+                            placeholder={tSeo('meta-description-placeholder')}
                             name="metaDescription"
                             defaultValue={currentPost.metaDescription}
                             error={state?.errors?.metaDescription}
@@ -193,11 +198,11 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     </div>
 
                     <div className="space-y-2 mb-2">
-                        <Label htmlFor="meta_keywords">Meta keywords</Label>
+                        <Label htmlFor="meta_keywords">{tSeo('meta-keywords')}</Label>
                         <Input
                             id="meta_keywords"
                             type="text"
-                            placeholder="Enter meta keywords"
+                            placeholder={tSeo('meta-keywords-placeholder')}
                             name="metaKeywords"
                             defaultValue={currentPost.metaKeywords}
                             error={state?.errors?.metaKeywords}
@@ -207,7 +212,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                     <div
                         className="w-full border-b-1 border-laureo-border dark:border-laureo-border-dark mt-4 mb-4"></div>
 
-                    <h2 className="text-xl mt-5 font-semibold">Translations</h2>
+                    <h2 className="text-xl mt-5 font-semibold">{tTranslations('title')}</h2>
 
                     {translations?.filter(lang => lang.languageCode !== currentPost.languageCode).map((lang, index) => (
                         <div key={index} className="flex items-center space-y2 mb-2">
@@ -219,8 +224,8 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                             />
                             {lang.postLang ? (
                                 <Link href={`/${currentPost.post?.type.toLowerCase()}/${lang.postLang.id}`}><Button
-                                    type="button">Edit</Button></Link>) : (<Button type="button"
-                                                                                   onClick={() => postLangAdd(currentPost.postId, lang.languageCode)}>Create</Button>)}
+                                    type="button">{tTranslations('edit')}</Button></Link>) : (<Button type="button"
+                                                                                   onClick={() => postLangAdd(currentPost.postId, lang.languageCode)}>{tTranslations('create')}</Button>)}
                         </div>
                     ))}
                 </div>

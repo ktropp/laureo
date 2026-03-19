@@ -133,5 +133,32 @@
   "block": {
     "add-placeholder": "Write / for block selection",
     "heading": "Heading"
+  },
+  "post-form": {
+    "error": "Form contains errors",
+    "success": "Successfully saved",
+    "save": "Save",
+    "preview": "Preview",
+    "status": "Status",
+    "status-placeholder": "Choose status",
+    "language": "Language",
+    "language-placeholder": "Choose language",
+    "title": "Title",
+    "title-placeholder": "Fill title",
+    "url": "Url",
+    "url-placeholder": "Fill url"
+  },
+  "statuses": {
+    "draft": "Draft",
+    "published": "Published"
+  },
+  "seo": {
+    "title": "SEO",
+    "meta-title": "Meta title",
+    "meta-title-placeholder": "Fill meta title",
+    "meta-description": "Meta description",
+    "meta-description-placeholder": "Fill meta description",
+    "meta-keywords": "Meta keywords",
+    "meta-keywords-placeholder": "Fill meta keywords"
   }
 }

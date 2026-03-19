@@ -143,5 +143,32 @@
     "list": "Seznam",
     "list-item": "Položka seznamu",
     "paragraph": "Odstavec"
+  },
+  "post-form": {
+    "error": "Formulář obsahuje chyby",
+    "success": "Úspěšně uloženo",
+    "save": "Uložit",
+    "preview": "Náhled",
+    "status": "Status",
+    "status-placeholder": "Vyberte status",
+    "language": "Jazyk",
+    "language-placeholder": "Vyberte jazyk",
+    "title": "Název",
+    "title-placeholder": "Vyplňte název",
+    "url": "Url",
+    "url-placeholder": "Vyplňte url"
+  },
+  "statuses": {
+    "draft": "Koncept",
+    "published": "Publikován"
+  },
+  "seo": {
+    "title": "SEO",
+    "meta-title": "Meta title",
+    "meta-title-placeholder": "Vyplňte meta title",
+    "meta-description": "Meta description",
+    "meta-description-placeholder": "Vyplňte meta description",
+    "meta-keywords": "Meta keywords",
+    "meta-keywords-placeholder": "Vyplňte meta keywords"
   }
 }
