@@ -185,7 +185,13 @@
     "more-title": "Více možností",
     "more-copy-all": "Zkopírovat všechny bloky",
     "more-lock-all": "Zamknout všechny bloky",
-    "more-unlock-all": "Odemknout všechny bloky"
+    "more-unlock-all": "Odemknout všechny bloky",
+    "copy-all-success": "Všechny bloky zkopírovány do schránky!",
+    "copy-all-error": "Chyba: nepodařilo se zkopírovat všechny bloky do schránky.",
+    "lock-all-success": "Všechny bloky byly úspěšně zamknuty!",
+    "lock-all-error": "Chyba: nepodařilo se zamknout bloky.",
+    "unlock-all-success": "Všechny bloky byly úspěšně odemknuty!",
+    "unlock-all-error": "Chyba: nepodařilo se odemknout bloky."
   },
   "statuses": {
     "draft": "Koncept",

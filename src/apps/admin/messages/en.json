@@ -173,7 +173,13 @@
     "more-title": "More options",
     "more-copy-all": "Copy all blocks",
     "more-lock-all": "Lock all blocks",
-    "more-unlock-all": "Unlock all blocks"
+    "more-unlock-all": "Unlock all blocks",
+    "copy-all-success": "All blocks copied to clipboard!",
+    "copy-all-error": "Failed to copy blocks to clipboard.",
+    "lock-all-success": "All blocks locked successfully!",
+    "lock-all-error": "Failed to lock all blocks.",
+    "unlock-all-success": "All blocks unlocked successfully!",
+    "unlock-all-error": "Failed to unlock all blocks."
   },
   "statuses": {
     "draft": "Draft",

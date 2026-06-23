@@ -1,11 +1,11 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {List} from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 
-const ListBlock = ({children, block, className}: BlockProps) => {
+const ListBlock = ({children, block, className, isEditor}: BlockProps) => {
     const Tag = block.tagName;
 
-    return <Tag className={cn(block.className, className)}>{children}</Tag>
+    return <Tag className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>{children}</Tag>
 };
 
 export const blockConfig: BlockMeta = {

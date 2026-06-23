@@ -35,7 +35,7 @@ export async function POST(
 
 
         const flattenItems = (items: MenuLangItem[], parentId: number | null = null): MenuLangItem[] => {
-            return items.flatMap((item) => {
+            return items.flatMap((item, index) => {
                 const flatItem = {
                     where: {
                         id: item.id
@@ -43,7 +43,7 @@ export async function POST(
                     data: {
                         title: item.title,
                         url: item.url,
-                        order: item.index,
+                        order: index,
                         parentId: parentId // Set the parentId to maintain hierarchy
                     }
                 };

@@ -1,9 +1,9 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import { Group } from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 
-const GroupBlock = ({ children, block, className }: BlockProps) => {
-  return <div className={cn(block.className, className)}>{children}</div>
+const GroupBlock = ({ children, block, className, isEditor }: BlockProps) => {
+  return <div className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>{children}</div>
 };
 
 export const blockConfig: BlockMeta = {

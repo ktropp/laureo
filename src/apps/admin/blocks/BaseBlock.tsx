@@ -172,6 +172,13 @@ const BaseBlock = ({
 
     const t = useTranslations('block')
 
+    const blockClasses = blockWithCallback.className
+        ? blockWithCallback.className
+            .split(' ')
+            .filter(cls => cls.startsWith('w-') || cls.startsWith('h-') || cls.startsWith('max-w-') || cls.startsWith('max-h-') || cls.startsWith('sm:w-') || cls.startsWith('md:w-') || cls.startsWith('lg:w-') || cls.startsWith('xl:w-'))
+            .join(' ')
+        : '';
+
     return (
         <div
             id={index}
@@ -182,7 +189,7 @@ const BaseBlock = ({
             }}
             style={style}
             {...attributes}
-            className={`relative outline-1 outline-dashed flex-1 ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
+            className={`relative outline-1 outline-dashed flex-1 ${blockClasses} ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
             tabIndex={0}
             onFocus={(e) => {
                 e.stopPropagation()
@@ -274,7 +281,8 @@ const BaseBlock = ({
                             </button>
                         </div>
                     </div>
-                    <div className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
+                    <div
+                        className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
                         {Block.tags && (
                             <div className="relative">
                                 <button
@@ -499,7 +507,8 @@ const BaseBlock = ({
                                                 />
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Label className="mb-0" htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
+                                                <Label className="mb-0"
+                                                       htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
                                                 <Checkbox
                                                     name="target_blank"
                                                     id={"target_blank" + index}
@@ -527,7 +536,8 @@ const BaseBlock = ({
                                             </div>
                                             <div className="flex justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <Label className="mb-0" htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
+                                                    <Label className="mb-0"
+                                                           htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
                                                     <Checkbox
                                                         name="target_blank"
                                                         id={"target_blank" + index}
@@ -617,7 +627,8 @@ const BaseBlock = ({
                                     <span>Ctrl+V</span>
                                 </button>
                             </div>
-                            <div className={`p-2 border-t border-laureo-border dark:border-laureo-border-dark ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <div
+                                className={`p-2 border-t border-laureo-border dark:border-laureo-border-dark ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -665,7 +676,9 @@ const BaseBlock = ({
                 </div>
             </div>
             <BlockComponent block={blockWithCallback}
-                            className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}>
+                            className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}
+                            isEditor={true}
+            >
                 {children}
                 {
                     Block.isParent && isFocused &&

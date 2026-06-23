@@ -1,14 +1,14 @@
 import {BlockMeta} from "blocks/blockDefinitions";
 import {ListCollapse} from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 
 interface AccordionContentsProps extends BlockProps {
     activeIndex?: number
 }
-const AccordionContentsBlock = ({children, block, className, activeIndex}: AccordionContentsProps) => {
+const AccordionContentsBlock = ({children, block, className, isEditor, activeIndex}: AccordionContentsProps) => {
     const Tag = block.tagName;
 
-    return <Tag className={cn(block.className, className)}>{children}</Tag>
+    return <Tag className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>{children}</Tag>
 };
 
 export const blockConfig: BlockMeta = {

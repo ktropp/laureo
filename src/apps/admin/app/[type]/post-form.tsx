@@ -45,6 +45,86 @@ export function PostForm({post, type}: { post: Post, type: string }) {
         setBlocks(newBlocks);
     }, []);
 
+    const handleCopyAllBlocks = () => {
+        const prepareBlocksCopy = (blocks: BlockJson[]): BlockJson[] => {
+            return blocks.map(block => {
+                const newBlock: BlockJson = {
+                    ...block,
+                    index: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                };
+
+                if (block.children?.length) {
+                    newBlock.children = prepareBlocksCopy(block.children);
+                }
+
+                return newBlock;
+            });
+        };
+
+        const blocksCopy = prepareBlocksCopy(blocks);
+
+        try {
+            navigator.clipboard.writeText(JSON.stringify(blocksCopy));
+            toast.success(t('copy-all-success'));
+        } catch (err) {
+            toast.error(t('copy-all-error'));
+            console.error('Failed to copy blocks to clipboard:', err);
+        }
+    }
+
+    //TODO: lock/unlock not propagating to the editor, but works after save
+    const handleLockAllBlocks = () => {
+        const lockAllBlocks = (blocks: BlockJson[]): BlockJson[] => {
+            return blocks.map(block => {
+                const lockedBlock: BlockJson = {
+                    ...block,
+                    lock: true
+                }
+
+                if (block.children?.length) {
+                    lockedBlock.children = lockAllBlocks(block.children);
+                }
+
+                return lockedBlock;
+            })
+        }
+
+        try {
+            const blocksLocked = lockAllBlocks(blocks);
+            setBlocks(blocksLocked);
+            toast.success(t('lock-all-success'));
+        } catch (err) {
+            toast.error(t('lock-all-error'));
+            console.error('Failed to lock blocks', err);
+        }
+    }
+
+    const handleUnlockAllBlocks = () => {
+        const unlockAllBlocks = (blocks: BlockJson[]): BlockJson[] => {
+            return blocks.map(block => {
+                const lockedBlock: BlockJson = {
+                    ...block,
+                    lock: false
+                }
+
+                if (block.children?.length) {
+                    lockedBlock.children = unlockAllBlocks(block.children);
+                }
+
+                return lockedBlock;
+            })
+        }
+
+        try {
+            const blocksUnlocked = unlockAllBlocks(blocks);
+            setBlocks(blocksUnlocked);
+            toast.success(t('unlock-all-success'));
+        } catch (err) {
+            toast.error(t('unlock-all-error'));
+            console.error('Failed to unlock blocks', err);
+        }
+    }
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -90,7 +170,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
             <div className="flex justify-between">
                 <div className="w-full">
                     <BlockEditor
-                        content={post?.blocks}
+                        content={blocks}
                         onChange={handleBlocksChange}
                     />
                     <MetaEditor postLang={post} type={type}/>
@@ -120,7 +200,8 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                setIsOptionsOpen(false);
+                                                handleCopyAllBlocks()
+                                                setIsOptionsOpen(false)
                                             }}
                                             className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
                                             <span>{t('more-copy-all')}</span>
@@ -130,7 +211,8 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                setIsOptionsOpen(false);
+                                                handleLockAllBlocks()
+                                                setIsOptionsOpen(false)
                                             }}
                                             className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
                                             <span>{t('more-lock-all')}</span>
@@ -140,7 +222,8 @@ export function PostForm({post, type}: { post: Post, type: string }) {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                setIsOptionsOpen(false);
+                                                handleUnlockAllBlocks()
+                                                setIsOptionsOpen(false)
                                             }}
                                             className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
                                             <span>{t('more-unlock-all')}</span>

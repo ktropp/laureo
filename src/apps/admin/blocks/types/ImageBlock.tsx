@@ -1,11 +1,11 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {Image as LucideImage} from "lucide-react";
 import Image from 'next/image'
-import {cn} from "@admin/lib/utils";
+import {cn, cnEditor} from "@admin/lib/utils";
 
-const ImageBlock = ({block, ...props}: BlockProps) => {
+const ImageBlock = ({block, isEditor, ...props}: BlockProps) => {
     return <figure
-        className={cn(block.className, props.className)}
+        className={isEditor? cnEditor(block.className, props.className) : cn(block.className, props.className)}
     >
         {block.src ? (
             <Image

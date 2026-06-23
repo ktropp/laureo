@@ -1,12 +1,12 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {ChevronsUpDown} from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 import AccordionBlockClient from "@front/components/AccordionBlock.client";
 
-const AccordionBlock = ({children, block, className}: BlockProps) => {
+const AccordionBlock = ({children, block, className, isEditor}: BlockProps) => {
     const Tag = block.tagName;
 
-    return <Tag className={cn(block.className, className)}>
+    return <Tag className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>
         <AccordionBlockClient>
             {children}
         </AccordionBlockClient>

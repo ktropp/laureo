@@ -1,15 +1,15 @@
 import {BlockMeta, BlockProps} from "blocks/blockDefinitions";
 import {ListCollapse} from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 import React from "react";
 
 interface AccordionLinksProps extends BlockProps {
     activeIndex?: number
 }
-const AccordionLinksBlock = ({children, block, className, activeIndex}: AccordionLinksProps) => {
+const AccordionLinksBlock = ({children, block, className, isEditor, activeIndex}: AccordionLinksProps) => {
     const Tag = block.tagName;
 
-    return <Tag className={cn(block.className, className)}>
+    return <Tag className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>
         {React.Children.map(children, (child, index) => {
            if (React.isValidElement(child)){
                return React.cloneElement(child, {

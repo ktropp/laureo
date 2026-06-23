@@ -1,11 +1,11 @@
 import {BlockMeta} from "blocks/blockDefinitions";
 import {AlignLeft} from "lucide-react";
-import {cn} from "../../lib/utils";
+import {cn, cnEditor} from "../../lib/utils";
 
-const AccordionContentBlock = ({children, block, className}: { block: Block }) => {
+const AccordionContentBlock = ({children, block, className, isEditor}: { block: Block }) => {
     const Tag = block.tagName;
 
-    return <Tag className={cn(block.className, className)}>{children}</Tag>
+    return <Tag className={isEditor? cnEditor(block.className, className) : cn(block.className, className)}>{children}</Tag>
 };
 
 export const blockConfig: BlockMeta = {

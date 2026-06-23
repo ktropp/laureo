@@ -57,4 +57,5 @@ export interface BlockJson {
 export interface BlockProps extends HTMLAttributes<HTMLElement> {
   block: BlockJson;
   GlobalFields?: GlobalField[];
+  isEditor?: boolean;
 }
