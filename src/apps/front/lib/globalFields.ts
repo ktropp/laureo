@@ -5,8 +5,7 @@ export type GlobalFieldType = {
     slug: string,
     value: string
 }
-export default async function getGlobalFields(postLang: PostLang)
-{
+export default async function getGlobalFields(postLang?: PostLang) {
     const GlobalFields = await prisma.globalField.findMany()
     let Fields = []
 
@@ -14,10 +13,12 @@ export default async function getGlobalFields(postLang: PostLang)
         Fields.push({slug: field.slug, value: field.value})
     })
 
-    if (postLang.postLangMeta) {
-        postLang.postLangMeta.forEach(meta => {
-            Fields.push({slug: 'meta.' + meta.key, value: meta.value})
-        })
+    if (postLang !== undefined) {
+        if (postLang.postLangMeta) {
+            postLang.postLangMeta.forEach(meta => {
+                Fields.push({slug: 'meta.' + meta.key, value: meta.value})
+            })
+        }
     }
 
     return Fields
