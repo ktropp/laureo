@@ -433,6 +433,58 @@ export default function BlockEditor({content, onChange}: {
         setMediaEditorOpen(null);
     }
 
+    const handleMoveUp = (blockIndex: string) => {
+        setBlocks((prevBlocks) => {
+            const moveUpInParent = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map((block) => {
+                    if (block.children?.some((child) => child.index === blockIndex)) {
+                        const children = block.children;
+                        const index = children.findIndex((child) => child.index === blockIndex);
+                        if (index > 0) {
+                            // Swap the block with the one above it
+                            const newChildren = [
+                                ...children.slice(0, index - 1),
+                                children[index],
+                                children[index - 1],
+                                ...children.slice(index + 1)
+                            ];
+                            return {...block, children: newChildren};
+                        }
+                    }
+                    return block;
+                });
+            };
+
+            return moveUpInParent(prevBlocks);
+        });
+    };
+
+    const handleMoveDown = (blockIndex: string) => {
+        setBlocks((prevBlocks) => {
+            const moveDownInParent = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map((block) => {
+                    if (block.children?.some((child) => child.index === blockIndex)) {
+                        const children = block.children;
+                        const index = children.findIndex((child) => child.index === blockIndex);
+                        if (index < children.length - 1) {
+                            // Swap the block with the one below it
+                            const newChildren = [
+                                ...children.slice(0, index),
+                                children[index + 1],
+                                children[index],
+                                ...children.slice(index + 2)
+                            ];
+                            return {...block, children: newChildren};
+                        }
+                    }
+                    return block;
+                });
+            };
+
+            return moveDownInParent(prevBlocks);
+        });
+    };
+
     const renderBlocks = (blocks: BlockJson[], parentBlock: BlockJson) => {
         return blocks?.map((block) => {
             return (
@@ -453,6 +505,8 @@ export default function BlockEditor({content, onChange}: {
                     onBlockCopy={() => handleBlockCopy(block.index)}
                     onBlockPaste={() => handleBlockPaste(block.index)}
                     onMediaEditorOpen={(slug, blockIndex, selectedMediaId) => handleMediaEditorOpen(slug, block.index, selectedMediaId || block.media_id || null)}
+                    onMoveUp={() => handleMoveUp(block.index)}
+                    onMoveDown={() => handleMoveDown(block.index)}
                 >
                     {block.children && renderBlocks(block.children, block)}
                 </BaseBlock>
@@ -489,6 +543,8 @@ export default function BlockEditor({content, onChange}: {
                                 onBlockCopy={() => handleBlockCopy(block.index)}
                                 onBlockPaste={() => handleBlockPaste(block.index)}
                                 onMediaEditorOpen={(slug, blockIndex, selectedMediaId) => handleMediaEditorOpen(slug, block.index, selectedMediaId || block.media_id || null)}
+                                onMoveUp={() => handleMoveUp(block.index)}
+                                onMoveDown={() => handleMoveDown(block.index)}
                             >
                                 {block.children && renderBlocks(block.children, block)}
                             </BaseBlock>

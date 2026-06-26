@@ -47,6 +47,8 @@ const BaseBlock = ({
                        onBlockPaste,
                        onBlockLock,
                        onMediaEditorOpen,
+                       onMoveUp,
+                       onMoveDown,
                        parentBlock,
                        autoFocus
                    }) => {
@@ -255,6 +257,7 @@ const BaseBlock = ({
                                 onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
                             <Block.icon size={20}/>
                         </button>
+                        {/*
                         <button
                             className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                             title={t('drag-handle')}
@@ -264,11 +267,13 @@ const BaseBlock = ({
                         >
                             <GripVertical size={20}/>
                         </button>
+                        */}
                         <div className="flex flex-col px-1">
                             <button
                                 className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                                 title={t('move-up')}
                                 type="button"
+                                onClick={() => onMoveUp()}
                             >
                                 <ChevronUp size={20}/>
                             </button>
@@ -276,6 +281,7 @@ const BaseBlock = ({
                                 className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                                 title={t('move-down')}
                                 type="button"
+                                onClick={() => onMoveDown()}
                             >
                                 <ChevronDown size={20}/>
                             </button>
