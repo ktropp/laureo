@@ -19,7 +19,7 @@ export default async function RootLayout({
     return (
         <html lang={locale} className="overflow-x-hidden">
         <body
-            className={`${bodyClass} flex flex-col min-h-screen antialiased overflow-x-hidden`}
+            className={`${bodyClass} flex flex-col min-h-screen antialiased`}
         >
         <NextIntlClientProvider>
             <div className="flex-[1_0_auto]">
