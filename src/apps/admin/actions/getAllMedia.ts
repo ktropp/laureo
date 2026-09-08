@@ -14,6 +14,11 @@ export async function getAllMedia() {
             size: true,
             width: true,
             height: true,
-        }
+        },
+        orderBy: [
+            {
+                created_at: 'desc'
+            }
+        ]
     });
 }

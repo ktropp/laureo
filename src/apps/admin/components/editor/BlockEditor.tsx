@@ -4,6 +4,7 @@ import BaseBlock from "../../blocks/BaseBlock";
 import {BlockAdd} from "blocks/BlockAdd";
 import BlockRegistry from "../../blocks/blockRegistry";
 import React, {useState} from "react";
+import sanitizeHtml from 'sanitize-html';
 import {
     DndContext,
     closestCenter,
@@ -223,6 +224,10 @@ export default function BlockEditor({content, onChange}: {
     };
 
     const handleBlockTextChange = (text: string, blockIndex: string) => {
+        text = sanitizeHtml(text, {
+            allowedTags: ['br', 'strong'],
+            allowedAttributes: {},
+        })
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map(block => {

@@ -17,72 +17,10 @@ export default function Home() {
             <div className="flex flex-col gap-4">
                 <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
                     <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
+                        <h2 className="text-lg font-bold">{t('tutorial-title')}</h2>
                     </div>
                     <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col gap-4">
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col gap-4">
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col gap-4">
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
-                    </div>
-                </div>
-                <div className="border border-laureo-border dark:border-laureo-border-dark rounded-lg">
-                    <div className="p-4 border-b border-laureo-border dark:border-laureo-border-dark">
-                        <h2 className="text-lg font-bold">Title</h2>
-                    </div>
-                    <div className="p-4">
-                        Todo: content
+                        <p>{t('tutorial-text')}</p>
                     </div>
                 </div>
             </div>

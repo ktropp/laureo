@@ -59,6 +59,8 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
         ]
     }
 
+    const version = '1.0.0'
+
     return (
         <div className={`
       fixed left-0 top-0 h-full bg-card border-r border-laureo-border dark:border-laureo-border-dark transition-all duration-300 z-50 w-16 flex flex-col
@@ -131,7 +133,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                     variant="link"
                     onClick={() => setActiveVersionModal(true)}
                 >
-                    {t('version')} 1.0.0
+                    {t('version')} {version}
                 </Button>
                 {activeVersionModal &&
                 <div
@@ -139,7 +141,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                     <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-md w-full h-full max-w-200">
                         <div
                             className="flex justify-between border-b border-laureo-border dark:border-laureo-border-dark">
-                            <div className="text-xl font-semibold p-4">{t('whats-new')}</div>
+                            <div className="text-xl font-semibold p-4">{t('whats-new', {version: version})}</div>
                             <div className="flex">
                                 <button
                                     type="button"
@@ -151,19 +153,7 @@ export function Sidebar({collapsed, onToggle}: SidebarProps) {
                             </div>
                         </div>
                         <div className="flex h-[calc(100%-61px)]">
-                            <div className="flex flex-col gap-4 p-4">
-                                <h2 className="text-lg font-semibold">Todo</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
-                                <ul className="list-disc pl-5">
-                                    <li>Lorem ipsum</li>
-                                    <li>Lorem ipsum</li>
-                                    <li>Lorem ipsum</li>
-                                </ul>
-                                <h2 className="text-lg font-semibold">Todo</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
-                                <h2 className="text-lg font-semibold">Todo</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla pulvinar velit at elit mollis porttitor. In sem ex, lobortis vitae justo eu, condimentum rutrum sapien. Cras condimentum risus sed rhoncus tristique. Praesent eu mattis ex.</p>
-                            </div>
+                            <div className="flex flex-col gap-4 p-4" dangerouslySetInnerHTML={{__html: t.raw(version.replaceAll('.', '_'))}}></div>
                         </div>
                     </div>
                 </div>}

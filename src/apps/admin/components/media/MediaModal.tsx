@@ -7,6 +7,8 @@ import Image from "next/image";
 import {deleteMedia} from "actions/deleteMedia";
 import {toast} from "react-toastify";
 import {useTranslations} from "next-intl";
+import {mediaItemAltEdit} from "@admin/actions/mediaItemAltEdit";
+import {mediaItemTitleEdit} from "@admin/actions/mediaItemTitleEdit";
 
 export default function MediaModal({media}) {
     const t = useTranslations('media-item')
@@ -78,6 +80,9 @@ export default function MediaModal({media}) {
                                 placeholder={t('alt-placeholder')}
                                 name="alt"
                                 defaultValue={media.alt}
+                                onChange={(e) => {
+                                    mediaItemAltEdit(media.id, e.target.value)
+                                }}
                             />
                         </div>
                         <div className="space-y-2 mb-2">
@@ -88,6 +93,9 @@ export default function MediaModal({media}) {
                                 placeholder={t('media-title-placeholder')}
                                 name="title"
                                 defaultValue={media.title}
+                                onChange={(e) => {
+                                    mediaItemTitleEdit(media.id, e.target.value)
+                                }}
                             />
                         </div>
                         <div className="space-y-2 mb-2">
@@ -102,7 +110,8 @@ export default function MediaModal({media}) {
                         </div>
                     </div>
                     <div className="flex gap-4">
-                        <a href={`${Settings.cdnUrl}/${media.id}_${media.file}`} target="_blank" download={media.file}>{t('download')}</a>
+                        <a href={`${Settings.cdnUrl}/${media.id}_${media.file}`} target="_blank"
+                           download={media.file}>{t('download')}</a>
                         <span>|</span>
                         <button
                             type="button"

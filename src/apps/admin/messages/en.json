@@ -17,7 +17,10 @@
     "media": "Media",
     "users": "Users",
     "menus": "Menus",
-    "settings": "Settings"
+    "settings": "Settings",
+    "version": "Version",
+    "whats-new": "What's new in version {version}?",
+    "1_0_0": "<h2 class='text-lg font-semibold'>First public version</h2><p>This is a first public version of CMS Laureo, built on next.js framework.</p>"
   },
   "dashboard": {
     "meta-title": "Dashboard",
@@ -121,7 +124,7 @@
     "filesize": "File size: ",
     "dimensions": "Dimensions: ",
     "alt": "Alternative title",
-    "alt-description": "Fill alternative title",
+    "alt-placeholder": "Fill alternative title",
     "media-title": "Title",
     "media-title-placeholder": "Fill title",
     "url": "URL",

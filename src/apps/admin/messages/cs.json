@@ -19,11 +19,14 @@
     "menus": "Menu",
     "settings": "Nastavení",
     "version": "Verze",
-    "whats-new": "Co je nového?"
+    "whats-new": "Co je nového ve verzi {version}?",
+    "1_0_0": "<h2 class='text-lg font-semibold'>První veřejná verze</h2><p>Jedná se o počáteční funkční verzi CMS Laureo, postavené na frameworku next.js.</p>"
   },
   "dashboard": {
     "meta-title": "Nástěnka",
-    "title": "Nástěnka"
+    "title": "Nástěnka",
+    "tutorial-title": "Vítejte v administraci Laureo",
+    "tutorial-text": "TODO: informace a návod"
   },
   "pages": {
     "meta-title": "Stránky",
@@ -125,7 +128,7 @@
     "filesize": "Velikost souboru: ",
     "dimensions": "Rozměry: ",
     "alt": "Alternativní název",
-    "alt-description": "Vyplňte alternativní název",
+    "alt-placeholder": "Vyplňte alternativní název",
     "media-title": "Název",
     "media-title-placeholder": "Vyplňte název",
     "url": "URL",

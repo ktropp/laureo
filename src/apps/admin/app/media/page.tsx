@@ -11,7 +11,13 @@ export async function generateMetadata() {
 }
 
 export default async function MediaPage({params}: { params: { type: string } }) {
-    const data = await prisma.media.findMany()
+    const data = await prisma.media.findMany({
+        orderBy: [
+            {
+                created_at: 'desc'
+            }
+        ]
+    })
 
     return <MediaIndex initialData={data}/>
 }

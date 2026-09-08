@@ -425,11 +425,20 @@ const BaseBlock = ({
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
                                     title={t('bold')}
+                                    onMouseDown={(e) => {
+                                        e.preventDefault()
+                                        const sel = window.getSelection();
+                                        console.log(sel.toString())
+                                        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+                                            //savedRange.current = sel.getRangeAt(0).cloneRange();
+                                        }
+                                    }}
                                     onClick={() => {
                                         const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
                                         if (editableElement) {
                                             const selection = window.getSelection();
                                             const range = selection?.getRangeAt(0);
+                                            console.log(selection.toString())
 
                                             if (selection && !selection.isCollapsed) {
                                                 // There is selected text

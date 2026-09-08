@@ -47,7 +47,7 @@ export default function MediaIndex({initialData}) {
                 </Button>
             </div>
             <div
-                className={`border-laureo-border dark:border-laureo-border-dark border-3 border-dashed rounded-lg p-6 text-center relative ${isInputVisible ? 'block' : 'hidden'}`}
+                className={`border-laureo-border dark:border-laureo-border-dark border-3 border-dashed rounded-lg p-6 text-center cursor-pointer relative ${isInputVisible ? 'block' : 'hidden'}`}
                 {...getRootProps()}
             >
                 <input {...getInputProps()} />

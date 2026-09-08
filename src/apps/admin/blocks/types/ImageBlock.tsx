@@ -10,7 +10,7 @@ const ImageBlock = ({block, isEditor, ...props}: BlockProps) => {
         {block.src ? (
             <Image
                 src={block.src}
-                alt={block.alt}
+                alt={block.alt ? block.alt : 'image'}
                 width={block.width}
                 height={block.height}
             />

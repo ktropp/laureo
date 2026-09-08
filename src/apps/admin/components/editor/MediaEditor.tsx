@@ -1,13 +1,16 @@
 import {X} from "lucide-react"
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import {getAllMedia} from "../../actions/getAllMedia";
 import MediaItem from "./MediaItem";
 import {Button} from "components/ui/button";
 import {Settings} from "@theme/settings";
 import {Label} from "components/ui/label";
 import {Input} from "../ui/input";
+import {useDropzone} from "react-dropzone";
+import {useTranslations} from "next-intl";
 
 export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaEditorClose, onMediaSelect}) {
+    const t = useTranslations('media');
 
     const accordionItems = [
         {
@@ -59,9 +62,33 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
         setHeight(media?.height);
     }
 
+    async function handleFileUpload(acceptedFiles) {
+        if (!acceptedFiles || acceptedFiles === 0) {
+            return; // User canceled file selection
+        }
+
+        const formData = new FormData();
+
+        for (const file of Array.from(acceptedFiles)) {
+            formData.append('files', file);
+        }
+
+        const newMedia = await fetch('/api/media/upload', {
+            method: 'POST',
+            body: formData
+        })
+
+        //setSelectedMedia(newMedia)
+        setCurrentAccordionSlug('media')
+    }
+
+    const onDrop = useCallback(acceptedFiles => {
+        handleFileUpload(acceptedFiles)
+    }, [])
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
     return <div
-        className="fixed w-full h-full top-0 left-0 flex items-center justify-center bg-black/70 z-90 p-4 xl:p-8">
+        className="fixed w-full h-full top-0 left-0 flex items-center justify-center bg-black/70 z-100 p-4 xl:p-8">
         <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-md w-full h-full">
             <div className="flex justify-between border-b border-laureo-border dark:border-laureo-border-dark">
                 <div className="text-xl font-semibold p-4">Choose or upload media file</div>
@@ -98,7 +125,19 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                             {(() => {
                                 switch (item.slug) {
                                     case 'upload':
-                                        return <div className="p-4">todo: upload</div>;
+                                        return <div className="p-4 w-full">
+                                            <div
+                                                className={`border-laureo-border dark:border-laureo-border-dark border-3 border-dashed rounded-lg p-6 text-center cursor-pointer relative h-full flex items-center justify-center`}
+                                                {...getRootProps()}
+                                            >
+                                                <input {...getInputProps()} />
+                                                {
+                                                    isDragActive ?
+                                                        <p>{t('drop')}</p> :
+                                                        <p>{t('drag')}</p>
+                                                }
+                                            </div>
+                                        </div>;
                                     case 'media':
                                         return (
                                             <div className="flex flex-col">
@@ -146,7 +185,7 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                                                             type="text"
                                                                             placeholder="Enter alt"
                                                                             name="alt"
-                                                                            requuired
+                                                                            required
                                                                             defaultValue={selectedMedia?.alt}
                                                                             onChange={(e) => setAlt(e.target.value)}
                                                                         />

@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     // Process files sequentially or in parallel
     const author = await currentUser()
 
+    let media
     for (const file of files) {
         let data = {
             authorId: author.id,
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
             }
         }
 
-        const media = await prisma.media.create({
+        media = await prisma.media.create({
             data: data,
             select: {
                 id: true
@@ -60,5 +61,6 @@ export async function POST(request: Request) {
     //TODO: this is not working here
     revalidatePath('/media')
 
-    return new Response("Files uploaded successfully", {status: 200});
+    //return new Response("Files uploaded successfully", {status: 200});
+    return media
 }
