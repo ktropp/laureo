@@ -172,6 +172,35 @@ const BaseBlock = ({
         }
     }
 
+    const handleBlockBold = () => {
+        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+        if (editableElement) {
+            const selection = window.getSelection();
+            const range = selection?.getRangeAt(0);
+            console.log(selection.toString())
+
+            if (selection && !selection.isCollapsed) {
+                // There is selected text
+                const selectedText = selection.toString();
+                const strong = document.createElement('strong');
+                strong.textContent = selectedText;
+                range?.deleteContents();
+                range?.insertNode(strong);
+            } else {
+                // No selection, wrap all content
+                const content = editableElement.innerHTML;
+                editableElement.innerHTML = `<strong>${content}</strong>`;
+            }
+
+            // Trigger content change
+            const event = new CustomEvent('input', {
+                bubbles: true,
+                detail: {isOnce: true}
+            });
+            editableElement.dispatchEvent(event);
+        }
+    }
+
     const t = useTranslations('block')
 
     const blockClasses = blockWithCallback.className
@@ -191,7 +220,7 @@ const BaseBlock = ({
             }}
             style={style}
             {...attributes}
-            className={`relative outline-1 outline-dashed flex-1 ${blockClasses} ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
+            className={`relative outline-1 outline-dashed ${parentBlock?.className.includes('wrap') ? 'flex-[1_0_auto]' : 'flex-1'} ${blockClasses} ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
             tabIndex={0}
             onFocus={(e) => {
                 e.stopPropagation()
@@ -224,6 +253,10 @@ const BaseBlock = ({
                 if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'e') {
                     e.preventDefault()
                     handleBlockClassNameToggle()
+                }
+                if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'b') {
+                    e.preventDefault()
+                    handleBlockBold()
                 }
             }
             }
@@ -433,34 +466,7 @@ const BaseBlock = ({
                                             //savedRange.current = sel.getRangeAt(0).cloneRange();
                                         }
                                     }}
-                                    onClick={() => {
-                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
-                                        if (editableElement) {
-                                            const selection = window.getSelection();
-                                            const range = selection?.getRangeAt(0);
-                                            console.log(selection.toString())
-
-                                            if (selection && !selection.isCollapsed) {
-                                                // There is selected text
-                                                const selectedText = selection.toString();
-                                                const strong = document.createElement('strong');
-                                                strong.textContent = selectedText;
-                                                range?.deleteContents();
-                                                range?.insertNode(strong);
-                                            } else {
-                                                // No selection, wrap all content
-                                                const content = editableElement.innerHTML;
-                                                editableElement.innerHTML = `<strong>${content}</strong>`;
-                                            }
-
-                                            // Trigger content change
-                                            const event = new CustomEvent('input', {
-                                                bubbles: true,
-                                                detail: {isOnce: true}
-                                            });
-                                            editableElement.dispatchEvent(event);
-                                        }
-                                    }}
+                                    onClick={() => handleBlockBold()}
                                 >
                                     <Bold size={20}/>
                                 </button>
