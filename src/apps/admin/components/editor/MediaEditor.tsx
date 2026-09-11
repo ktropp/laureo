@@ -141,7 +141,7 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                     case 'media':
                                         return (
                                             <div className="flex flex-col">
-                                                <div className="flex flex-1">
+                                                <div className="flex flex-1 h-full">
                                                     <div className="flex-1 flex p-4">
                                                         {isLoading ? (<div>Loading...</div>) : (
                                                             <div className="grid grid-cols-10 gap-4">
@@ -153,7 +153,7 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                                         )}
                                                     </div>
                                                     <div
-                                                        className="w-75 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
+                                                        className="flex flex-col w-75 p-4 border-l h-full border-laureo-border dark:border-laureo-border-dark bg-laureo-border/30 dark:bg-laureo-border-dark/30 text-sm">
                                                         {selectedMedia && (
                                                             <>
                                                                 <div
@@ -177,7 +177,7 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                                                         </p>}
                                                                 </div>
                                                                 <div
-                                                                    className="flex flex-col gap-0.5 border-b border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
+                                                                    className="flex flex-col gap-0.5 border-laureo-border dark:border-laureo-border-dark pb-4 mb-4">
                                                                     <div className="space-y-2 mb-2">
                                                                         <Label htmlFor="alt">Alt</Label>
                                                                         <Input
@@ -224,18 +224,18 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                <div
+                                                                    className="mt-auto flex justify-end p-4 border-laureo-border dark:border-laureo-border-dark">
+                                                                    <Button
+                                                                        type="button"
+                                                                        disabled={!selectedMedia}
+                                                                        onClick={() => onMediaSelect(selectedMedia.id, Settings.cdnUrl + "/" + selectedMedia.id + "_" + selectedMedia.file, alt, title, width, height, blockIndex)}
+                                                                    >Select</Button>
+                                                                </div>
                                                             </>
                                                         )
                                                         }
                                                     </div>
-                                                </div>
-                                                <div
-                                                    className="flex justify-end border-t p-4 border-laureo-border dark:border-laureo-border-dark">
-                                                    <Button
-                                                        type="button"
-                                                        disabled={!selectedMedia}
-                                                        onClick={() => onMediaSelect(selectedMedia.id, Settings.cdnUrl + "/" + selectedMedia.id + "_" + selectedMedia.file, alt, title, width, height, blockIndex)}
-                                                    >Select</Button>
                                                 </div>
                                             </div>
                                         )
