@@ -5,9 +5,9 @@ import {
     Bold,
     Braces,
     ChevronDown,
-    ChevronUp, Diamond,
+    ChevronUp, Code, Diamond,
     EllipsisVertical,
-    GripVertical,
+    GripVertical, Hash,
     Heading1,
     Heading2,
     Heading3,
@@ -41,6 +41,7 @@ const BaseBlock = ({
                        onClassNameChange,
                        onTagNameChange,
                        onHrefChange,
+                       onIdChange,
                        onIconChange,
                        onBlockDelete,
                        onBlockCopy,
@@ -62,6 +63,7 @@ const BaseBlock = ({
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
     const [isTagOpen, setIsTagOpen] = useState(false);
     const [isClassOpen, setIsClassOpen] = useState(false);
+    const [isIdOpen, setIsIdOpen] = useState(false);
     const [isLinkOpen, setIsLinkOpen] = useState(false);
     const [isVariantOpen, setIsVariantOpen] = useState(false);
     const [isIconOpen, setIsIconOpen] = useState(false);
@@ -125,6 +127,7 @@ const BaseBlock = ({
             setIsFocused(false);
             setIsOptionsOpen(false);
             setIsClassOpen(false);
+            setIsIdOpen(false);
         }
     };
 
@@ -151,6 +154,13 @@ const BaseBlock = ({
             onHrefChange(value, isTargetBlank);
         }, 300),
         [onHrefChange]
+    )
+
+    const debouncedIdChange = useCallback(
+        debounce((value: string) => {
+            onIdChange(value);
+        }, 300),
+        [onIdChange]
     )
 
     const handleBlockIconClick = (type, blockIndex, selectedMediaId) => {
@@ -322,6 +332,32 @@ const BaseBlock = ({
                     </div>
                     <div
                         className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
+                        <div className="relative">
+                            <button
+                                type="button"
+                                className="p-1 cursor-pointer hover:text-laureo-primary"
+                                title={t('change-id')}
+                                onClick={() => setIsIdOpen(!isIdOpen)}
+                            >
+                                <Hash size={20}/>
+                            </button>
+                            <div
+                                className={`absolute w-50 z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isIdOpen ? 'flex' : 'hidden'}`}>
+                                <div className="p-2 space-y-3">
+                                    <div>
+                                        <Input
+                                            id=""
+                                            type="text"
+                                            placeholder={t('id-placeholder')}
+                                            name=""
+                                            defaultValue={blockJson.id}
+                                            onChange={(e) => debouncedIdChange(e.target.value)}
+                                            onBlur={(e) => onIdChange(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {Block.tags && (
                             <div className="relative">
                                 <button

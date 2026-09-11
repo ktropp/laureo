@@ -301,6 +301,30 @@ export default function BlockEditor({content, onChange}: {
         });
     };
 
+    const handleBlockIdChange = (id: string, blockIndex: string) => {
+        setBlocks(prev => {
+            const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+                return blocks.map(block => {
+                    if (block.index === blockIndex) {
+                        return {
+                            ...block,
+                            id: id,
+                        };
+                    }
+                    if (block.children && block.children.length > 0) {
+                        return {
+                            ...block,
+                            children: updateBlocksRecursively(block.children)
+                        };
+                    }
+                    return block;
+                });
+            };
+
+            return updateBlocksRecursively(prev);
+        });
+    };
+
     const handleBlockHrefChange = (href: string, isTargetBlank: boolean, blockIndex: string) => {
         setBlocks(prev => {
             const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
@@ -502,6 +526,7 @@ export default function BlockEditor({content, onChange}: {
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
+                    onIdChange={(id) => handleBlockIdChange(id, block.index)}
                     onHrefChange={(href, isTargetBlank) => handleBlockHrefChange(href, isTargetBlank, block.index)}
                     onIconChange={(icon, iconPosition) => handleBlockIconChange(icon, iconPosition, block.index)}
                     onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
@@ -541,6 +566,7 @@ export default function BlockEditor({content, onChange}: {
                                 onContentChange={(text) => handleBlockTextChange(text, block.index)}
                                 onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
                                 onHrefChange={(href, isTargetBlank) => handleBlockHrefChange(href, isTargetBlank, block.index)}
+                                onIdChange={(id) => handleBlockIdChange(id, block.index)}
                                 onIconChange={(icon, iconPosition) => handleBlockIconChange(icon, iconPosition, block.index)}
                                 onTagNameChange={(tagName, className) => handleBlockTagNameChange(tagName, className, block.index)}
                                 onBlockLock={() => handleBlockLockChange(block.index)}
