@@ -58,9 +58,9 @@ export default function BlockEditor({content, onChange}: {
     Settings.fonts.forEach(font => {
         bodyClass = bodyClass.concat(" ", font.variable)
     });
-    bodyClass += " mt-14";
+    bodyClass += " mt-14 flex flex-col items-center";
 
-    const handleBlockAdd = (type: string, parentIndex?: string) => {
+    const handleBlockAdd = (type: string, parentIndex?: string, afterIndex?: string) => {
         const blockReg = BlockRegistry.find(block => block.type === type)
         const newBlock: BlockJson = {
             index: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

@@ -10,9 +10,10 @@ interface BlockAddProps {
     onBlockAdd: (block: BlockJson) => void;
     Block?: BlockMeta;
     parentBlock?: BlockJson;
+    insertAfterBlock?: boolean;
 }
 
-export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
+export const BlockAdd = ({onBlockAdd, Block, parentBlock, insertAfterBlock}: BlockAddProps) => {
     const t = useTranslations('block')
     const inputRef = useRef<HTMLParagraphElement>(null);
     const [isEmpty, setIsEmpty] = useState(true);
@@ -118,7 +119,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
 
     return (
         <div
-            className={`flex justify-between items-center relative z-20 ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
+            className={`flex justify-between items-center relative z-20 ${insertAfterBlock ? 'before:w-full before:absolute before:border before:border-laureo-border dark:before:border-laureo-border-dark opacity-0 hover:opacity-100 transition-opacity h-6 min-w-6' : ''} ${parentBlock ? 'mt-auto -translate-y-3' : 'flex-1'}`}>
             {!parentBlock && (
                 <p
                     ref={inputRef}
@@ -152,7 +153,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                             onMouseEnter={() => handleMenuItemMouseEnter(index)}
                         >
                             {block.icon && <block.icon size={20}/>}
-                            {t(block.type).startsWith('block.') ? block.name : t(block.type)}
+                            {t.has(block.type) ? t(block.type) : block.name}
                         </Button>
                     ))}
                 </div>
@@ -160,7 +161,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
             <Button
                 variant="secondary"
                 size="icon_small"
-                className="absolute right-0"
+                className={`absolute left-0 ${insertAfterBlock ? 'right-0 m-auto top-0 bottom-0' : ''}`}
                 type="button"
                 onClick={() => {
                     setFilteredBlocks(blockRegistryFiltered);
@@ -171,7 +172,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                 <Plus size={20}/>
             </Button>
             {showMenu && (
-                <div className="absolute right-0 top-8 z-20">
+                <div className={`absolute right-0 top-8 z-20 ${insertAfterBlock ? 'w-full' : ''}`}>
                     <div className="bg-laureo-body dark:bg-laureo-body-dark rounded-lg shadow-lg p-2">
                         <div className="flex flex-col gap-2">
                             <div className="relative">
@@ -194,7 +195,7 @@ export const BlockAdd = ({onBlockAdd, Block, parentBlock}: BlockAddProps) => {
                                         onMouseEnter={() => handleMenuItemMouseEnter(index)}
                                     >
                                         {block.icon && <block.icon size={20}/>}
-                                        {t(block.type).startsWith('block.') ? block.name : t(block.type)}
+                                        {t.has(block.type) ? t(block.type) : block.name}
                                     </Button>
                                 ))}
                             </div>

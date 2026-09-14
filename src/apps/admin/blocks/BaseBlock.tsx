@@ -216,91 +216,93 @@ const BaseBlock = ({
     const blockClasses = blockWithCallback.className
         ? blockWithCallback.className
             .split(' ')
-            .filter(cls => cls.startsWith('w-') || cls.startsWith('h-') || cls.startsWith('max-w-') || cls.startsWith('max-h-') || cls.startsWith('sm:w-') || cls.startsWith('md:w-') || cls.startsWith('lg:w-') || cls.startsWith('xl:w-'))
+            .filter(cls => cls.startsWith('w-') || cls.startsWith('h-') || cls.startsWith('sm:w-') || cls.startsWith('md:w-') || cls.startsWith('lg:w-') || cls.startsWith('xl:w-'))
             .join(' ')
         : '';
-
+    const isLastBlockInParent = parentBlock?.children?.map(child => child.index).indexOf(index) === parentBlock?.children?.length - 1;
+    const isFirstBlockInParent = parentBlock?.children?.map(child => child.index).indexOf(index) === 0;
     return (
-        <div
-            id={index}
-            data-block-index={index}
-            ref={(node) => {
-                setNodeRef(node)
-                blockRef.current = node
-            }}
-            style={style}
-            {...attributes}
-            className={`relative outline-1 outline-dashed ${parentBlock?.className.includes('wrap') ? 'flex-[1_0_auto]' : 'flex-1'} ${blockClasses} ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark' : 'outline-laureo-text-dark/10'}`}
-            tabIndex={0}
-            onFocus={(e) => {
-                e.stopPropagation()
-                setIsFocused(true)
-                if (Block.isText && !(isLinkOpen || isClassOpen || isVariantOpen || isIconOpen || isTagOpen)) {
-                    setTimeout(() => {
-                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
-                        if (editableElement) {
-                            //TODO: focus on the clicked letter, not to the beginning!
-                            editableElement.focus();
-                        }
-                    }, 0);
+        <>
+            <div
+                id={index}
+                data-block-index={index}
+                ref={(node) => {
+                    setNodeRef(node)
+                    blockRef.current = node
+                }}
+                style={style}
+                {...attributes}
+                className={`relative outline-1 outline-dashed ${parentBlock?.className.includes('wrap') ? 'flex-[1_0_auto]' : 'flex-1'} ${blockClasses} ${!blockJson.children && Block.isParent ? '' : ''} ${isFocused ? 'outline-laureo-text-dark ' : 'outline-laureo-text-dark/10'}`}
+                tabIndex={0}
+                onFocus={(e) => {
+                    e.stopPropagation()
+                    setIsFocused(true)
+                    if (Block.isText && !(isLinkOpen || isClassOpen || isVariantOpen || isIconOpen || isTagOpen)) {
+                        setTimeout(() => {
+                            const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                            if (editableElement) {
+                                //TODO: focus on the clicked letter, not to the beginning!
+                                editableElement.focus();
+                            }
+                        }, 0);
+                    }
+                }}
+                onBlur={handleBlur}
+                onKeyDown={(e) => {
+                    const selection = window.getSelection()
+                    if (isFocused && e.shiftKey && e.altKey && e.key.toLowerCase() === 'z') {
+                        e.preventDefault()
+                        onBlockDelete()
+                    }
+                    if (isFocused && !(isClassOpen || isLinkOpen || (selection && !selection.isCollapsed)) && e.ctrlKey && e.key.toLowerCase() === 'c') {
+                        e.preventDefault()
+                        onBlockCopy()
+                    }
+                    if (isFocused && Block.isParent && !(isClassOpen || isLinkOpen || selection && !selection.isCollapsed) && e.ctrlKey && e.key.toLowerCase() === 'v') {
+                        e.preventDefault()
+                        onBlockPaste()
+                    }
+                    if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'e') {
+                        e.preventDefault()
+                        handleBlockClassNameToggle()
+                    }
+                    if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'b') {
+                        e.preventDefault()
+                        handleBlockBold()
+                    }
                 }
-            }}
-            onBlur={handleBlur}
-            onKeyDown={(e) => {
-                const selection = window.getSelection()
-                if (isFocused && e.shiftKey && e.altKey && e.key.toLowerCase() === 'z') {
-                    e.preventDefault()
-                    onBlockDelete()
                 }
-                if (isFocused && !(isClassOpen || isLinkOpen || (selection && !selection.isCollapsed)) && e.ctrlKey && e.key.toLowerCase() === 'c') {
-                    e.preventDefault()
-                    onBlockCopy()
-                }
-                if (isFocused && Block.isParent && !(isClassOpen || isLinkOpen || selection && !selection.isCollapsed) && e.ctrlKey && e.key.toLowerCase() === 'v') {
-                    e.preventDefault()
-                    onBlockPaste()
-                }
-                if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'e') {
-                    e.preventDefault()
-                    handleBlockClassNameToggle()
-                }
-                if (isFocused && e.ctrlKey && e.key.toLowerCase() === 'b') {
-                    e.preventDefault()
-                    handleBlockBold()
-                }
-            }
-            }
-        >
-            <div className={`absolute z-99 gap-2 -translate-y-19 text-base ${isFocused ? 'flex' : 'hidden'}`}>
-                {parentBlock &&
-                    <div
-                        className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
-                        <button title={t('select-parent')}
-                                type="button"
-                                className="p-1 cursor-pointer hover:text-laureo-primary"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (parentBlock?.index) {
-                                        const parentElement = blockRef.current?.closest(`[data-block-index="${parentBlock.index}"`);
-                                        if (parentElement) {
-                                            parentElement.focus();
+            >
+                <div className={`absolute z-99 gap-2 -translate-y-19 text-base ${isFocused ? 'flex' : 'hidden'}`}>
+                    {parentBlock &&
+                        <div
+                            className="font-(family-name:--font-roboto) flex flex-row items-center p-2 border bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text">
+                            <button title={t('select-parent')}
+                                    type="button"
+                                    className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (parentBlock?.index) {
+                                            const parentElement = blockRef.current?.closest(`[data-block-index="${parentBlock.index}"`);
+                                            if (parentElement) {
+                                                parentElement.focus();
+                                            }
                                         }
-                                    }
-                                }}
-                        >
-                            <ParentBlock.icon size={20}/>
-                        </button>
-                    </div>
-                }
-                <div
-                    className="font-(family-name:--font-roboto) border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
-                    <div className="p-2 flex flex-row items-center gap-1">
-                        <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
-                                title={Block.name}
-                                onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
-                            <Block.icon size={20}/>
-                        </button>
-                        {/*
+                                    }}
+                            >
+                                <ParentBlock.icon size={20}/>
+                            </button>
+                        </div>
+                    }
+                    <div
+                        className="font-(family-name:--font-roboto) border border-laureo-border dark:border-laureo-border-dark bg-laureo-body dark:bg-laureo-body-dark text-laureo-text-dark dark:text-laureo-text flex flex-row items-center">
+                        <div className="p-2 flex flex-row items-center gap-1">
+                            <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
+                                    title={Block.name}
+                                    onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
+                                <Block.icon size={20}/>
+                            </button>
+                            {/*
                         <button
                             className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
                             title={t('drag-handle')}
@@ -311,438 +313,442 @@ const BaseBlock = ({
                             <GripVertical size={20}/>
                         </button>
                         */}
-                        <div className="flex flex-col px-1">
-                            <button
-                                className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                                title={t('move-up')}
-                                type="button"
-                                onClick={() => onMoveUp()}
-                            >
-                                <ChevronUp size={20}/>
-                            </button>
-                            <button
-                                className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                                title={t('move-down')}
-                                type="button"
-                                onClick={() => onMoveDown()}
-                            >
-                                <ChevronDown size={20}/>
-                            </button>
-                        </div>
-                    </div>
-                    <div
-                        className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
-                        <div className="relative">
-                            <button
-                                type="button"
-                                className="p-1 cursor-pointer hover:text-laureo-primary"
-                                title={t('change-id')}
-                                onClick={() => setIsIdOpen(!isIdOpen)}
-                            >
-                                <Hash size={20}/>
-                            </button>
-                            <div
-                                className={`absolute w-50 z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isIdOpen ? 'flex' : 'hidden'}`}>
-                                <div className="p-2 space-y-3">
-                                    <div>
-                                        <Input
-                                            id=""
-                                            type="text"
-                                            placeholder={t('id-placeholder')}
-                                            name=""
-                                            defaultValue={blockJson.id}
-                                            onChange={(e) => debouncedIdChange(e.target.value)}
-                                            onBlur={(e) => onIdChange(e.target.value)}
-                                        />
-                                    </div>
-                                </div>
+                            <div className="flex flex-col px-1">
+                                <button
+                                    className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
+                                    title={t('move-up')}
+                                    type="button"
+                                    onClick={() => onMoveUp()}
+                                >
+                                    <ChevronUp size={20}/>
+                                </button>
+                                <button
+                                    className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
+                                    title={t('move-down')}
+                                    type="button"
+                                    onClick={() => onMoveDown()}
+                                >
+                                    <ChevronDown size={20}/>
+                                </button>
                             </div>
                         </div>
-                        {Block.tags && (
+                        <div
+                            className="font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
                             <div className="relative">
                                 <button
                                     type="button"
                                     className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('change-tag')}
-                                    onClick={() => setIsTagOpen(!isTagOpen)}
+                                    title={t('change-id')}
+                                    onClick={() => setIsIdOpen(!isIdOpen)}
                                 >
-                                    {blockJson.tagName && tagNameIcons[blockJson.tagName] ? (
-                                        (() => {
-                                            const IconComponent = tagNameIcons[blockJson.tagName];
-                                            return <IconComponent size={20}/>;
-                                        })()
-                                    ) : blockJson.tagName || 'div'}
+                                    <Hash size={20}/>
                                 </button>
                                 <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isTagOpen ? 'flex' : 'hidden'}`}>
-                                    <div className="p-2">
-                                        {Block.tags?.map((tag, index) => (
-                                            <button
-                                                key={index}
-                                                className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
-                                                data-tag-name={tag.tagName}
-                                                data-tag-class={tag.className}
-                                                onClick={(e) => {
-                                                    const tagName = e.currentTarget.dataset.tagName;
-                                                    const className = e.currentTarget.dataset.tagClass;
-
-                                                    onTagNameChange(tagName, className);
-
-                                                    setIsTagOpen(false);
-                                                }}
-                                            >
-                                                {tagNameIcons[tag.tagName] ? (
-                                                    (() => {
-                                                        const IconComponent = tagNameIcons[tag.tagName];
-                                                        return <IconComponent size={20}/>;
-                                                    })()
-                                                ) : tag.tagName || 'div'}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        {Block.variants && (
-                            <div className="relative">
-                                <button
-                                    type="button"
-                                    className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('change-variant')}
-                                    onClick={() => setIsVariantOpen(!isVariantOpen)}
-                                >
-                                    <Paintbrush size={20}/>
-                                </button>
-                                <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isVariantOpen ? 'flex' : 'hidden'}`}>
-                                    <div className="p-2">
-                                        {Block.variants?.map((variant, index) => (
-                                            <button
-                                                key={index}
-                                                className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
-                                                data-variant-class={variant.className}
-                                                onClick={(e) => {
-                                                    const className = e.currentTarget.dataset.variantClass;
-
-                                                    onClassNameChange(className);
-
-                                                    setIsVariantOpen(false);
-                                                }}
-                                            >
-                                                {variant.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        {Block.icons && (
-                            <div className="relative">
-                                <button
-                                    type="button"
-                                    className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('change-icon')}
-                                    onClick={() => setIsIconOpen(!isIconOpen)}
-                                >
-                                    <Diamond size={20}/>
-                                </button>
-                                <div
-                                    className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
-                                    <div className="p-2">
-                                        {Block.icons?.map((Icon, index) => (
-                                            <div className="flex flex-row items-center gap-2" key={index}>
-                                                <button
-                                                    type="button"
-                                                    className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && blockJson.iconPosition == 'before') ? 'text-laureo-primary' : ''}`}
-                                                    onClick={() => {
-                                                        let iconName = getIconName(Icon)
-                                                        if (iconName === blockJson.icon) {
-                                                            iconName = null;
-                                                        }
-                                                        onIconChange(iconName, 'before');
-                                                        setIsIconOpen(false);
-                                                    }}
-                                                >
-                                                    {t('icon-before')}
-                                                </button>
-                                                <Icon
-                                                    className={`flex-[1_0_auto] ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
-                                                    size={20}/>
-                                                <button
-                                                    type="button"
-                                                    className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && (blockJson.iconPosition == 'after' || !blockJson.iconPosition)) ? 'text-laureo-primary' : ''}`}
-                                                    onClick={() => {
-                                                        let iconName = getIconName(Icon)
-                                                        if (iconName === blockJson.icon) {
-                                                            iconName = null;
-                                                        }
-                                                        onIconChange(iconName, 'after');
-                                                        setIsIconOpen(false);
-                                                    }}
-                                                >
-                                                    {t('icon-after')}
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        {Block.isText && (
-                            <>
-                                <button
-                                    type="button"
-                                    className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('bold')}
-                                    onMouseDown={(e) => {
-                                        e.preventDefault()
-                                        const sel = window.getSelection();
-                                        console.log(sel.toString())
-                                        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
-                                            //savedRange.current = sel.getRangeAt(0).cloneRange();
-                                        }
-                                    }}
-                                    onClick={() => handleBlockBold()}
-                                >
-                                    <Bold size={20}/>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('italic')}
-                                    onClick={() => {
-                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
-                                        if (editableElement) {
-                                            const selection = window.getSelection();
-                                            const range = selection?.getRangeAt(0);
-
-                                            if (selection && !selection.isCollapsed) {
-                                                // There is selected text
-                                                const selectedText = selection.toString();
-                                                const strong = document.createElement('em');
-                                                strong.textContent = selectedText;
-                                                range?.deleteContents();
-                                                range?.insertNode(strong);
-                                            } else {
-                                                // No selection, wrap all content
-                                                const content = editableElement.innerHTML;
-                                                editableElement.innerHTML = `<em>${content}</em>`;
-                                            }
-
-                                            // Trigger content change
-                                            const event = new CustomEvent('input', {
-                                                bubbles: true,
-                                                detail: {isOnce: true}
-                                            });
-                                            editableElement.dispatchEvent(event);
-                                        }
-                                    }}
-                                >
-                                    <Italic size={20}/>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="p-1 cursor-pointer hover:text-laureo-primary"
-                                    title={t('link')}
-                                    onClick={() => setIsLinkOpen(!isLinkOpen)}
-                                >
-                                    <Link size={20}/>
-                                </button>
-                                <div
-                                    className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
-                                    {Block.type === 'button' ? (
-                                        <div className="p-2 space-y-3">
-                                            <div>
-                                                <Input
-                                                    id=""
-                                                    type="text"
-                                                    placeholder={t('link-placeholder')}
-                                                    name=""
-                                                    defaultValue={blockJson.href}
-                                                    onChange={(e) => debouncedHrefChange(e.target.value, isTargetBlank)}
-                                                    onBlur={(e) => onHrefChange(e.target.value, isTargetBlank)}
-                                                />
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Label className="mb-0"
-                                                       htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
-                                                <Checkbox
-                                                    name="target_blank"
-                                                    id={"target_blank" + index}
-                                                    defaultChecked={blockJson.isTargetBlank}
-                                                    onCheckedChange={(checked) => {
-                                                        setIsTargetBlank(checked);
-                                                        if (blockJson.href) {
-                                                            onHrefChange(blockJson.href, checked);
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
+                                    className={`absolute w-50 z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isIdOpen ? 'flex' : 'hidden'}`}>
+                                    <div className="p-2 space-y-3">
+                                        <div>
+                                            <Input
+                                                id=""
+                                                type="text"
+                                                placeholder={t('id-placeholder')}
+                                                name=""
+                                                defaultValue={blockJson.id}
+                                                onChange={(e) => debouncedIdChange(e.target.value)}
+                                                onBlur={(e) => onIdChange(e.target.value)}
+                                            />
                                         </div>
-                                    ) : (
-                                        <div className="p-2 space-y-3">
-                                            <div>
-                                                <Input
-                                                    id=""
-                                                    type="text"
-                                                    placeholder={t('link-placeholder')}
-                                                    name=""
-                                                    onChange={(e) => setHref(e.target.value)}
-                                                    onBlur={(e) => setHref(e.target.value)}
-                                                />
-                                            </div>
-                                            <div className="flex justify-between">
+                                    </div>
+                                </div>
+                            </div>
+                            {Block.tags && (
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('change-tag')}
+                                        onClick={() => setIsTagOpen(!isTagOpen)}
+                                    >
+                                        {blockJson.tagName && tagNameIcons[blockJson.tagName] ? (
+                                            (() => {
+                                                const IconComponent = tagNameIcons[blockJson.tagName];
+                                                return <IconComponent size={20}/>;
+                                            })()
+                                        ) : blockJson.tagName || 'div'}
+                                    </button>
+                                    <div
+                                        className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isTagOpen ? 'flex' : 'hidden'}`}>
+                                        <div className="p-2">
+                                            {Block.tags?.map((tag, index) => (
+                                                <button
+                                                    key={index}
+                                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
+                                                    data-tag-name={tag.tagName}
+                                                    data-tag-class={tag.className}
+                                                    onClick={(e) => {
+                                                        const tagName = e.currentTarget.dataset.tagName;
+                                                        const className = e.currentTarget.dataset.tagClass;
+
+                                                        onTagNameChange(tagName, className);
+
+                                                        setIsTagOpen(false);
+                                                    }}
+                                                >
+                                                    {tagNameIcons[tag.tagName] ? (
+                                                        (() => {
+                                                            const IconComponent = tagNameIcons[tag.tagName];
+                                                            return <IconComponent size={20}/>;
+                                                        })()
+                                                    ) : tag.tagName || 'div'}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {Block.variants && (
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('change-variant')}
+                                        onClick={() => setIsVariantOpen(!isVariantOpen)}
+                                    >
+                                        <Paintbrush size={20}/>
+                                    </button>
+                                    <div
+                                        className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isVariantOpen ? 'flex' : 'hidden'}`}>
+                                        <div className="p-2">
+                                            {Block.variants?.map((variant, index) => (
+                                                <button
+                                                    key={index}
+                                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2"
+                                                    data-variant-class={variant.className}
+                                                    onClick={(e) => {
+                                                        const className = e.currentTarget.dataset.variantClass;
+
+                                                        onClassNameChange(className);
+
+                                                        setIsVariantOpen(false);
+                                                    }}
+                                                >
+                                                    {variant.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {Block.icons && (
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('change-icon')}
+                                        onClick={() => setIsIconOpen(!isIconOpen)}
+                                    >
+                                        <Diamond size={20}/>
+                                    </button>
+                                    <div
+                                        className={`absolute z-2 top-13 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-20 flex-col ${isIconOpen ? 'flex' : 'hidden'}`}>
+                                        <div className="p-2">
+                                            {Block.icons?.map((Icon, index) => (
+                                                <div className="flex flex-row items-center gap-2" key={index}>
+                                                    <button
+                                                        type="button"
+                                                        className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && blockJson.iconPosition == 'before') ? 'text-laureo-primary' : ''}`}
+                                                        onClick={() => {
+                                                            let iconName = getIconName(Icon)
+                                                            if (iconName === blockJson.icon) {
+                                                                iconName = null;
+                                                            }
+                                                            onIconChange(iconName, 'before');
+                                                            setIsIconOpen(false);
+                                                        }}
+                                                    >
+                                                        {t('icon-before')}
+                                                    </button>
+                                                    <Icon
+                                                        className={`flex-[1_0_auto] ${blockJson.icon === getIconName(Icon) ? 'text-laureo-primary' : ''}`}
+                                                        size={20}/>
+                                                    <button
+                                                        type="button"
+                                                        className={`cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2 ${(blockJson.icon === getIconName(Icon) && (blockJson.iconPosition == 'after' || !blockJson.iconPosition)) ? 'text-laureo-primary' : ''}`}
+                                                        onClick={() => {
+                                                            let iconName = getIconName(Icon)
+                                                            if (iconName === blockJson.icon) {
+                                                                iconName = null;
+                                                            }
+                                                            onIconChange(iconName, 'after');
+                                                            setIsIconOpen(false);
+                                                        }}
+                                                    >
+                                                        {t('icon-after')}
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {Block.isText && (
+                                <>
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('bold')}
+                                        onMouseDown={(e) => {
+                                            e.preventDefault()
+                                            const sel = window.getSelection();
+                                            console.log(sel.toString())
+                                            if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+                                                //savedRange.current = sel.getRangeAt(0).cloneRange();
+                                            }
+                                        }}
+                                        onClick={() => handleBlockBold()}
+                                    >
+                                        <Bold size={20}/>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('italic')}
+                                        onClick={() => {
+                                            const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                                            if (editableElement) {
+                                                const selection = window.getSelection();
+                                                const range = selection?.getRangeAt(0);
+
+                                                if (selection && !selection.isCollapsed) {
+                                                    // There is selected text
+                                                    const selectedText = selection.toString();
+                                                    const strong = document.createElement('em');
+                                                    strong.textContent = selectedText;
+                                                    range?.deleteContents();
+                                                    range?.insertNode(strong);
+                                                } else {
+                                                    // No selection, wrap all content
+                                                    const content = editableElement.innerHTML;
+                                                    editableElement.innerHTML = `<em>${content}</em>`;
+                                                }
+
+                                                // Trigger content change
+                                                const event = new CustomEvent('input', {
+                                                    bubbles: true,
+                                                    detail: {isOnce: true}
+                                                });
+                                                editableElement.dispatchEvent(event);
+                                            }
+                                        }}
+                                    >
+                                        <Italic size={20}/>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="p-1 cursor-pointer hover:text-laureo-primary"
+                                        title={t('link')}
+                                        onClick={() => setIsLinkOpen(!isLinkOpen)}
+                                    >
+                                        <Link size={20}/>
+                                    </button>
+                                    <div
+                                        className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border border-laureo-border dark:border-laureo-border-dark min-w-full flex-col ${isLinkOpen ? 'flex' : 'hidden'}`}>
+                                        {Block.type === 'button' ? (
+                                            <div className="p-2 space-y-3">
+                                                <div>
+                                                    <Input
+                                                        id=""
+                                                        type="text"
+                                                        placeholder={t('link-placeholder')}
+                                                        name=""
+                                                        defaultValue={blockJson.href}
+                                                        onChange={(e) => debouncedHrefChange(e.target.value, isTargetBlank)}
+                                                        onBlur={(e) => onHrefChange(e.target.value, isTargetBlank)}
+                                                    />
+                                                </div>
                                                 <div className="flex items-center gap-2">
                                                     <Label className="mb-0"
                                                            htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
                                                     <Checkbox
                                                         name="target_blank"
                                                         id={"target_blank" + index}
-                                                        onCheckedChange={(checked) => setIsTargetBlank(checked)}
+                                                        defaultChecked={blockJson.isTargetBlank}
+                                                        onCheckedChange={(checked) => {
+                                                            setIsTargetBlank(checked);
+                                                            if (blockJson.href) {
+                                                                onHrefChange(blockJson.href, checked);
+                                                            }
+                                                        }}
                                                     />
                                                 </div>
-                                                <Button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
-                                                        if (editableElement) {
-                                                            const selection = window.getSelection();
-                                                            const range = selection?.getRangeAt(0);
-
-                                                            if (selection && !selection.isCollapsed) {
-                                                                // There is selected text
-                                                                const selectedText = selection.toString();
-                                                                const link = document.createElement('a');
-                                                                link.textContent = selectedText;
-                                                                link.setAttribute('href', href);
-                                                                if (isTargetBlank) link.setAttribute('target', '_blank');
-                                                                range?.deleteContents();
-                                                                range?.insertNode(link);
-                                                            } else {
-                                                                // No selection, wrap all content
-                                                                const content = editableElement.innerHTML;
-                                                                editableElement.innerHTML = `<a href="${href}" ${isTargetBlank ? 'target="blank"' : ''}>${content}</a>`;
-                                                            }
-
-                                                            // Trigger content change
-                                                            const event = new CustomEvent('input', {
-                                                                bubbles: true,
-                                                                detail: {isOnce: true}
-                                                            });
-                                                            editableElement.dispatchEvent(event);
-
-                                                            setIsLinkOpen(false)
-                                                        }
-                                                    }}
-                                                >{t('link-create')}</Button>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                        <button
-                            type="button"
-                            className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
-                            title={t('change-class')}
-                            onClick={() => handleBlockClassNameToggle()}
-                        >
-                            <Braces size={20}/>
-                        </button>
-                    </div>
-                    <div
-                        className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
-                        <button
-                            type="button"
-                            className="p-1 cursor-pointer hover:text-laureo-primary"
-                            title={t('more-options')}
-                            onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
-                            <EllipsisVertical size={20}/>
-                        </button>
+                                        ) : (
+                                            <div className="p-2 space-y-3">
+                                                <div>
+                                                    <Input
+                                                        id=""
+                                                        type="text"
+                                                        placeholder={t('link-placeholder')}
+                                                        name=""
+                                                        onChange={(e) => setHref(e.target.value)}
+                                                        onBlur={(e) => setHref(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <Label className="mb-0"
+                                                               htmlFor={"target_blank" + index}>{t('link-blank')}</Label>
+                                                        <Checkbox
+                                                            name="target_blank"
+                                                            id={"target_blank" + index}
+                                                            onCheckedChange={(checked) => setIsTargetBlank(checked)}
+                                                        />
+                                                    </div>
+                                                    <Button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const editableElement = blockRef.current?.querySelector('[contenteditable="true"]');
+                                                            if (editableElement) {
+                                                                const selection = window.getSelection();
+                                                                const range = selection?.getRangeAt(0);
+
+                                                                if (selection && !selection.isCollapsed) {
+                                                                    // There is selected text
+                                                                    const selectedText = selection.toString();
+                                                                    const link = document.createElement('a');
+                                                                    link.textContent = selectedText;
+                                                                    link.setAttribute('href', href);
+                                                                    if (isTargetBlank) link.setAttribute('target', '_blank');
+                                                                    range?.deleteContents();
+                                                                    range?.insertNode(link);
+                                                                } else {
+                                                                    // No selection, wrap all content
+                                                                    const content = editableElement.innerHTML;
+                                                                    editableElement.innerHTML = `<a href="${href}" ${isTargetBlank ? 'target="blank"' : ''}>${content}</a>`;
+                                                                }
+
+                                                                // Trigger content change
+                                                                const event = new CustomEvent('input', {
+                                                                    bubbles: true,
+                                                                    detail: {isOnce: true}
+                                                                });
+                                                                editableElement.dispatchEvent(event);
+
+                                                                setIsLinkOpen(false)
+                                                            }
+                                                        }}
+                                                    >{t('link-create')}</Button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                            <button
+                                type="button"
+                                className={`p-1 cursor-pointer hover:text-laureo-primary ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}
+                                title={t('change-class')}
+                                onClick={() => handleBlockClassNameToggle()}
+                            >
+                                <Braces size={20}/>
+                            </button>
+                        </div>
                         <div
-                            className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border-laureo-border dark:border-laureo-border-dark border min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
-                            <div className="p-2">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        onBlockCopy()
-                                        setIsOptionsOpen(false);
-                                    }}
-                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>{t('copy')}</span>
-                                    <span>Ctrl+C</span>
-                                </button>
-                            </div>
-                            <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        onBlockPaste()
-                                    }}
-                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>{t('paste')}</span>
-                                    <span>Ctrl+V</span>
-                                </button>
-                            </div>
+                            className="relative font-(family-name:--font-roboto) p-2 flex flex-row items-center border-l border-laureo-border dark:border-laureo-border-dark h-full">
+                            <button
+                                type="button"
+                                className="p-1 cursor-pointer hover:text-laureo-primary"
+                                title={t('more-options')}
+                                onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
+                                <EllipsisVertical size={20}/>
+                            </button>
                             <div
-                                className={`p-2 border-t border-laureo-border dark:border-laureo-border-dark ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        onBlockDelete()
-                                    }}
-                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>{t('delete')}</span>
-                                    <span>Shift+Alt+Z</span>
-                                </button>
-                            </div>
-                            <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        onBlockLock()
-                                    }}
-                                    className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
-                                    <span>{blockJson.lock ? t('unlock') : t('lock')}</span>
-                                    <span></span>
-                                </button>
+                                className={`absolute z-2 top-16 left-0 bg-laureo-body dark:bg-laureo-body-dark border-laureo-border dark:border-laureo-border-dark border min-w-60 flex-col ${isOptionsOpen ? 'flex' : 'hidden'}`}>
+                                <div className="p-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onBlockCopy()
+                                            setIsOptionsOpen(false);
+                                        }}
+                                        className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                        <span>{t('copy')}</span>
+                                        <span>Ctrl+C</span>
+                                    </button>
+                                </div>
+                                <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onBlockPaste()
+                                        }}
+                                        className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                        <span>{t('paste')}</span>
+                                        <span>Ctrl+V</span>
+                                    </button>
+                                </div>
+                                <div
+                                    className={`p-2 border-t border-laureo-border dark:border-laureo-border-dark ${blockJson.lock ? 'opacity-50 pointer-events-none' : ''}`}>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onBlockDelete()
+                                        }}
+                                        className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                        <span>{t('delete')}</span>
+                                        <span>Shift+Alt+Z</span>
+                                    </button>
+                                </div>
+                                <div className="p-2 border-t border-laureo-border dark:border-laureo-border-dark">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onBlockLock()
+                                        }}
+                                        className="cursor-pointer hover:text-laureo-primary flex justify-between w-full p-2">
+                                        <span>{blockJson.lock ? t('unlock') : t('lock')}</span>
+                                        <span></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div
-                className={`fixed min-w-50 w-50 xl:w-100 h-full z-99 top-0 right-0 bg-laureo-body dark:bg-laureo-body-dark border flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
-                <div className="p-4 h-full">
-                    <Textarea
-                        id=""
-                        placeholder={t('class-placeholder')}
-                        name=""
-                        className="h-full classname-textarea"
-                        defaultValue={blockJson.className}
-                        /*onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                onClassNameChange(e.target.value);
-                                setIsClassOpen(false);
-                            }
-                        }}*/
-                        onChange={(e) => debouncedClassNameChange(e.target.value)}
-                        onBlur={(e) => onClassNameChange(e.target.value)}
-                    />
+                <div
+                    className={`fixed min-w-50 w-50 xl:w-100 h-full z-99 top-0 right-0 bg-laureo-body dark:bg-laureo-body-dark border flex-col ${isClassOpen ? 'flex' : 'hidden'}`}>
+                    <div className="p-4 h-full">
+                        <Textarea
+                            id=""
+                            placeholder={t('class-placeholder')}
+                            name=""
+                            className="h-full classname-textarea"
+                            defaultValue={blockJson.className}
+                            /*onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    onClassNameChange(e.target.value);
+                                    setIsClassOpen(false);
+                                }
+                            }}*/
+                            onChange={(e) => debouncedClassNameChange(e.target.value)}
+                            onBlur={(e) => onClassNameChange(e.target.value)}
+                        />
+                    </div>
                 </div>
+                <BlockComponent block={blockWithCallback}
+                                className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}
+                                isEditor={true}
+                >
+                    {children}
+                    {
+                        Block.isParent && isFocused &&
+                        <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock}/>
+                    }
+                </BlockComponent>
             </div>
-            <BlockComponent block={blockWithCallback}
-                            className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}
-                            isEditor={true}
-            >
-                {children}
-                {
-                    Block.isParent && isFocused &&
-                    <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock}/>
-                }
-            </BlockComponent>
-        </div>
+            {parentBlock && !isLastBlockInParent && (
+                <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock} insertAfterBlock={true}/>
+            )}
+        </>
     )
 };
 

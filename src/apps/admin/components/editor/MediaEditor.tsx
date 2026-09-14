@@ -144,7 +144,7 @@ export default function MediaEditor({slug, blockIndex, selectedMediaId, onMediaE
                                                 <div className="flex flex-1 h-full">
                                                     <div className="flex-1 flex p-4">
                                                         {isLoading ? (<div>Loading...</div>) : (
-                                                            <div className="grid grid-cols-10 gap-4">
+                                                            <div className="grid grid-cols-10 gap-4 overflow-y-auto">
                                                                 {mediaItems.map((media, index) => <MediaItem key={index}
                                                                                                              media={media}
                                                                                                              isActive={selectedMedia?.id === media.id}
