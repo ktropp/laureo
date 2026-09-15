@@ -37,6 +37,7 @@ const BaseBlock = ({
                        index,
                        blockJson,
                        onBlockAdd,
+                       onBlockAddAfter,
                        onContentChange,
                        onClassNameChange,
                        onTagNameChange,
@@ -735,7 +736,7 @@ const BaseBlock = ({
                     </div>
                 </div>
                 <BlockComponent block={blockWithCallback}
-                                className={Block.isParent ? 'min-h-7 min-w-20 overflow-visible' : ''}
+                                className={Block.isParent ? 'min-h-7 min-w-20 box-content overflow-visible' : ''}
                                 isEditor={true}
                 >
                     {children}
@@ -746,7 +747,7 @@ const BaseBlock = ({
                 </BlockComponent>
             </div>
             {parentBlock && !isLastBlockInParent && (
-                <BlockAdd onBlockAdd={onBlockAdd} Block={Block} parentBlock={parentBlock} insertAfterBlock={true}/>
+                <BlockAdd onBlockAdd={onBlockAddAfter} Block={Block} parentBlock={parentBlock} insertAfterBlock={true}/>
             )}
         </>
     )

@@ -144,7 +144,7 @@ export function PostForm({post, type}: { post: Post, type: string }) {
 
     let postUrl = Settings.frontendUrl + '/' + post?.slug
     if (type === 'page' && Settings.defaultLanguage !== post.languageCode) {
-        postUrl = Settings.frontendUrl + '/' + post.languageCode.slice(0, 2) + '/' + post?.slug
+        postUrl = Settings.frontendUrl + '/' + post.languageCode?.slice(0, 2) + '/' + post?.slug
     }
     if (type !== 'page' && post.languageCode) {
         postUrl = Settings.frontendUrl + '/' + Settings.customPostTypes.filter(postType => postType.slug == type)[0].rewrite.filter(rewrite => rewrite.lang == post.languageCode.slice(0, 2))[0].rewrite + '/' + post.slug

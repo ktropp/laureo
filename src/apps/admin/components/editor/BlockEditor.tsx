@@ -60,11 +60,18 @@ export default function BlockEditor({content, onChange}: {
     });
     bodyClass += " mt-14 flex flex-col items-center";
 
-    const handleBlockAdd = (type: string, parentIndex?: string, afterIndex?: string) => {
-        const blockReg = BlockRegistry.find(block => block.type === type)
+    const handleBlockAdd = (
+        type: string,
+        parentIndex?: string,
+        afterIndex?: string
+    ) => {
+        const blockReg = BlockRegistry.find(block => block.type === type);
+
+        if (!blockReg) return;
+
         const newBlock: BlockJson = {
             index: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            type: type,
+            type,
             tagName: blockReg.tagName,
             className: blockReg.className,
         };
@@ -75,31 +82,85 @@ export default function BlockEditor({content, onChange}: {
             setLastAddedBlockIndex(null);
         }, 100);
 
-        if (parentIndex !== undefined) {
-            setBlocks(prev => {
-                const updateBlocksRecursively = (blocks: BlockJson[]): BlockJson[] => {
+        setBlocks(prev => {
+            // afterIndex has precedence
+            if (afterIndex) {
+                const insertAfter = (
+                    blocks: BlockJson[]
+                ): { blocks: BlockJson[]; found: boolean } => {
+                    const result: BlockJson[] = [];
+                    let found = false;
+
+                    for (const block of blocks) {
+                        result.push(block);
+
+                        // Found the target block
+                        if (block.index === afterIndex) {
+                            result.push(newBlock);
+                            found = true;
+                            continue;
+                        }
+
+                        // If we haven't found it yet, search children
+                        if (!found && block.children?.length) {
+                            const childResult = insertAfter(block.children);
+
+                            if (childResult.found) {
+                                result[result.length - 1] = {
+                                    ...block,
+                                    children: childResult.blocks
+                                };
+
+                                found = true;
+                            }
+                        }
+                    }
+
+                    return {
+                        blocks: result,
+                        found
+                    };
+                };
+
+                const result = insertAfter(prev);
+
+                if (result.found) {
+                    return result.blocks;
+                }
+            }
+
+            // No afterIndex, or afterIndex wasn't found:
+            // add to parent as the last child
+            if (parentIndex !== undefined) {
+                const addToParent = (blocks: BlockJson[]): BlockJson[] => {
                     return blocks.map(block => {
                         if (block.index === parentIndex) {
                             return {
                                 ...block,
-                                children: [...(block.children || []), newBlock]
+                                children: [
+                                    ...(block.children || []),
+                                    newBlock
+                                ]
                             };
                         }
-                        if (block.children && block.children.length > 0) {
+
+                        if (block.children?.length) {
                             return {
                                 ...block,
-                                children: updateBlocksRecursively(block.children)
+                                children: addToParent(block.children)
                             };
                         }
+
                         return block;
                     });
                 };
 
-                return updateBlocksRecursively(prev);
-            });
-        } else {
-            setBlocks(prev => [...prev, newBlock]);
-        }
+                return addToParent(prev);
+            }
+
+            // No parentIndex and no afterIndex → add to root
+            return [...prev, newBlock];
+        });
     };
 
     const handleBlockDelete = (blockIndex: string) => {
@@ -466,20 +527,33 @@ export default function BlockEditor({content, onChange}: {
         setBlocks((prevBlocks) => {
             const moveUpInParent = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map((block) => {
-                    if (block.children?.some((child) => child.index === blockIndex)) {
-                        const children = block.children;
-                        const index = children.findIndex((child) => child.index === blockIndex);
+                    if (block.children) {
+                        const index = block.children.findIndex(
+                            (child) => child.index === blockIndex
+                        );
+
+                        // This block is the parent of the target
                         if (index > 0) {
-                            // Swap the block with the one above it
-                            const newChildren = [
-                                ...children.slice(0, index - 1),
+                            const children = [...block.children];
+
+                            [children[index - 1], children[index]] = [
                                 children[index],
                                 children[index - 1],
-                                ...children.slice(index + 1)
                             ];
-                            return {...block, children: newChildren};
+
+                            return {
+                                ...block,
+                                children,
+                            };
                         }
+
+                        // Target wasn't a direct child, so search deeper
+                        return {
+                            ...block,
+                            children: moveUpInParent(block.children),
+                        };
                     }
+
                     return block;
                 });
             };
@@ -492,20 +566,33 @@ export default function BlockEditor({content, onChange}: {
         setBlocks((prevBlocks) => {
             const moveDownInParent = (blocks: BlockJson[]): BlockJson[] => {
                 return blocks.map((block) => {
-                    if (block.children?.some((child) => child.index === blockIndex)) {
-                        const children = block.children;
-                        const index = children.findIndex((child) => child.index === blockIndex);
-                        if (index < children.length - 1) {
-                            // Swap the block with the one below it
-                            const newChildren = [
-                                ...children.slice(0, index),
+                    if (block.children) {
+                        const index = block.children.findIndex(
+                            (child) => child.index === blockIndex
+                        );
+
+                        // This block is the parent of the target
+                        if (index !== -1 && index < block.children.length - 1) {
+                            const children = [...block.children];
+
+                            [children[index], children[index + 1]] = [
                                 children[index + 1],
                                 children[index],
-                                ...children.slice(index + 2)
                             ];
-                            return {...block, children: newChildren};
+
+                            return {
+                                ...block,
+                                children,
+                            };
                         }
+
+                        // Target wasn't a direct child, so search deeper
+                        return {
+                            ...block,
+                            children: moveDownInParent(block.children),
+                        };
                     }
+
                     return block;
                 });
             };
@@ -524,6 +611,7 @@ export default function BlockEditor({content, onChange}: {
                     blockJson={block}
                     autoFocus={block.index === lastAddedBlockIndex}
                     onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
+                    onBlockAddAfter={(newBlock) => handleBlockAdd(newBlock, null, block.index)}
                     onContentChange={(text) => handleBlockTextChange(text, block.index)}
                     onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
                     onIdChange={(id) => handleBlockIdChange(id, block.index)}
@@ -563,6 +651,7 @@ export default function BlockEditor({content, onChange}: {
                                 blockJson={block}
                                 autoFocus={block.index === lastAddedBlockIndex}
                                 onBlockAdd={(newBlock) => handleBlockAdd(newBlock, block.index)}
+                                onBlockAddAfter={(newBlock) => handleBlockAdd(newBlock, null, block.index)}
                                 onContentChange={(text) => handleBlockTextChange(text, block.index)}
                                 onClassNameChange={(className) => handleBlockClassNameChange(className, block.index)}
                                 onHrefChange={(href, isTargetBlank) => handleBlockHrefChange(href, isTargetBlank, block.index)}
