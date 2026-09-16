@@ -5,6 +5,7 @@ export interface BlockMeta {
   type: string;
   name: string;
   icon?: LucideIcon;
+  isFile?: boolean; // if true, act as upload (like Image)
   isParent?: boolean; // if true, can have nested blocks
   isText?: boolean; // if true, is editable as text
   isServer?: boolean; // if true, admin will have different component than frontend (frontend will be use server)

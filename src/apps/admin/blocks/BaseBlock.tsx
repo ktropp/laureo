@@ -75,7 +75,7 @@ const BaseBlock = ({
         BlockComponent = withEditable(BlockComponent);
     }
 
-    if (Block.type === 'image') {
+    if (Block.isFile) {
         BlockComponent = withImage(BlockComponent);
     }
 
@@ -164,11 +164,10 @@ const BaseBlock = ({
         [onIdChange]
     )
 
-    const handleBlockIconClick = (type, blockIndex, selectedMediaId) => {
-        switch (type) {
-            case 'image':
-                onMediaEditorOpen('media', blockIndex, selectedMediaId);
-                break;
+    const handleBlockIconClick = (block, blockIndex, selectedMediaId) => {
+        if (block.isFile) {
+            onMediaEditorOpen('media', blockIndex, selectedMediaId);
+            return;
         }
     }
 
@@ -300,7 +299,7 @@ const BaseBlock = ({
                         <div className="p-2 flex flex-row items-center gap-1">
                             <button type="button" className="p-1 cursor-pointer hover:text-laureo-primary"
                                     title={Block.name}
-                                    onClick={() => handleBlockIconClick(Block.type, index, blockJson?.media_id || null)}>
+                                    onClick={() => handleBlockIconClick(Block, index, blockJson?.media_id || null)}>
                                 <Block.icon size={20}/>
                             </button>
                             {/*

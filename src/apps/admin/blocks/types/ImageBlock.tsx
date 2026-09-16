@@ -23,6 +23,7 @@ const ImageBlock = ({block, isEditor, ...props}: BlockProps) => {
 export const blockConfig: BlockMeta = {
     type: 'image',
     name: 'Image',
+    isFile: true,
     icon: LucideImage
 };
 
