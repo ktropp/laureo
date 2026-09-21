@@ -8,7 +8,18 @@ export default function AccordionBlockClient({children, block}) {
     const [activeIndex, setActiveIndex] = useState<number>(0)
 
     const handleAccordionChange = (index: number) => {
-        setActiveIndex(index)
+        const isDesktop = window.matchMedia("(min-width: 64rem)").matches
+
+        if (isDesktop) {
+            setActiveIndex(index)
+            return
+        }
+
+        if (activeIndex === index) {
+            setActiveIndex(null)
+        } else {
+            setActiveIndex(index)
+        }
     }
 
     const findContents = (children): any[] => {
