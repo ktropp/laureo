@@ -1,8 +1,9 @@
 import {BlockProps, BlockMeta} from "blocks/blockDefinitions";
 import {Minus} from "lucide-react";
+import {sanitizeFrontendHtml} from "@admin/lib/utils";
 
 const ListItemBlock = ({block, GlobalFields, ...props}: BlockProps) => {
-    const sanitizedHtml = block?.text || ''
+    const sanitizedHtml = sanitizeFrontendHtml(block?.text || '', GlobalFields)
     return <li
         className={block.className}
         dangerouslySetInnerHTML={{__html: sanitizedHtml}}

@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
-    "image-size": "^2.0.2",
-    "nodemailer": "^7.0.11",
-    "sanitize-html": "^2.17.5"
+    "image-size": "2.0.3",
+    "nodemailer": "10.0.9",
+    "sanitize-html": "^2.17.5",
+    "typograf": "^7.8.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.14",

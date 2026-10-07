@@ -1,6 +1,7 @@
 import {clsx, type ClassValue} from "clsx"
 import {extendTailwindMerge} from "tailwind-merge"
 import {GlobalField} from "@front/lib/globalFields"
+import Typograf from 'typograf'
 
 //TODO: this needs to be defined in settings, or parsed from tailwind
 const customTwMerge = extendTailwindMerge({
@@ -42,5 +43,7 @@ export function sanitizeFrontendHtml(html: string, GlobalFields: GlobalField[]) 
     GlobalFields?.forEach(field => {
         returnHtml = returnHtml.replace('[' + field.slug + ']', field.value)
     })
+    const typ = new Typograf({locale: ['cs']})
+    returnHtml = typ.execute(returnHtml)
     return returnHtml
 }
